@@ -240,7 +240,8 @@ function submitToGoogleSheet() {
     headers: { "Content-Type": "application/json" }
   })
   .then(response => response.text())
-  .then(result => alert("Submission Successful!"))
+  //.then(result => alert("Submission Successful!"))
+  .then(result => window.location.href = "/summer-confirmation")
   .catch(error => alert("Submission Failed: " + error));
 }
 </script>
