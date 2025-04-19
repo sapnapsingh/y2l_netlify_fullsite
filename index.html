@@ -1,74 +1,140 @@
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Y2L Summer Program Signup</title>
-  <style>
-    body { font-family: 'Segoe UI', sans-serif; padding: 20px; background-color: #f8f9fa; }
-    h2 { color: #2a7ae2; }
-    label, input, select { display: block; margin-top: 10px; font-size: 16px; }
-    input[type="text"], input[type="email"], input[type="tel"] {
-      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
-    }
-    .section { margin-bottom: 30px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
-    .total-box {
-      margin-top: 20px; background-color: #fff; padding: 15px;
-      border: 1px solid #ccc; border-radius: 5px; font-size: 18px;
-    }
-    .btn {
-      margin-top: 20px; padding: 12px 24px; background-color: #2a7ae2;
-      color: white; border: none; border-radius: 6px;
-      font-weight: 600; cursor: pointer;
-    }
-  </style>
+<html><head>
+<meta charset="UTF-8">
+<title>Y2L Summer Enrollment</title>
+
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    padding: 20px;
+  }
+
+  h2 {
+    color: #a05767;
+    text-align: center;
+  }
+
+  .section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #2a7ae2;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 15px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #e9effb;
+    color: #2a7ae2;
+  }
+
+  .btn {
+    background-color: #2a7ae2;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 6px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .btn:hover {
+    background-color: #195bb1;
+  }
+
+  .total-box {
+    margin-top: 20px;
+    background-color: #fefefe;
+    padding: 20px;
+    border: 2px solid #2a7ae2;
+    border-radius: 8px;
+  }
+
+  .total-box p {
+    margin: 10px 0;
+    font-size: 17px;
+  }
+
+  .discount-breakdown {
+    font-size: 14px;
+    color: #555;
+    margin-top: 8px;
+  }
+</style>
+
 </head>
 <body>
-  <h2>Y2L Summer Program Signup Form</h2>
-  <form id="signupForm">
-    <div class="section">
-      <label>Parent Name:</label><input type="text" name="parent_name" required>
-      <label>Email:</label><input type="email" name="email" required>
-      <label>Phone Number:</label><input type="tel" name="phone" required>
-    </div>
+<h2>Y2L Summer Program Signup Form</h2>
+<form id="signupForm">
+  <div class="section">
+    <label>Parent Name:</label><input type="text" name="parent_name" required>
+    <label>Email:</label><input type="email" name="email" required>
+    <label>Phone Number:</label><input type="tel" name="phone" required>
+  </div>
 
-    <div class="section" id="children-section">
-      <!-- Student 1 -->
-      <div class="section" id="student1">
-        <h3>Student 1 Information</h3>
-        <label>Student Name:</label><input type="text" name="student_name_1" required>
-        <label>Grade:</label><input type="text" name="grade_1" required>
-        <label>School:</label><input type="text" name="school_1" required>
-        <table><thead><tr>
-          <th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
-          <th>Chess</th><th>Robotics</th><th>Python</th><th>Book Club</th>
-        </tr></thead><tbody id="programTable1"></tbody></table>
-      </div>
+  <div class="section">
+    <h3>Student 1</h3>
+    <label>Student Name:</label><input type="text" name="student_name_1" required>
+    <label>Grade:</label><input type="text" name="grade_1" required>
+    <label>School:</label><input type="text" name="school_1" required>
+    <table><thead><tr><th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
+    <th>Chess</th><th>Robotics</th><th>Python</th><th>Book Club</th></tr></thead><tbody id="programTable1"></tbody></table>
+  </div>
 
-      <!-- Student 2 -->
-      <div class="section" id="student2">
-        <h3>Student 2 Information</h3>
-        <label>Student Name:</label><input type="text" name="student_name_2">
-        <label>Grade:</label><input type="text" name="grade_2">
-        <label>School:</label><input type="text" name="school_2">
-        <table><thead><tr>
-          <th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
-          <th>Chess</th><th>Robotics</th><th>Python</th><th>Book Club</th>
-        </tr></thead><tbody id="programTable2"></tbody></table>
-      </div>
-    </div>
+  <div class="section">
+    <h3>Student 2</h3>
+    <label>Student Name:</label><input type="text" name="student_name_2">
+    <label>Grade:</label><input type="text" name="grade_2">
+    <label>School:</label><input type="text" name="school_2">
+    <table><thead><tr><th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
+    <th>Chess</th><th>Robotics</th><th>Python</th><th>Book Club</th></tr></thead><tbody id="programTable2"></tbody></table>
+  </div>
 
-    <div class="total-box">
-      <p><strong>Total Fee (Before Discounts): $<span id="baseFee">0</span></strong></p>
-      <p><strong>Applied Discounts: $<span id="discount">0</span></strong></p>
-      <p><strong>Final Amount Due: $<span id="amountDue">0</span></strong></p>
-    </div>
+  <div class="total-box">
+    <p><strong>Total Fee:</strong> $<span id="baseFee">0</span></p>
+    <p><strong>Total Discount:</strong> $<span id="discount">0</span></p>
+    <div id="discount-details" class="discount-breakdown"></div>
+    <p><strong>Final Amount Due:</strong> $<span id="amountDue">0</span></p>
+  </div>
 
-    <button type="button" class="btn" onclick="calculateFee()">Calculate Total</button>
-    <button type="button" class="btn" onclick="submitToGoogleSheet()">Submit</button>
-  </form>
+  <button type="button" class="btn" onclick="calculateFee()">Calculate Total</button>
+  <button type="button" class="btn" onclick="submitToGoogleSheet()">Submit</button>
+</form>
 
 <script>
 function renderProgramRows(tableId, studentId) {
@@ -131,6 +197,12 @@ function calculateFee() {
   const due = Math.max(0, total - discount);
   document.getElementById("baseFee").textContent = total;
   document.getElementById("discount").textContent = discount;
+  let breakdown = [];
+  if (today <= earlyBird) breakdown.push(`– Early Bird: $${10 * weekSet.size}`);
+  if (weekSet.size > 2) breakdown.push(`– Multi-Week: $${15 * (weekSet.size - 2)}`);
+  if (programCount > weekSet.size) breakdown.push(`– Multi-Program: $${20 * (programCount - weekSet.size)}`);
+  if (studentCount > 1) breakdown.push(`– Sibling: $${5 * weekSet.size}`);
+  document.getElementById("discount-details").innerHTML = "<strong>Discounts Applied:</strong><br>" + breakdown.join("<br>");
   document.getElementById("amountDue").textContent = due;
 }
 
@@ -172,5 +244,6 @@ function submitToGoogleSheet() {
   .catch(error => alert("Submission Failed: " + error));
 }
 </script>
+
 </body>
 </html>
