@@ -187,5 +187,115 @@ function toggleStudent2() {
     }
   });
 }
+
+function renderProgramRows(tableId, studentId) {
+  const tableBody = document.getElementById(tableId);
+  const programSchedule = {
+    math: [1,2,3,4,5,6,7,8],
+    public_speaking: [1,6,8],
+    creative_writing: [2,5,7],
+    chess: [3,4,7,8],
+    robotics: [3,6],
+    python: [2,5,7],
+    book_club: [1,4,6]
+  };
+  const weekDates = {
+    1: "Jun 9–13", 2: "Jun 16–20", 3: "Jun 23–27", 4: "Jun 30–Jul 4",
+    5: "Jul 7–11", 6: "Jul 14–18", 7: "Jul 21–25", 8: "Jul 28–Aug 1"
+  };
+  for (let i = 1; i <= 8; i++) {
+    const row = document.createElement("tr");
+    let html = `<td>Week ${i}<br><small>${weekDates[i]}</small></td>`;
+    for (const prog in programSchedule) {
+      html += programSchedule[prog].includes(i)
+        ? `<td><input type='checkbox' name='${studentId}_week${i}_${prog}'></td>`
+        : `<td></td>`;
+    }
+    row.innerHTML = html;
+    tableBody.appendChild(row);
+  }
+}
+renderProgramRows("programTable1", "student_1");
+renderProgramRows("programTable2", "student_2");
+
+
+function calculateFee() {
+  const prices = {
+    math: 150, public_speaking: 150, creative_writing: 150,
+    chess: 200, robotics: 170, python: 170, book_club: 150
+  };
+  let total = 0, programCount = 0, weekSet = new Set(), studentCount = 0;
+
+  ['student_1','student_2'].forEach(student => {
+    let hasPrograms = false;
+    for (let i = 1; i <= 8; i++) {
+      for (const prog in prices) {
+        const box = document.querySelector(`input[name='${student}_week${i}_${prog}']`);
+        if (box && box.checked) {
+          total += prices[prog]; programCount++; weekSet.add(i); hasPrograms = true;
+        }
+      }
+    }
+    if (hasPrograms) studentCount++;
+  });
+
+  let discount = 0;
+  const today = new Date(), earlyBird = new Date("2025-05-15");
+  if (today <= earlyBird) discount += 10 * weekSet.size;
+  if (weekSet.size > 2) discount += 15 * (weekSet.size - 2);
+  if (programCount > weekSet.size) discount += 20 * (programCount - weekSet.size);
+  if (studentCount > 1) discount += 5 * weekSet.size;
+
+  const due = Math.max(0, total - discount);
+  document.getElementById("baseFee").textContent = total;
+  document.getElementById("discount").textContent = discount;
+  let breakdown = [];
+  if (today <= earlyBird) breakdown.push(`– Early Bird: $${10 * weekSet.size}`);
+  if (weekSet.size > 2) breakdown.push(`– Multi-Week: $${15 * (weekSet.size - 2)}`);
+  if (programCount > weekSet.size) breakdown.push(`– Multi-Program: $${20 * (programCount - weekSet.size)}`);
+  if (studentCount > 1) breakdown.push(`– Sibling: $${5 * weekSet.size}`);
+  document.getElementById("discount-details").innerHTML = "<strong>Discounts Applied:</strong><br>" + breakdown.join("<br>");
+  document.getElementById("amountDue").textContent = due;
+}
+
+
+function submitToGoogleSheet() {
+  const payload = {
+    timestamp: new Date().toISOString(),
+    parentName: document.querySelector("input[name='parent_name']").value,
+    email: document.querySelector("input[name='email']").value,
+    phone: document.querySelector("input[name='phone']").value,
+    student_1_name: document.querySelector("input[name='student_name_1']").value,
+    student_1_grade: document.querySelector("input[name='grade_1']").value,
+    student_1_school: document.querySelector("input[name='school_1']").value,
+    student_2_name: document.querySelector("input[name='student_name_2']").value,
+    student_2_grade: document.querySelector("input[name='grade_2']").value,
+    student_2_school: document.querySelector("input[name='school_2']").value,
+    baseFee: document.getElementById("baseFee").textContent,
+    discount: document.getElementById("discount").textContent,
+    finalFee: document.getElementById("amountDue").textContent
+  };
+
+  for (let s = 1; s <= 2; s++) {
+    for (let i = 1; i <= 8; i++) {
+      for (const prog of ['math','public_speaking','creative_writing','chess','robotics','python','book_club']) {
+        const field = `S${s} - Week ${i} - ${prog.replace('_',' ').replace(/\b\w/g,l=>l.toUpperCase())}`;
+        const box = document.querySelector(`input[name='student_${s}_week${i}_${prog}']`);
+        payload[field] = box && box.checked ? 'Yes' : '';
+      }
+    }
+  }
+
+  console.log("Payload submitted:", payload);
+  fetch("/.netlify/functions/submit", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" }
+  })
+  .then(response => response.text())
+  //.then(result => alert("Submission Successful!"))
+  .then(result => window.location.href = "https://y2lacademy.com/summer-confirmation")
+  .catch(error => alert("Submission Failed: " + error));
+}
 </script>
 </body></html>
