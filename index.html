@@ -261,119 +261,31 @@
 </form>
 </div>
 </div>
+
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const student2Toggle = document.getElementById("add-student-2");
-  const student2Info = document.getElementById("student2Fields");
-  const student2Table = document.getElementById("student-2-table");
+function toggleStudent2(checked) {
+  const info = document.getElementById("student2Fields");
+  const table = document.getElementById("student-2-table");
+  if (!info || !table) return;
+  info.style.display = checked ? "" : "none";
+  table.style.display = checked ? "" : "none";
 
-  function toggleStudent2State(enabled) {
-    if (student2Info) {
-      student2Info.style.display = enabled ? "" : "none";
-      const inputs = student2Info.querySelectorAll("input");
-      inputs.forEach(input => {
-        input.disabled = !enabled;
-        if (!enabled) input.value = "";
-      });
-    }
-
-    if (student2Table) {
-      student2Table.style.display = enabled ? "" : "none";
-      const checkboxes = student2Table.querySelectorAll("input[type='checkbox']");
-      checkboxes.forEach(cb => {
-        cb.disabled = !enabled;
-        if (!enabled) cb.checked = false;
-      });
-    }
-  }
-
-  toggleStudent2State(false);
-  if (student2Toggle) {
-    student2Toggle.addEventListener("change", () => {
-      toggleStudent2State(student2Toggle.checked);
-    });
-  }
-
-  const feeMap = {
-    Math: 150,
-    "Public Speaking": 150,
-    "Creative Writing": 150,
-    Chess: 200,
-    Python: 170
-  };
-
-  const checkboxFields = document.querySelectorAll("input[type=checkbox]");
-  checkboxFields.forEach(cb => cb.addEventListener("change", updateFee));
-
-  function updateFee() {
-    const selections = [...checkboxFields].filter(cb => cb.checked && !cb.disabled);
-    const programs = selections.map(cb => {
-      const label = cb.name.split(" - ").pop();
-      return label.includes("Python") ? "Python" :
-             label.includes("Creative Writing") ? "Creative Writing" :
-             label.includes("Public Speaking") ? "Public Speaking" :
-             label.includes("Math") ? "Math" :
-             label.includes("Chess") ? "Chess" : "";
-    }).filter(p => p && feeMap[p]);
-
-    const totalPrograms = programs.length;
-    let baseFee = programs.reduce((sum, prog) => sum + (feeMap[prog] || 0), 0);
-
-    let discount = 0;
-    if (totalPrograms >= 5) discount += 50;
-    if (totalPrograms >= 8) discount += 100;
-
-    document.getElementById("baseFee").textContent = baseFee;
-    document.getElementById("discount").textContent = discount;
-    document.getElementById("amountDue").textContent = baseFee - discount;
-    document.getElementById("discount-details").textContent = discount > 0
-      ? "Multi-program discount applied." : "";
-  }
-
-  document.getElementById("signupForm")?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const form = e.target;
-    const payload = {
-      timestamp: new Date().toISOString(),
-      parentName: form.parent_name.value,
-      email: form.email.value,
-      phone: form.phone.value,
-      student_1_name: form.student_name_1.value,
-      grade_1: form.grade_1.value,
-      school_1: form.school_1.value,
-      student_2_name: form.student_name_2?.value || "",
-      grade_2: form.grade_2?.value || "",
-      school_2: form.school_2?.value || "",
-      baseFee: document.getElementById("baseFee").textContent,
-      discount: document.getElementById("discount").textContent,
-      finalFee: document.getElementById("amountDue").textContent
-    };
-
-    const checkboxes = document.querySelectorAll("input[type=checkbox]");
-    checkboxes.forEach(cb => {
-      payload[cb.name] = cb.checked ? "Yes" : "";
-    });
-
-    try {
-      // Show processing screen immediately
-      window.top.location.href = "https://y2lacademy.com/summer-processing-wait-screen";
-
-      // Send data to Netlify function for Google Sheet + PDF
-      await fetch("/.netlify/functions/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      // Redirect to confirmation
-      setTimeout(() => {
-        window.top.location.href = "https://y2lacademy.com/summer-confirmation";
-      }, 3000);
-    } catch (err) {
-      alert("Submission failed. Please try again.");
-    }
+  const infoInputs = info.querySelectorAll("input");
+  infoInputs.forEach(i => {
+    i.disabled = !checked;
+    if (!checked) i.value = "";
   });
+
+  const checkboxes = table.querySelectorAll("input[type='checkbox']");
+  checkboxes.forEach(cb => {
+    cb.disabled = !checked;
+    if (!checked) cb.checked = false;
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  toggleStudent2(false);  // force initial state
 });
 </script></body>
 </html>
