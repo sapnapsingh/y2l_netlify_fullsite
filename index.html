@@ -1,198 +1,110 @@
 
 <!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8">
-<title>Y2L Summer Enrollment</title>
-
-<style>
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    padding: 20px;
-  }
-
-  h2 {
-    color: #a05767;
-    text-align: center;
-  }
-
-  .section {
-    margin-bottom: 30px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-
-  label {
-    display: block;
-    margin-top: 10px;
-    font-weight: 600;
-    color: #2a7ae2;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 4px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    font-size: 15px;
-  }
-
-  th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-    vertical-align: top;
-  }
-
-  th {
-    background-color: #e9effb;
-    color: #2a7ae2;
-  }
-
-  .btn {
-    background-color: #2a7ae2;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 6px;
-    margin-top: 15px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  .btn:hover {
-    background-color: #195bb1;
-  }
-
-  .total-box {
-    margin-top: 20px;
-    background-color: #fefefe;
-    padding: 20px;
-    border: 2px solid #2a7ae2;
-    border-radius: 8px;
-  }
-
-  .total-box p {
-    margin: 10px 0;
-    font-size: 17px;
-  }
-
-  .discount-breakdown {
-    font-size: 14px;
-    color: #555;
-    margin-top: 8px;
-  }
-
-  .hours-label {
-    font-size: 12px;
-    color: #666;
-    margin-top: 4px;
-  }
-</style>
-
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Y2L Summer Program Signup</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; padding: 20px; background-color: #f8f9fa; }
+    h2 { color: #2a7ae2; }
+    label, input, select { display: block; margin-top: 10px; font-size: 16px; }
+    input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+    }
+    .section { margin-bottom: 30px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+    .total-box {
+      margin-top: 20px; background-color: #fff; padding: 15px;
+      border: 1px solid #ccc; border-radius: 5px; font-size: 18px;
+    }
+    .btn {
+      margin-top: 20px; padding: 12px 24px; background-color: #2a7ae2;
+      color: white; border: none; border-radius: 6px;
+      font-weight: 600; cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-<h2>Y2L Summer Program Signup Form</h2>
-<form id="signupForm">
-  <div class="section">
-    <label>Parent Name:</label><input type="text" name="parent_name" required>
-    <label>Email:</label><input type="email" name="email" required>
-    <label>Phone Number:</label><input type="tel" name="phone" required>
-  </div>
+  <h2>Y2L Summer Program Signup Form</h2>
+  <form id="signupForm">
+    <div class="section">
+      <label>Parent Name:</label><input type="text" name="parent_name" required>
+      <label>Email:</label><input type="email" name="email" required>
+      <label>Phone Number:</label><input type="tel" name="phone" required>
+    </div>
 
-  <div class="section">
-    <h3>Student Information</h3>
-    <label>Student Name:</label><input type="text" name="student_name_1" required>
-    <label>Grade:</label><input type="text" name="grade_1" required>
-    <label>School:</label><input type="text" name="school_1" required>
-    <table><thead><tr><th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
-    <th>Chess</th><th>Python</th><th>Robotics</th><th>Book Club</th></tr></thead><tbody><tr><td>Week 1</td><td><input name="student_1_week1_math" type="checkbox"/><div class="hours-label">9:00–11:00 am</div></td><td><input name="student_1_week1_public_speaking" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td></td><td><input name="student_1_week1_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_1_week1_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week1_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
+    <div class="section" id="children-section">
+      <!-- Student 1 -->
+      <div class="section" id="student1">
+        <h3>Student 1 Information</h3>
+        <label>Student Name:</label><input type="text" name="student_name_1" required>
+        <label>Grade:</label><input type="text" name="grade_1" required>
+        <label>School:</label><input type="text" name="school_1" required>
+        <table><thead><tr>
+          <th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
+          <th>Chess</th><th>Robotics</th><th>Python</th><th>Book Club</th>
+        </tr></thead><tbody id="programTable1"></tbody></table>
+      </div>
 
-<tr><td>Week 2</td><td><input name="student_1_week2_math" type="checkbox"/><div class="hours-label">9:00–11:00 am</div></td><td></td><td><input name="student_1_week2_creative_writing" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td><input name="student_1_week2_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_1_week2_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week2_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
+      <!-- Student 2 -->
+      <div class="section" id="student2">
+        <h3>Student 2 Information</h3>
+        <label>Student Name:</label><input type="text" name="student_name_2">
+        <label>Grade:</label><input type="text" name="grade_2">
+        <label>School:</label><input type="text" name="school_2">
+        <table><thead><tr>
+          <th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
+          <th>Chess</th><th>Robotics</th><th>Python</th><th>Book Club</th>
+        </tr></thead><tbody id="programTable2"></tbody></table>
+      </div>
+    </div>
 
-<tr><td>Week 3</td><td><input name="student_1_week3_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td></td><td></td><td><input name="student_1_week3_chess" type="checkbox"/><div class="hours-label">9:00 am –12:00 pm</div></td><td></td><td><input disabled="" name="student_1_week3_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week3_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
+    <div class="total-box">
+      <p><strong>Total Fee (Before Discounts): $<span id="baseFee">0</span></strong></p>
+      <p><strong>Applied Discounts: $<span id="discount">0</span></strong></p>
+      <p><strong>Final Amount Due: $<span id="amountDue">0</span></strong></p>
+    </div>
 
-<tr><td>Week 4</td><td><input name="student_1_week4_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td></td><td></td><td><input name="student_1_week4_chess" type="checkbox"/><div class="hours-label">9:00 am –12:00 pm</div></td><td></td><td><input disabled="" name="student_1_week4_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week4_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 5</td><td><input name="student_1_week5_math" type="checkbox"/><div class="hours-label">9:00–11:00</div></td><td></td><td><input name="student_1_week5_creative_writing" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td><input name="student_1_week5_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_1_week5_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week5_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 6</td><td><input name="student_1_week6_math" type="checkbox"/><div class="hours-label">9:00–11:00</div></td><td><input name="student_1_week6_public_speaking" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td></td><td><input name="student_1_week6_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_1_week6_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week6_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 7</td><td><input name="student_1_week7_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td></td><td><input name="student_1_week7_creative_writing" type="checkbox"/><div class="hours-label">3.30 pm-5.30 pm</div></td><td><input name="student_1_week7_chess" type="checkbox"/><div class="hours-label">9:00 am–12:00 pm</div></td><td></td><td><input disabled="" name="student_1_week7_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week7_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 8</td><td><input name="student_1_week8_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td><input name="student_1_week8_public_speaking" type="checkbox"/><div class="hours-label">3.30 pm-5.30 pm</div></td><td></td><td><input name="student_1_week8_chess" type="checkbox"/><div class="hours-label">9:00 am–12:00 pm</div></td><td></td><td><input disabled="" name="student_1_week8_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_1_week8_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-</tbody></table>
-  </div>
-
-  <div class="section">
-    <h3>Sibling Information</h3>
-    <label><input type="checkbox" id="enable_student2" onchange="toggleStudent2()"> I want to enroll a second student</label>
-    <label>Student Name:</label><input type="text" name="student_name_2">
-    <label>Grade:</label><input type="text" name="grade_2">
-    <label>School:</label><input type="text" name="school_2">
-    <table><thead><tr><th>Week</th><th>Math</th><th>Public Speaking</th><th>Creative Writing</th>
-    <th>Chess</th><th>Python</th><th>Robotics</th><th>Book Club</th></tr></thead><tbody><tr><td>Week 1</td><td><input name="student_2_week1_math" type="checkbox"/><div class="hours-label">9:00–11:00 am</div></td><td><input name="student_2_week1_public_speaking" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td></td><td><input name="student_2_week1_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_2_week1_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week1_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 2</td><td><input name="student_2_week2_math" type="checkbox"/><div class="hours-label">9:00–11:00 am</div></td><td></td><td><input name="student_2_week2_creative_writing" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td><input name="student_2_week2_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_2_week2_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week2_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 3</td><td><input name="student_2_week3_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td></td><td></td><td><input name="student_2_week3_chess" type="checkbox"/><div class="hours-label">9:00 am–12:00 pm</div></td><td></td><td><input disabled="" name="student_2_week3_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week3_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 4</td><td><input name="student_2_week4_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td></td><td></td><td><input name="student_2_week4_chess" type="checkbox"/><div class="hours-label">9:00 am–12:00 pm</div></td><td></td><td><input disabled="" name="student_2_week4_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week4_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 5</td><td><input name="student_2_week5_math" type="checkbox"/><div class="hours-label">9:00–11:00 am</div></td><td></td><td><input name="student_2_week5_creative_writing" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td><input name="student_2_week5_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_2_week5_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week5_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 6</td><td><input name="student_2_week6_math" type="checkbox"/><div class="hours-label">9:00–11:00 am</div></td><td><input name="student_2_week6_public_speaking" type="checkbox"/><div class="hours-label">11.30 am-1.30 pm</div></td><td></td><td></td><td><input name="student_2_week6_python" type="checkbox"/><div class="hours-label">2:00–4:00 pm</div></td><td><input disabled="" name="student_2_week6_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week6_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 7</td><td><input name="student_2_week7_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td></td><td><input name="student_2_week7_creative_writing" type="checkbox"/><div class="hours-label">3.30 pm-5.30 pm</div></td><td><input name="student_2_week7_chess" type="checkbox"/><div class="hours-label">9:00 am–12:00 pm</div></td><td></td><td><input disabled="" name="student_2_week7_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week7_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-
-<tr><td>Week 8</td><td><input name="student_2_week8_math" type="checkbox"/><div class="hours-label">1:00–3:00 pm</div></td><td><input name="student_2_week8_public_speaking" type="checkbox"/><div class="hours-label">3.30 pm-5.30 pm</div></td><td></td><td><input name="student_2_week8_chess" type="checkbox"/><div class="hours-label">9:00 am–12:00 pm</div></td><td></td><td><input disabled="" name="student_2_week8_robotics" type="checkbox"/><div class="hours-label"></div></td><td><input disabled="" name="student_2_week8_book_club" type="checkbox"/><div class="hours-label"></div></td></tr>
-</tbody></table>
-  </div>
-
-  <div class="total-box">
-    <p><strong>Total Fee:</strong> $<span id="baseFee">0</span></p>
-    <p><strong>Total Discount:</strong> $<span id="discount">0</span></p>
-    <div id="discount-details" class="discount-breakdown"></div>
-    <p><strong>Final Amount Due:</strong> $<span id="amountDue">0</span></p>
-  </div>
-
-  <button type="button" class="btn" onclick="calculateFee()">Calculate Total</button>
-  <button type="button" class="btn" onclick="submitToGoogleSheet()">Submit</button>
-</form>
-</body></html>
+    <button type="button" class="btn" onclick="calculateFee()">Calculate Total</button>
+    <button type="button" class="btn" onclick="submitToGoogleSheet()">Submit</button>
+  </form>
 
 <script>
-function toggleStudent2() {
-  const enabled = document.getElementById("enable_student2").checked;
-  ['student_name_2','grade_2','school_2'].forEach(id => {
-    const input = document.querySelector(`[name="${id}"]`);
-    if (enabled) {
-      input.setAttribute("required", "required");
-    } else {
-      input.removeAttribute("required");
-      input.value = "";
+function renderProgramRows(tableId, studentId) {
+  const tableBody = document.getElementById(tableId);
+  const programSchedule = {
+    math: [1,2,3,4,5,6,7,8],
+    public_speaking: [1,6,8],
+    creative_writing: [2,5,7],
+    chess: [3,4,7,8],
+    robotics: [3,6],
+    python: [2,5,7],
+    book_club: [1,4,6]
+  };
+  const weekDates = {
+    1: "Jun 9–13", 2: "Jun 16–20", 3: "Jun 23–27", 4: "Jun 30–Jul 4",
+    5: "Jul 7–11", 6: "Jul 14–18", 7: "Jul 21–25", 8: "Jul 28–Aug 1"
+  };
+  for (let i = 1; i <= 8; i++) {
+    const row = document.createElement("tr");
+    let html = `<td>Week ${i}<br><small>${weekDates[i]}</small></td>`;
+    for (const prog in programSchedule) {
+      html += programSchedule[prog].includes(i)
+        ? `<td><input type='checkbox' name='${studentId}_week${i}_${prog}'></td>`
+        : `<td></td>`;
     }
-  });
+    row.innerHTML = html;
+    tableBody.appendChild(row);
+  }
 }
+renderProgramRows("programTable1", "student_1");
+renderProgramRows("programTable2", "student_2");
 
 function calculateFee() {
   const prices = {
     math: 150, public_speaking: 150, creative_writing: 150,
-    chess: 200, python: 170, robotics: 170, book_club: 150
+    chess: 200, robotics: 170, python: 170, book_club: 150
   };
   let total = 0, programCount = 0, weekSet = new Set(), studentCount = 0;
 
@@ -201,7 +113,7 @@ function calculateFee() {
     for (let i = 1; i <= 8; i++) {
       for (const prog in prices) {
         const box = document.querySelector(`input[name='${student}_week${i}_${prog}']`);
-        if (box && box.checked && !box.disabled) {
+        if (box && box.checked) {
           total += prices[prog]; programCount++; weekSet.add(i); hasPrograms = true;
         }
       }
@@ -219,35 +131,21 @@ function calculateFee() {
   const due = Math.max(0, total - discount);
   document.getElementById("baseFee").textContent = total;
   document.getElementById("discount").textContent = discount;
-
-  let breakdown = [];
-  if (today <= earlyBird) breakdown.push(`– Early Bird: $${10 * weekSet.size}`);
-  if (weekSet.size > 2) breakdown.push(`– Multi-Week: $${15 * (weekSet.size - 2)}`);
-  if (programCount > weekSet.size) breakdown.push(`– Multi-Program: $${20 * (programCount - weekSet.size)}`);
-  if (studentCount > 1) breakdown.push(`– Sibling: $${5 * weekSet.size}`);
-  document.getElementById("discount-details").innerHTML = "<strong>Discounts Applied:</strong><br>" + breakdown.join("<br>");
-
   document.getElementById("amountDue").textContent = due;
 }
 
 function submitToGoogleSheet() {
-  const form = document.getElementById("signupForm");
-  if (!form.checkValidity()) {
-    alert("Please complete all required fields before submitting.");
-    return;
-  }
-
   const payload = {
     timestamp: new Date().toISOString(),
-    parentName: form.parent_name.value,
-    email: form.email.value,
-    phone: form.phone.value,
-    student_1_name: form.student_name_1.value,
-    student_1_grade: form.grade_1.value,
-    student_1_school: form.school_1.value,
-    student_2_name: form.student_name_2.value,
-    student_2_grade: form.grade_2.value,
-    student_2_school: form.school_2.value,
+    parentName: document.querySelector("input[name='parent_name']").value,
+    email: document.querySelector("input[name='email']").value,
+    phone: document.querySelector("input[name='phone']").value,
+    student_1_name: document.querySelector("input[name='student_name_1']").value,
+    student_1_grade: document.querySelector("input[name='grade_1']").value,
+    student_1_school: document.querySelector("input[name='school_1']").value,
+    student_2_name: document.querySelector("input[name='student_name_2']").value,
+    student_2_grade: document.querySelector("input[name='grade_2']").value,
+    student_2_school: document.querySelector("input[name='school_2']").value,
     baseFee: document.getElementById("baseFee").textContent,
     discount: document.getElementById("discount").textContent,
     finalFee: document.getElementById("amountDue").textContent
@@ -255,7 +153,7 @@ function submitToGoogleSheet() {
 
   for (let s = 1; s <= 2; s++) {
     for (let i = 1; i <= 8; i++) {
-      for (const prog of ['math','public_speaking','creative_writing','chess','python','robotics','book_club']) {
+      for (const prog of ['math','public_speaking','creative_writing','chess','robotics','python','book_club']) {
         const field = `S${s} - Week ${i} - ${prog.replace('_',' ').replace(/\b\w/g,l=>l.toUpperCase())}`;
         const box = document.querySelector(`input[name='student_${s}_week${i}_${prog}']`);
         payload[field] = box && box.checked ? 'Yes' : '';
@@ -263,20 +161,16 @@ function submitToGoogleSheet() {
     }
   }
 
-console.log("Payload submitted:", payload);
-  fetch("/.netlify/functions/submit", {
+  console.log("Payload submitted:", payload);
+  fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
     method: "POST",
     body: JSON.stringify(payload),
     headers: { "Content-Type": "application/json" }
   })
-  /*fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })*/
   .then(response => response.text())
-  .then(result => window.top.location.href = "https://y2lacademy.com/summer-confirmation")
-  //.then(result => window.location.href = "https://y2lacademy.com/summer-confirmation")
+  .then(result => alert("Submission Successful!"))
   .catch(error => alert("Submission Failed: " + error));
 }
 </script>
+</body>
+</html>
