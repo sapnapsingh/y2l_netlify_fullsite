@@ -1,7 +1,7 @@
 
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-exports.handler = async function(event, context) {
+export const handler = async function(event, context) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -20,7 +20,7 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ status: "ok", message: "Data relayed to Google Apps Script" })
+      body: JSON.stringify({ status: "ok", message: "Data sent to Google Apps Script" })
     };
   } catch (err) {
     return {
