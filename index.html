@@ -21,7 +21,7 @@ Discount: $<span id="discount">0</span><br/>
 Total Due: $<span id="amountDue">0</span><br/>
 <small id="discount-details" style="color:green;"></small>
 </div>
-<br/><button onclick="submitForm()" type="button">Submit Enrollment</button>
+<br/><button onclick="submitForm()" type="submit">Submit Enrollment</button>
 </form><script>
 function toggleStudent2(checked) {
   const info = document.getElementById("student2Fields");
@@ -135,10 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
     cb.addEventListener("change", updateFee)
   );
 });
-</script>
-<script>
-function submitForm() {
+</script><script>
+async function submitForm() {
   const form = document.getElementById("signupForm");
+
   const payload = {
     timestamp: new Date().toISOString(),
     parentName: form.parent_name.value,
@@ -155,28 +155,26 @@ function submitForm() {
     finalFee: document.getElementById("amountDue").textContent
   };
 
+  // Add checkbox selections
   const checkboxes = document.querySelectorAll("input[type=checkbox]");
   checkboxes.forEach(cb => {
     payload[cb.name] = cb.checked ? "Yes" : "";
   });
 
-  // Immediate redirect to wait screen
-  window.location.assign("https://y2lacademy.com/processing-wait-screen");
+  try {
+    window.top.location.href = "https://y2lacademy.com/summer-processing-wait-screen";
 
-  // Fire background fetch to Apps Script
-  fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  });
+    await fetch("/.netlify/functions/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
-  // Delayed redirect to confirmation
-  setTimeout(() => {
-    window.location.assign("https://y2lacademy.com/summer-confirmation");
-  }, 3000);
+    setTimeout(() => {
+      window.top.location.href = "https://y2lacademy.com/summer-confirmation";
+    }, 3000);
+  } catch (error) {
+    alert("Submission failed. Please try again.");
+  }
 }
-</script>
-</body></html>
+</script></body></html>
