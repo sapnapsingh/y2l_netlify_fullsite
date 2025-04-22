@@ -21,8 +21,8 @@ Discount: $<span id="discount">0</span><br/>
 Total Due: $<span id="amountDue">0</span><br/>
 <small id="discount-details" style="color:green;"></small>
 </div>
-<br/><button onclick="submitForm()" type="submit">Submit Enrollment</button>
-</form><script>
+<br/><button onclick="submitForm()" type="button">Submit Enrollment</button>
+<div id="statusMessage" style="display:none; margin-top:20px; font-weight: bold; color:#2a7ae2;">Submitting your enrollment...</div></form><script>
 function toggleStudent2(checked) {
   const info = document.getElementById("student2Fields");
   const inputs = info.querySelectorAll("input[type=text]");
@@ -136,10 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 </script>
+
+
 <script>
 function submitForm() {
   const form = document.getElementById("signupForm");
-
   const payload = {
     timestamp: new Date().toISOString(),
     parentName: form.parent_name.value,
@@ -160,9 +161,21 @@ function submitForm() {
     payload[cb.name] = cb.checked ? "Yes" : "";
   });
 
-  // Save and redirect to processing
-  localStorage.setItem("formPayload", JSON.stringify(payload));
-  top.location.replace("https://y2lacademy.com/processing-wait-screen");
+  document.getElementById("statusMessage").style.display = "block";
+
+  fetch("/.netlify/functions/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    setTimeout(() => {
+      window.location.href = "https://y2lacademy.com/summer-confirmation";
+    }, 2000);
+  })
+  .catch(() => {
+    document.getElementById("statusMessage").innerText = "Submission failed. Please try again.";
+  });
 }
 </script>
 </body></html>
