@@ -161,7 +161,7 @@ async function submitForm() {
     payload[cb.name] = cb.checked ? "Yes" : "";
   });
 
-  try {
+  /*try {
     window.location.assign = "https://y2lacademy.com/processing-wait-screen";
 
     await fetch("/.netlify/functions/submit", {
@@ -173,6 +173,22 @@ async function submitForm() {
     setTimeout(() => {
       window.location.assign = "https://y2lacademy.com/summer-confirmation";
     }, 3000);
+  } catch (error) {
+    alert("Submission failed. Please try again.");
+  }*/
+
+  // Send to Google Apps Script
+    await fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // Redirect to confirmation after short delay
+    setTimeout(() => {
+      window.location.assign("https://y2lacademy.com/summer-confirmation");
+    }, 3000);
+
   } catch (error) {
     alert("Submission failed. Please try again.");
   }
