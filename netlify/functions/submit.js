@@ -1,5 +1,5 @@
 
-export async function handler(event, context) {
+/*export async function handler(event, context) {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -32,3 +32,37 @@ export async function handler(event, context) {
     };
   }
 }
+*/
+
+
+const fetch = require("node-fetch");
+
+exports.handler = async function(event, context) {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: "Method Not Allowed"
+    };
+  }
+
+  try {
+    const data = JSON.parse(event.body);
+
+    // Log data to console (for now)
+    console.log("Received submission:", data);
+
+    // Placeholder: send to Google Sheets (or log it)
+    // Placeholder: generate and email PDF
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ status: "success", message: "Submission received" })
+    };
+  } catch (error) {
+    console.error("Submission failed:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ status: "error", message: error.message })
+    };
+  }
+};
