@@ -137,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script><script>
 async function submitForm() {
+  try{
   const form = document.getElementById("signupForm");
 
   const payload = {
@@ -177,6 +178,9 @@ async function submitForm() {
     }, 3000);
   } catch (error) {
     alert("Submission failed. Please try again.");
+  }
+}catch (error) {
+    alert("Something went wrong. Please try again.");
   }
 }
 </script></body></html>
