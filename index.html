@@ -136,9 +136,8 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 </script>
-
 <script>
-async function submitForm() {
+function submitForm() {
   const form = document.getElementById("signupForm");
 
   const payload = {
@@ -157,28 +156,13 @@ async function submitForm() {
     finalFee: document.getElementById("amountDue").textContent
   };
 
-  // Add checkbox selections
-  const checkboxes = document.querySelectorAll("input[type=checkbox]");
-  checkboxes.forEach(cb => {
+  document.querySelectorAll("input[type=checkbox]").forEach(cb => {
     payload[cb.name] = cb.checked ? "Yes" : "";
   });
 
-  try {
-    top.location.replace("https://y2lacademy.com/processing-wait-screen");
-
-    await fetch("/.netlify/functions/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    setTimeout(() => {
-      top.location.replace("https://y2lacademy.com/summer-confirmation");
-    }, 3000);
-  } catch (error) {
-    alert("Submission failed. Please try again.");
-  }
+  // Save and redirect to processing
+  localStorage.setItem("formPayload", JSON.stringify(payload));
+  top.location.replace("https://y2lacademy.com/processing-wait-screen");
 }
 </script>
-
 </body></html>
