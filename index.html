@@ -21,7 +21,7 @@ Discount: $<span id="discount">0</span><br/>
 Total Due: $<span id="amountDue">0</span><br/>
 <small id="discount-details" style="color:green;"></small>
 </div>
-<br/><button onclick="submitForm()" type="submit">Submit Enrollment</button>
+<br/><button onclick="submitForm(); return false;">Submit Enrollment</button>
 </form><script>
 function toggleStudent2(checked) {
   const info = document.getElementById("student2Fields");
