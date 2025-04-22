@@ -162,7 +162,7 @@ async function submitForm() {
   });
 
   try {
-    window.location.assign("https://y2lacademy.com/processing-wait-screen");
+    window.location.assign = "https://y2lacademy.com/summer-processing-wait-screen";
 
     await fetch("/.netlify/functions/submit", {
       method: "POST",
@@ -171,7 +171,7 @@ async function submitForm() {
     });
 
     setTimeout(() => {
-      window.location.assign("https://y2lacademy.com/summer-confirmation");
+      window.location.assign = "https://y2lacademy.com/summer-confirmation";
     }, 3000);
   } catch (error) {
     alert("Submission failed. Please try again.");
