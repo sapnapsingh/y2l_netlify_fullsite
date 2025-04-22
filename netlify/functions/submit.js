@@ -1,7 +1,7 @@
 
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-export const handler = async function(event, context) {
+exports.handler = async function(event, context) {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
