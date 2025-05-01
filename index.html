@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Y2L Summer Enrollment</title>
+  <link rel="stylesheet" href="/styles/main.css" />
+</head>
+<body>
+
+<h2>Parent Information</h2>
+<div class="info-section">
+  <label>Parent Name <input type="text" class="input-field" name="parentName" required /></label>
+  <label>Email <input type="email" class="input-field" name="email" required /></label>
+  <label>Phone <input type="tel" class="input-field" name="phone" required /></label>
+</div>
+
+<h2>Student 1 Information</h2>
+<div class="info-section">
+  <label>Student Name <input type="text" class="input-field" name="student1Name" required /></label>
+  <label>Grade <input type="text" class="input-field" name="grade1" required /></label>
+  <label>School <input type="text" class="input-field" name="school1" required /></label>
+</div>
+
+<h2>Program Selection by Week</h2>
+<div id="program-grid"></div>
+
+<div style="margin-top: 30px;">
+  <label><input type="checkbox" id="add-sibling-checkbox" /> Add Sibling</label>
+</div>
+
+<div id="sibling-info-section" style="display: none;">
+  <h2>Student 2 Information</h2>
+  <div class="info-section">
+    <label>Student Name <input type="text" class="input-field" name="student2Name" /></label>
+    <label>Grade <input type="text" class="input-field" name="grade2" /></label>
+    <label>School <input type="text" class="input-field" name="school2" /></label>
+  </div>
+
+  <h2>Sibling Program Selection by Week</h2>
+  <div id="sibling-program-grid"></div>
+</div>
+
+<h2>Fee Summary</h2>
+<div class="fee-summary-box">
+  <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+  <div class="fee-line"><span>Discount:</span><span id="discount">$0</span></div>
+  <div class="fee-line total"><span>Final Fee:</span><span id="final-fee">$0</span></div>
+</div>
+<div id="discount-breakdown" class="discount-details" style="display:none; margin-top:10px;"></div>
+
+<div style="margin-top: 30px;">
+  <button type="submit" class="submit-btn">Submit Enrollment</button>
+</div>
+
+<script src="/scripts/main.js"></script>
+<script>
+  document.getElementById('add-sibling-checkbox').addEventListener('change', function () {
+    document.getElementById('sibling-info-section').style.display = this.checked ? 'block' : 'none';
+  });
+</script>
+</body>
+</html>
