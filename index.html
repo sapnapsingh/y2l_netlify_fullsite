@@ -145,10 +145,46 @@
     margin: 40px 0;
   }
 </style>
+
+<style>
+  #submitting-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    color: #2a7ae2;
+    text-align: center;
+  }
+  .spinner {
+    margin-top: 20px;
+    width: 50px;
+    height: 50px;
+    border: 6px solid #eee;
+    border-top: 6px solid #2a7ae2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>
 </head>
 
 
 <body>
+<div id="submitting-overlay">
+  <div>
+    <div>Submitting your enrollment... Please wait.</div>
+    <div class="spinner"></div>
+  </div>
+</div>
+
 
 <h2>Parent Information</h2>
 <div class="info-section">
@@ -236,7 +272,56 @@
 </script>
 
 <script>
-  document.querySelector("button[type='submit']").addEventListener("click", function(e) {
+  
+document.querySelector("button[type='submit']").addEventListener("click", function(e) {
+  e.preventDefault();
+  document.getElementById("submitting-overlay").style.display = "flex";
+
+  const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value || "";
+  const isChecked = (sel) => document.querySelector(sel)?.checked || false;
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    parentName: getVal("parentName"),
+    email: getVal("email"),
+    phone: getVal("phone"),
+    student_1_name: getVal("student1Name"),
+    grade_1: getVal("grade1"),
+    school_1: getVal("school1"),
+    student_2_name: getVal("student2Name"),
+    grade_2: getVal("grade2"),
+    school_2: getVal("school2"),
+    medicalInfo: getVal("medicalInfo"),
+    medications: getVal("medications"),
+    emergencyContactName: getVal("emergencyContactName"),
+    emergencyContactPhone: getVal("emergencyContactPhone"),
+    baseFee: document.getElementById("total-fee")?.innerText.replace("$", "") || "0",
+    discount: document.getElementById("discount")?.innerText.replace("$", "") || "0",
+    finalFee: document.getElementById("final-fee")?.innerText.replace("$", "") || "0"
+  };
+
+  document.querySelectorAll("input[type='checkbox']").forEach(cb => {
+    if (cb.name && cb.checked) {
+      payload[cb.name] = "Yes";
+    }
+  });
+
+  fetch("/.netlify/functions/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(result => {
+    top.location.replace("https://y2lacademy.com/summer-confirmation");
+  })
+  .catch(err => {
+    alert("Submission failed. Please try again.");
+    console.error(err);
+    document.getElementById("submitting-overlay").style.display = "none";
+  });
+});
+.addEventListener("click", function(e) {
     e.preventDefault();
 
     const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value || "";
