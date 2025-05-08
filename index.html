@@ -321,7 +321,9 @@ document.querySelector("button[type='submit']").addEventListener("click", functi
     document.getElementById("submitting-overlay").style.display = "none";
   });
 });
-.addEventListener("click", function(e) {
+
+  /*Added this code here document.querySelector("button[type='submit']")*/
+document.querySelector("button[type='submit']").addEventListener("click", function(e) {
     e.preventDefault();
 
     const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value || "";
