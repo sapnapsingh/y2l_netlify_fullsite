@@ -195,7 +195,7 @@
 </div>
 
 <hr class="section-divider">
-<h2>Student Information</h2>
+<h2>Student 1 Information</h2>
 <div class="info-section">
   <label>Student Name <input type="text" class="input-field" name="student1Name" required /></label>
   <label>Grade <input type="text" class="input-field" name="grade1" required /></label>
@@ -211,7 +211,7 @@
 </div>
 
 <div id="sibling-info-section" style="display: none;">
-  <h2>Sibling Information</h2>
+  <h2>Student 2 Information</h2>
   <div class="info-section">
     <label>Student Name <input type="text" class="input-field" name="student2Name" /></label>
     <label>Grade <input type="text" class="input-field" name="grade2" /></label>
@@ -277,6 +277,16 @@
 document.querySelector("button[type='submit']").addEventListener("click", function(e) {
   e.preventDefault();
   document.getElementById("submitting-overlay").style.display = "flex";
+  const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
+  const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
+  for (const waiver of requiredWaivers) {
+    if (!waiver.checked) {
+      alert("Please check all required waiver boxes to proceed.");
+      document.getElementById("submitting-overlay").style.display = "none";
+      return;
+    }
+  }
+
 
   const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value || "";
   const isChecked = (sel) => document.querySelector(sel)?.checked || false;
