@@ -5,6 +5,8 @@ function calculateFee() {
 
   const programFees = {
     "Math": 160,
+    "Math AM": 160,
+    "Math PM": 160,
     "Public Speaking": 160,
     "Creative Writing": 160,
     "Chess": 300,
@@ -29,6 +31,18 @@ function calculateFee() {
   document.querySelectorAll('#program-grid input[type="checkbox"]').forEach(checkbox => {
     if (checkbox.checked) {
       for (const prog in programFees) {
+        if (checkbox.name.includes("Math AM") || checkbox.name.includes("Math PM")) {
+          if (prog === "Math AM" && checkbox.name.includes("Math AM")) {
+            totalFee += programFees["Math AM"];
+            otherWeeks++;
+            break;
+          }
+          if (prog === "Math PM" && checkbox.name.includes("Math PM")) {
+            totalFee += programFees["Math PM"];
+            otherWeeks++;
+            break;
+          }
+        }
         if (checkbox.name.includes(prog)) {
           totalFee += programFees[prog];
           if (prog === "Chess") chessWeeks++;
@@ -43,6 +57,18 @@ function calculateFee() {
     document.querySelectorAll('#sibling-program-grid input[type="checkbox"]').forEach(checkbox => {
       if (checkbox.checked) {
         for (const prog in programFees) {
+        if (checkbox.name.includes("Math AM") || checkbox.name.includes("Math PM")) {
+          if (prog === "Math AM" && checkbox.name.includes("Math AM")) {
+            totalFee += programFees["Math AM"];
+            otherWeeks++;
+            break;
+          }
+          if (prog === "Math PM" && checkbox.name.includes("Math PM")) {
+            totalFee += programFees["Math PM"];
+            otherWeeks++;
+            break;
+          }
+        }
           if (checkbox.name.includes(prog)) {
             totalFee += programFees[prog];
             if (prog === "Chess") siblingChessWeeks++;
