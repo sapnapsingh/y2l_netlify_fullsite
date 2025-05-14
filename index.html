@@ -235,7 +235,6 @@
 
 <hr class="section-divider">
 <h2>Medical & Emergency Info</h2>
-<div id="emergency-error-msg" style="display:none;color:red;margin-bottom:15px;"></div>
 <div class="info-section">
   <label>Medical or Allergy Information (required)
     <input type="text" class="input-field" name="medicalInfo" placeholder="Enter NA if none" required />
@@ -254,7 +253,6 @@
 <!-- Waiver Checkboxes -->
 <hr class="section-divider">
 <h2>Waivers</h2>
-<div id="waiver-error-msg" style="display:none;color:red;margin-bottom:15px;"></div>
 <div class="waiver-section">
   <label><input type="checkbox" required /> I give permission for my child to be photographed or recorded during the program.</label><br>
   <label><input type="checkbox" required /> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" target="_blank" onclick="window.open(this.href, 'popup', 'width=600,height=600'); return false;">program's cancellation and refund policy</a>.</label><br>
@@ -279,78 +277,6 @@
 document.querySelector("button[type='submit']").addEventListener("click", function(e) {
   e.preventDefault();
   document.getElementById("submitting-overlay").style.display = "flex";
-  try {
-    const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
-    const waiverMsg = document.getElementById("waiver-error-msg");
-
-    if (!waiverBoxes || waiverBoxes.length < 4) {
-      console.warn("Waiver checkboxes not found or incomplete.");
-    } else {
-      const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
-      const waiverValid = requiredWaivers.every(cb => cb && cb.checked);
-      if (!waiverValid) {
-        waiverMsg.innerText = "⚠️ Please accept all required waivers to proceed.";
-        waiverMsg.style.display = "block";
-        document.getElementById("submitting-overlay").style.display = "none";
-        return;
-      } else {
-        waiverMsg.innerText = "";
-        waiverMsg.style.display = "none";
-      }
-    }
-
-    const requiredFields = ["medicalInfo", "medications", "emergencyContactName", "emergencyContactPhone"];
-    const emergencyMsg = document.getElementById("emergency-error-msg");
-    const emergencyValid = requiredFields.every(name => {
-      const el = document.querySelector(`[name='${name}']`);
-      return el && el.value.trim().length > 0;
-    });
-
-    if (!emergencyValid) {
-      emergencyMsg.innerText = "⚠️ Please complete all required emergency and medical fields.";
-      emergencyMsg.style.display = "block";
-      document.getElementById("submitting-overlay").style.display = "none";
-      return;
-    } else {
-      emergencyMsg.innerText = "";
-      emergencyMsg.style.display = "none";
-    }
-  } catch (err) {
-    console.error("Validation error:", err);
-    document.getElementById("submitting-overlay").style.display = "none";
-    return;
-  }
-
-  const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
-  const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
-  const waiverValid = requiredWaivers.every(cb => cb.checked);
-  const waiverMsg = document.getElementById("waiver-error-msg");
-  if (!waiverValid) {
-    waiverMsg.innerText = "⚠️ Please accept all required waivers to proceed.";
-    waiverMsg.style.display = "block";
-    document.getElementById("submitting-overlay").style.display = "none";
-    return;
-  } else {
-    waiverMsg.innerText = "";
-    waiverMsg.style.display = "none";
-  }
-
-  const requiredFields = ["medicalInfo", "medications", "emergencyContactName", "emergencyContactPhone"];
-  const emergencyValid = requiredFields.every(name => {
-    const el = document.querySelector(`[name='${name}']`);
-    return el && el.value.trim().length > 0;
-  });
-  const emergencyMsg = document.getElementById("emergency-error-msg");
-  if (!emergencyValid) {
-    emergencyMsg.innerText = "⚠️ Please complete all required emergency and medical fields.";
-    emergencyMsg.style.display = "block";
-    document.getElementById("submitting-overlay").style.display = "none";
-    return;
-  } else {
-    emergencyMsg.innerText = "";
-    emergencyMsg.style.display = "none";
-  }
-
   const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
   const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
   for (const waiver of requiredWaivers) {
