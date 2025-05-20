@@ -121,6 +121,13 @@ function calculateFee() {
   document.getElementById('total-fee').innerText = "$" + totalFee;
   document.getElementById('discount').innerText = "$" + discount;
   document.getElementById('final-fee').innerText = "$" + (totalFee - discount);
+  const baseFeeInput = document.querySelector("[name='baseFee']");
+  const discountInput = document.querySelector("[name='discountValue']");
+  const finalFeeInput = document.querySelector("[name='finalFee']");
+  if (baseFeeInput) baseFeeInput.value = totalFee;
+  if (discountInput) discountInput.value = discount;
+  if (finalFeeInput) finalFeeInput.value = totalFee - discount;
+
 
   // Update Discount Breakdown
   let breakdownText = "";
