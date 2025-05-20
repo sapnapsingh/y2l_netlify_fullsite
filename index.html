@@ -367,166 +367,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 
+
 <script>
-  
-document.querySelector("button[type='submit']").addEventListener("click", function(e) {
-  e.preventDefault();
-  document.getElementById("submitting-overlay").style.display = "flex";
-  let errors = [];
-
-  const parentFields = ["parentName", "email", "phone", "billingAddress"];
-  const studentFields = ["student1Name", "grade1", "school1"];
-  const emergencyFields = ["medicalInfo", "medications", "emergencyContactName", "emergencyContactPhone"];
-  const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
-  const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
-  const programBoxes = document.querySelectorAll("#program-grid input[type='checkbox']");
-
-  // Validate Parent
-  const parentValid = parentFields.every(name => {
-    const el = document.querySelector(`[name='${name}']`);
-    return el && el.value.trim().length > 0;
-  });
-  if (!parentValid) errors.push("• Parent Information");
-
-  // Validate Student
-  const studentValid = studentFields.every(name => {
-    const el = document.querySelector(`[name='${name}']`);
-    return el && el.value.trim().length > 0;
-  });
-  if (!studentValid) errors.push("• Student Information");
-
-  // Validate Emergency
-  const emergencyValid = emergencyFields.every(name => {
-    const el = document.querySelector(`[name='${name}']`);
-    return el && el.value.trim().length > 0;
-  });
-  if (!emergencyValid) errors.push("• Emergency & Medical Info");
-
-  // Validate Waivers
-  const waiversValid = requiredWaivers.every(cb => cb && cb.checked);
-  if (!waiversValid) errors.push("• Required Waivers");
-
-  // Validate Programs
-  const atLeastOneProgram = Array.from(programBoxes).some(cb => cb.checked);
-  if (!atLeastOneProgram) errors.push("• Program Selection");
-
-  // Show error message
-  const errorMsgBox = document.getElementById("form-error-msg");
-  if (errors.length > 0) {
-    errorMsgBox.innerText = "⚠️ Please complete the following sections before submitting:\n" + errors.join("\n");
-    errorMsgBox.style.display = "block";
-    document.getElementById("submitting-overlay").style.display = "none";
-    return;
-  } else {
-    errorMsgBox.innerText = "";
-    errorMsgBox.style.display = "none";
-  }
-
-  const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
-  const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
-  for (const waiver of requiredWaivers) {
-    if (!waiver.checked) {
-      alert("Please check all required waiver boxes to proceed.");
-      document.getElementById("submitting-overlay").style.display = "none";
-      return;
-    }
-  }
-
-
-  const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value || "";
-  const isChecked = (sel) => document.querySelector(sel)?.checked || false;
-
-  const payload = {
-    timestamp: new Date().toISOString(),
-    parentName: getVal("parentName"),
-    email: getVal("email"),
-    phone: getVal("phone"),
-    student_1_name: getVal("student1Name"),
-    grade_1: getVal("grade1"),
-    school_1: getVal("school1"),
-    student_2_name: getVal("student2Name"),
-    grade_2: getVal("grade2"),
-    school_2: getVal("school2"),
-    medicalInfo: getVal("medicalInfo"),
-    medications: getVal("medications"),
-    emergencyContactName: getVal("emergencyContactName"),
-    emergencyContactPhone: getVal("emergencyContactPhone"),
-    baseFee: document.getElementById("total-fee")?.innerText.replace("$", "") || "0",
-    discount: document.getElementById("discount")?.innerText.replace("$", "") || "0",
-    finalFee: document.getElementById("final-fee")?.innerText.replace("$", "") || "0"
-  };
-
-  document.querySelectorAll("input[type='checkbox']").forEach(cb => {
-    if (cb.name && cb.checked) {
-      payload[cb.name] = "Yes";
-    }
-  });
-
-  fetch("/.netlify/functions/submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(result => {
-    top.location.replace("https://y2lacademy.com/summer-confirmation");
-  })
-  .catch(err => {
-    alert("Submission failed. Please try again.");
-    console.error(err);
-    document.getElementById("submitting-overlay").style.display = "none";
-  });
-});
-
-  /*Added this code here document.querySelector("button[type='submit']")
-document.querySelector("button[type='submit']").addEventListener("click", function(e) {
-    e.preventDefault();
-
-    const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value || "";
-    const isChecked = (sel) => document.querySelector(sel)?.checked || false;
-
-    const payload = {
-      timestamp: new Date().toISOString(),
-      parentName: getVal("parentName"),
-      email: getVal("email"),
-      phone: getVal("phone"),
-      student_1_name: getVal("student1Name"),
-      grade_1: getVal("grade1"),
-      school_1: getVal("school1"),
-      student_2_name: getVal("student2Name"),
-      grade_2: getVal("grade2"),
-      school_2: getVal("school2"),
-      medicalInfo: getVal("medicalInfo"),
-      medications: getVal("medications"),
-      emergencyContactName: getVal("emergencyContactName"),
-      emergencyContactPhone: getVal("emergencyContactPhone"),
-      baseFee: document.getElementById("total-fee")?.innerText.replace("$", "") || "0",
-      discount: document.getElementById("discount")?.innerText.replace("$", "") || "0",
-      finalFee: document.getElementById("final-fee")?.innerText.replace("$", "") || "0"
-    };
-
-    // Add checkboxes from program selection
-    document.querySelectorAll("input[type='checkbox']").forEach(cb => {
-      if (cb.name && cb.checked) {
-        payload[cb.name] = "Yes";
-      }
-    });
-
-    fetch("/.netlify/functions/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(result => {
-      top.location.replace("https://y2lacademy.com/summer-confirmation");
-    })
-    .catch(err => {
-      alert("Submission failed. Please try again.");
-      console.error(err);
-    });
-  });*/
-
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelector("button[type='submit']").addEventListener("click", function (e) {
     const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
@@ -538,16 +380,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let errors = [];
 
-    if (!parentFields.every(name => document.querySelector(`[name='${name}']`)?.value.trim())) {
-      errors.push("• Parent Information");
+    for (let name of parentFields) {
+      const el = document.querySelector(`[name='${name}']`);
+      if (!el || el.value.trim() === "") {
+        errors.push("• Parent Information");
+        break;
+      }
     }
 
-    if (!studentFields.every(name => document.querySelector(`[name='${name}']`)?.value.trim())) {
-      errors.push("• Student Information");
+    for (let name of studentFields) {
+      const el = document.querySelector(`[name='${name}']`);
+      if (!el || el.value.trim() === "") {
+        errors.push("• Student Information");
+        break;
+      }
     }
 
-    if (!emergencyFields.every(name => document.querySelector(`[name='${name}']`)?.value.trim())) {
-      errors.push("• Emergency & Medical Info");
+    for (let name of emergencyFields) {
+      const el = document.querySelector(`[name='${name}']`);
+      if (!el || el.value.trim() === "") {
+        errors.push("• Emergency & Medical Info");
+        break;
+      }
     }
 
     if (!requiredWaivers.every(cb => cb && cb.checked)) {
@@ -569,11 +423,34 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       errorMsgBox.innerText = "";
       errorMsgBox.style.display = "none";
+      document.getElementById("submitting-overlay").style.display = "flex";
     }
+
+    const payload = buildPayload();
+    fetch("/.netlify/functions/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = "/submitted.html";
+      } else {
+        alert("There was a problem submitting the form. Please try again later.");
+        document.getElementById("submitting-overlay").style.display = "none";
+      }
+    })
+    .catch(error => {
+      console.error("Error submitting form:", error);
+      alert("There was a network error. Please try again later.");
+      document.getElementById("submitting-overlay").style.display = "none";
+    });
   });
 });
-
 </script>
+
 </body>
 
 </html>
