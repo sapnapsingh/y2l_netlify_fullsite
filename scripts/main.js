@@ -1,5 +1,4 @@
 function buildPayload() {
-  
   const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
 
   const data = {
@@ -32,9 +31,6 @@ function buildPayload() {
     }
   });
 
-    data.baseFee = getVal("baseFee");
-  data.discount = getVal("discountValue");
-  data.finalFee = getVal("finalFee");
   return data;
 }
 
@@ -120,9 +116,6 @@ function calculateFee() {
   discount = breakdown.earlyBird + breakdown.chessMultiWeek + breakdown.chessSibling + breakdown.multiWeek;
 
   document.getElementById('total-fee').innerText = "$" + totalFee;
-document.getElementById('baseFee').value = totalFee;
-document.getElementById('discountValue').value = discount;
-document.getElementById('finalFee').value = totalFee - discount;
   document.getElementById('discount').innerText = "$" + discount;
   document.getElementById('final-fee').innerText = "$" + (totalFee - discount);
 
@@ -225,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => {
       if (response.ok) {
-        window.top.location.href = "https://y2lacademy.com/summer-confirmation"; //https://y2lacademy.com/summer-confirmation
+        window.location.href = "https://y2lacademy.com/summer-confirmation"; //https://y2lacademy.com/summer-confirmation
       } else {
         alert("There was a problem submitting the form. Please try again later.");
         document.getElementById("submitting-overlay").style.display = "none";
