@@ -145,8 +145,19 @@ fetch('/grids/sibling_program_grid.html').then(r => r.text()).then(d => {
   document.querySelectorAll('#sibling-program-grid input[type="checkbox"]').forEach(cb => cb.onchange = calculateFee);
   calculateFee();
 });
-document.getElementById('add-sibling-checkbox').addEventListener('change', calculateFee);
 
+
+
+
+document.getElementById('add-sibling-checkbox').addEventListener('change', function () {
+  const section = document.getElementById('sibling-info-section');
+  if (this.checked) {
+    section.style.display = 'block';
+  } else {
+    section.style.display = 'none';
+  }
+  calculateFee();
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   const submitBtn = document.querySelector("button[type='submit']");
