@@ -220,7 +220,7 @@
 
   <h2>Sibling Program Selection by Week</h2>
   
-<!-- <div id="sibling-info" style="margin-top: 1rem;">
+<div id="sibling-info" style="margin-top: 1rem;">
   <h2>Sibling Information</h2>
   <div class="form-group">
     <label for="student2Name">Name</label>
@@ -243,7 +243,7 @@
     <label for="school2">School</label>
     <input type="text" id="school2" name="school2" class="form-control" />
   </div>
-</div> -->
+</div>
 
 <div id="sibling-program-grid"></div>
 </div>
@@ -288,7 +288,12 @@
 
 
 <div style="margin-top: 30px;">
-  <div id="form-error-msg" style="display:none;color:red;margin-bottom:20px;font-weight:bold;"></div>
+  
+<input type="hidden" name="baseFee" />
+<input type="hidden" name="discountValue" />
+<input type="hidden" name="finalFee" />
+
+<div id="form-error-msg" style="display:none;color:red;margin-bottom:20px;font-weight:bold;"></div>
 <button type="submit" class="submit-btn">Submit Enrollment</button>
 </div>
 
