@@ -1,5 +1,5 @@
 function buildPayload() {
-  const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value?.trim() || "";
+  
   const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
 
   const data = {
