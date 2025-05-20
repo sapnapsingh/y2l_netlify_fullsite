@@ -266,59 +266,13 @@
 <button type="submit" class="submit-btn">Submit Enrollment</button>
 </div>
 
-<script src="/scripts/main.js">
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelector("button[type='submit']").addEventListener("click", function (e) {
-    const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
-    const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
-    const parentFields = ["parentName", "email", "phone", "billingAddress"];
-    const studentFields = ["student1Name", "grade1", "school1"];
-    const emergencyFields = ["medicalInfo", "medications", "emergencyContactName", "emergencyContactPhone"];
-    const programBoxes = document.querySelectorAll("#program-grid input[type='checkbox']");
-
-    let errors = [];
-
-    if (!parentFields.every(name => document.querySelector(`[name='${name}']`)?.value.trim())) {
-      errors.push("• Parent Information");
-    }
-
-    if (!studentFields.every(name => document.querySelector(`[name='${name}']`)?.value.trim())) {
-      errors.push("• Student Information");
-    }
-
-    if (!emergencyFields.every(name => document.querySelector(`[name='${name}']`)?.value.trim())) {
-      errors.push("• Emergency & Medical Info");
-    }
-
-    if (!requiredWaivers.every(cb => cb && cb.checked)) {
-      errors.push("• Required Waivers");
-    }
-
-    if (!Array.from(programBoxes).some(cb => cb.checked)) {
-      errors.push("• Program Selection");
-    }
-
-    const errorMsgBox = document.getElementById("form-error-msg");
-    if (errors.length > 0) {
-      e.preventDefault();
-      errorMsgBox.innerText = "⚠️ Please complete the following sections before submitting:\n" + errors.join("\n");
-      errorMsgBox.style.display = "block";
-      document.getElementById("submitting-overlay").style.display = "none";
-      console.warn("Validation failed:", errors);
-      return;
-    } else {
-      errorMsgBox.innerText = "";
-      errorMsgBox.style.display = "none";
-    }
-  });
-});
-
-</script>
 
 
 
 
 
+
+  <script src="/scripts/main.js?v=20240520"></script>
 </body>
 
 </html>
