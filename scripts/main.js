@@ -31,7 +31,10 @@ function buildPayload() {
     }
   });
 
-  return data;
+  data.baseFee = getVal("baseFee");
+data.discount = getVal("discountValue");
+data.finalFee = getVal("finalFee");
+return data;
 }
 
 function calculateFee() {
