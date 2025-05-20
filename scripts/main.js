@@ -1,4 +1,5 @@
 function buildPayload() {
+  const getVal = (name) => document.querySelector(`[name="${name}"]`)?.value?.trim() || "";
   const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
 
   const data = {
@@ -31,6 +32,9 @@ function buildPayload() {
     }
   });
 
+    data.baseFee = getVal("baseFee");
+  data.discount = getVal("discountValue");
+  data.finalFee = getVal("finalFee");
   return data;
 }
 
@@ -116,6 +120,9 @@ function calculateFee() {
   discount = breakdown.earlyBird + breakdown.chessMultiWeek + breakdown.chessSibling + breakdown.multiWeek;
 
   document.getElementById('total-fee').innerText = "$" + totalFee;
+document.getElementById('baseFee').value = totalFee;
+document.getElementById('discountValue').value = discount;
+document.getElementById('finalFee').value = totalFee - discount;
   document.getElementById('discount').innerText = "$" + discount;
   document.getElementById('final-fee').innerText = "$" + (totalFee - discount);
 
