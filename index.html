@@ -187,6 +187,7 @@
 
 
 <h2>Parent Information</h2>
+<div id="parent-error-msg" style="display:none;color:red;margin-bottom:15px;"></div>
 <div class="info-section">
   <label>Parent Name <input type="text" class="input-field" name="parentName" required /></label>
   <label>Email <input type="email" class="input-field" name="email" required /></label>
@@ -315,9 +316,45 @@ document.querySelector("button[type='submit']").addEventListener("click", functi
   for (const name of parentFields) {
     const el = document.querySelector(`[name='${name}']`);
     if (!el || el.value.trim().length === 0) {
-      alert("Please complete all required parent information fields.");
-      document.getElementById("submitting-overlay").style.display = "none";
-      return;
+      
+  const parentMsg = document.getElementById("parent-error-msg");
+  let parentValid = true;
+  for (const name of parentFields) {
+    const el = document.querySelector(`[name='${name}']`);
+    if (!el || el.value.trim().length === 0) {
+      parentValid = false;
+      break;
+    }
+  }
+  if (!parentValid) {
+    parentMsg.innerText = "⚠️ Please complete all required parent information.";
+    parentMsg.style.display = "block";
+    document.getElementById("submitting-overlay").style.display = "none";
+    return;
+  } else {
+    parentMsg.innerText = "";
+    parentMsg.style.display = "none";
+  }
+
+  const studentMsg = document.getElementById("student-error-msg");
+  let studentValid = true;
+  for (const name of studentFields) {
+    const el = document.querySelector(`[name='${name}']`);
+    if (!el || el.value.trim().length === 0) {
+      studentValid = false;
+      break;
+    }
+  }
+  if (!studentValid) {
+    studentMsg.innerText = "⚠️ Please complete all required student information.";
+    studentMsg.style.display = "block";
+    document.getElementById("submitting-overlay").style.display = "none";
+    return;
+  } else {
+    studentMsg.innerText = "";
+    studentMsg.style.display = "none";
+  }
+
     }
   }
 
@@ -325,9 +362,7 @@ document.querySelector("button[type='submit']").addEventListener("click", functi
   for (const name of studentFields) {
     const el = document.querySelector(`[name='${name}']`);
     if (!el || el.value.trim().length === 0) {
-      alert("Please complete all required student information fields.");
-      document.getElementById("submitting-overlay").style.display = "none";
-      return;
+      
     }
   }
 
