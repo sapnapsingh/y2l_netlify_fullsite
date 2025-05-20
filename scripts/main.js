@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const payload = buildPayload();
-    fetch("/.netlify/functions/submit", {
+    fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
