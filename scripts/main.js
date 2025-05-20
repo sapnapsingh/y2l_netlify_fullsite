@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => {
       if (response.ok) {
-        window.location.href = "https://y2lacademy.com/summer-confirmation"; //https://y2lacademy.com/summer-confirmation
+        window.top.location.href = "https://y2lacademy.com/summer-confirmation"; //https://y2lacademy.com/summer-confirmation
       } else {
         alert("There was a problem submitting the form. Please try again later.");
         document.getElementById("submitting-overlay").style.display = "none";
