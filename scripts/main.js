@@ -207,6 +207,19 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
+    
+    if (document.getElementById("add-sibling-checkbox")?.checked) {
+      const siblingFields = ["student2Name", "grade2", "school2"];
+      for (let name of siblingFields) {
+        const el = document.querySelector(`[name='${name}']`);
+        if (!el || el.value.trim() === "") {
+          errors.push("• Sibling Information");
+          break;
+        }
+      }
+    }
+
+
     if (!requiredWaivers.every(cb => cb && cb.checked)) {
       errors.push("• Required Waivers");
     }
@@ -230,25 +243,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const payload = buildPayload();
-    fetch("/.netlify/functions/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-    .then(response => {
-      if (response.ok) {
-        window.top.location.href = "https://y2lacademy.com/summer-confirmation"; //https://y2lacademy.com/summer-confirmation
-      } else {
-        alert("There was a problem submitting the form. Please try again later.");
-        document.getElementById("submitting-overlay").style.display = "none";
-      }
-    })
-    .catch(error => {
-      console.error("Error submitting form:", error);
-      alert("There was a network error. Please try again later.");
-      document.getElementById("submitting-overlay").style.display = "none";
-    });
+    
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+    window.top.location.href = "https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec?data=" + encoded;
+    
   });
 });
