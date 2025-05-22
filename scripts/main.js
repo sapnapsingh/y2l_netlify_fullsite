@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const payload = buildPayload();
     
     
-    fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
+    fetch("/.netlify/functions/submit", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
