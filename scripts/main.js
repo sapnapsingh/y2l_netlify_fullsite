@@ -244,8 +244,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const payload = buildPayload();
     
-    const encoded = encodeURIComponent(JSON.stringify(payload));
-    window.top.location.href = "https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec?data=" + encoded;
+    
+    fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.text())
+    .then(result => {
+      if (result.trim() === "Submitted and emailed successfully.") {
+        window.top.location.href = "https://y2lacademy.com/summer-confirmation";
+      } else {
+        alert("Submission error: " + result);
+      }
+    })
+    .catch(error => {
+      console.error("Submission failed:", error);
+      alert("There was an error submitting the form. Please try again.");
+    });
+
     
   });
 });
