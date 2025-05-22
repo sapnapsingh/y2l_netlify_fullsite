@@ -207,19 +207,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    
-    const siblingFields = ["student2Name", "grade2", "school2"];
-    if (document.getElementById("add-sibling-checkbox")?.checked) {
-      for (let name of siblingFields) {
-        const el = document.querySelector(`[name='${name}']`);
-        if (!el || el.value.trim() === "") {
-          errors.push("• Sibling Information");
-          break;
-        }
-      }
-    }
-
-
     if (!requiredWaivers.every(cb => cb && cb.checked)) {
       errors.push("• Required Waivers");
     }
