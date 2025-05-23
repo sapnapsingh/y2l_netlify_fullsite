@@ -245,7 +245,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const payload = buildPayload();
     
     
-    fetch("/.netlify/functions/submit", {
+    console.log("Waiver values being submitted:", {
+  photo_consent: payload.photo_consent,
+  cancellation_policy: payload.cancellation_policy,
+  medical_release: payload.medical_release,
+  emergency_contact_info: payload.emergency_contact_info
+});
+fetch("/.netlify/functions/submit", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
