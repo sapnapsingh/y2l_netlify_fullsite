@@ -55,7 +55,7 @@ function calculateFee() {
   let siblingOtherWeeks = 0;
 
   const today = new Date();
-  const earlyBirdDeadline = new Date("2025-05-21");
+  const earlyBirdDeadline = new Date("2025-05-27");
   let earlyBirdDeadlinePassed = today > earlyBirdDeadline;
 
   let breakdown = {
