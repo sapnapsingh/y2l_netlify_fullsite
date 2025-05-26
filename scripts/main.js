@@ -103,7 +103,8 @@ function calculateFee() {
   if (chessWeeks >= 2) {
     breakdown.chessMultiWeek += chessWeeks * 5;
   }
-  if (siblingChessWeeks >= 2) {
+  // Apply sibling chess multi-week discount ONLY if no shared weeks with student 1
+  if (sharedChessWeeks === 0 && siblingChessWeeks >= 2) {
     breakdown.chessMultiWeek += siblingChessWeeks * 5;
   }
 
