@@ -102,7 +102,7 @@ function calculateFee() {
     breakdown.earlyBird += (otherWeeks + siblingOtherWeeks) * 10;
   }
 
-  // Sibling Chess Discount - only for shared weeks
+  // Sibling Chess Discount and Correct Multi-Week Logic
   let sharedChessWeeks = 0;
   for (let week = 1; week <= 8; week++) {
     const w = `S1 - ${week} - Chess`;
@@ -120,7 +120,6 @@ function calculateFee() {
 
   if (chessWeeks >= 2) {
     breakdown.chessMultiWeek += chessWeeks * 5;
-  }
   }
 
   // Multi-Program Discount
