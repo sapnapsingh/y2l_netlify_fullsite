@@ -102,17 +102,25 @@ function calculateFee() {
     breakdown.earlyBird += (otherWeeks + siblingOtherWeeks) * 10;
   }
 
-  // Chess Multi-Week Discount
-  if (chessWeeks >= 2) {
-    breakdown.chessMultiWeek += chessWeeks * 5;
+  // Sibling Chess Discount - only for shared weeks
+  let sharedChessWeeks = 0;
+  for (let week = 1; week <= 8; week++) {
+    const w = `S1 - ${week} - Chess`;
+    const s = `S2 - ${week} - Chess`;
+    if (document.querySelector(`[name='${w}']`)?.checked && document.querySelector(`[name='${s}']`)?.checked) {
+      sharedChessWeeks++;
+    }
   }
-  if (siblingChessWeeks >= 2) {
+
+  if (sharedChessWeeks > 0) {
+    breakdown.chessSibling += sharedChessWeeks * 20;
+  } else if (chessWeeks === 0 && siblingChessWeeks >= 2) {
     breakdown.chessMultiWeek += siblingChessWeeks * 5;
   }
 
-  // Sibling Chess Discount
-  if (chessWeeks > 0 && siblingChessWeeks > 0) {
-    breakdown.chessSibling += siblingChessWeeks * 20;
+  if (chessWeeks >= 2) {
+    breakdown.chessMultiWeek += chessWeeks * 5;
+  }
   }
 
   // Multi-Program Discount
