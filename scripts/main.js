@@ -37,7 +37,10 @@ data.finalFee = getVal("finalFee");
 return data;
 }
 
+
 function calculateFee() {
+  
+
   let totalFee = 0;
   let discount = 0;
 
@@ -103,24 +106,14 @@ function calculateFee() {
   if (chessWeeks >= 2) {
     breakdown.chessMultiWeek += chessWeeks * 5;
   }
-  // Apply sibling chess multi-week discount ONLY if no shared weeks with student 1
-  if (sharedChessWeeks === 0 && siblingChessWeeks >= 2) {
+  if (siblingChessWeeks >= 2) {
     breakdown.chessMultiWeek += siblingChessWeeks * 5;
   }
 
   // Sibling Chess Discount
-  
-  // Sibling Chess Discount - only for shared weeks
-  let sharedChessWeeks = 0;
-  for (let week = 1; week <= 8; week++) {
-    const w = `S1 - ${week} - Chess`;
-    const s = `S2 - ${week} - Chess`;
-    if (document.querySelector(`[name='${w}']`)?.checked && document.querySelector(`[name='${s}']`)?.checked) {
-      sharedChessWeeks++;
-    }
+  if (chessWeeks > 0 && siblingChessWeeks > 0) {
+    breakdown.chessSibling += siblingChessWeeks * 20;
   }
-  breakdown.chessSibling += sharedChessWeeks * 20;
-
 
   // Multi-Program Discount
   const totalWeeks = otherWeeks + siblingOtherWeeks;
