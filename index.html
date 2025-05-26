@@ -181,17 +181,17 @@
 </div>
 <h2>Parent Information</h2>
 <div class="info-section">
-<label>Parent Name <input class="input-field" name="parentName" required="" type="text"/></label>
-<label>Email <input class="input-field" name="email" required="" type="email"/></label>
-<label>Phone <input class="input-field" name="phone" required="" type="tel"/></label>
-<label>Billing Address <input class="input-field" name="billingAddress" placeholder="123 Main St, City, State ZIP" required="" type="text"/></label>
+<label>Parent Name <input class="input-field" id="parentName" name="parentName" required="" type="text"/></label>
+<label>Email <input class="input-field" id="email" name="email" required="" type="email"/></label>
+<label>Phone <input class="input-field" id="phone" name="phone" required="" type="tel"/></label>
+<label>Billing Address <input class="input-field" id="billingAddress" name="billingAddress" placeholder="123 Main St, City, State ZIP" required="" type="text"/></label>
 </div>
 <hr class="section-divider"/>
 <h2>Student 1 Information</h2>
 <div class="info-section">
-<label>Student Name <input class="input-field" name="student1Name" required="" type="text"/></label>
-<label>Grade <input class="input-field" name="grade1" required="" type="text"/></label>
-<label>School <input class="input-field" name="school1" required="" type="text"/></label>
+<label>Student Name <input class="input-field" id="student1Name" name="student1Name" required="" type="text"/></label>
+<label>Grade <input class="input-field" id="grade1" name="grade1" required="" type="text"/></label>
+<label>School <input class="input-field" id="school1" name="school1" required="" type="text"/></label>
 </div>
 <hr class="section-divider"/>
 <h2>Program Selection by Week</h2>
@@ -202,9 +202,9 @@
 <div id="sibling-info-section" style="display: none;">
 <h2>Student 2 Information</h2>
 <div class="info-section">
-<label>Student Name <input class="input-field" name="student2Name" type="text"/></label>
-<label>Grade <input class="input-field" name="grade2" type="text"/></label>
-<label>School <input class="input-field" name="school2" type="text"/></label>
+<label>Student Name <input class="input-field" id="student2Name" name="student2Name" type="text"/></label>
+<label>Grade <input class="input-field" id="grade2" name="grade2" type="text"/></label>
+<label>School <input class="input-field" id="school2" name="school2" type="text"/></label>
 </div>
 <h2>Sibling Program Selection by Week</h2>
 <!-- <div id="sibling-info" style="margin-top: 1rem;">
@@ -245,16 +245,16 @@
 <h2>Medical &amp; Emergency Info</h2>
 <div class="info-section">
 <label>Medical or Allergy Information (required)
-    <input class="input-field" name="medicalInfo" placeholder="Enter NA if none" required="" type="text"/>
+    <input class="input-field" id="medicalInfo" name="medicalInfo" placeholder="Enter NA if none" required="" type="text"/>
 </label>
 <label>Medications Currently Taking (required)
-    <input class="input-field" name="medications" placeholder="Enter NA if none" required="" type="text"/>
+    <input class="input-field" id="medications" name="medications" placeholder="Enter NA if none" required="" type="text"/>
 </label>
 <label>Emergency Contact Name (required)
-    <input class="input-field" name="emergencyContactName" required="" type="text"/>
+    <input class="input-field" id="emergencyContactName" name="emergencyContactName" required="" type="text"/>
 </label>
 <label>Emergency Contact Phone (required)
-    <input class="input-field" name="emergencyContactPhone" required="" type="tel"/>
+    <input class="input-field" id="emergencyContactPhone" name="emergencyContactPhone" required="" type="tel"/>
 </label>
 </div>
 <!-- Waiver Checkboxes -->
@@ -262,12 +262,11 @@
 <hr class="section-divider"/>
 <h2>Waivers</h2>
 <div class="waiver-section">
-  <label><input type="checkbox" name="photoConsent" /> I give permission for my child to be photographed or recorded during the program.</label><br/>
-  <label><input type="checkbox" name="refundPolicy" required /> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" onclick="window.open(this.href, 'popup', 'width=600,height=600'); return false;" target="_blank">program's cancellation and refund policy</a>.</label><br/>
-  <label><input type="checkbox" name="emergencyMedical" required /> I authorize Y2L Academy to obtain emergency medical care for my child if necessary.</label><br/>
-  <label><input type="checkbox" name="emergencyContact" required /> I confirm I have provided accurate emergency contact information and consent to its use if needed.</label>
+<label><input id="photoConsent" name="photoConsent" type="checkbox"/> I give permission for my child to be photographed or recorded during the program.</label><br/>
+<label><input id="refundPolicy" name="refundPolicy" required="" type="checkbox"/> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" onclick="window.open(this.href, 'popup', 'width=600,height=600'); return false;" target="_blank">program's cancellation and refund policy</a>.</label><br/>
+<label><input id="emergencyMedical" name="emergencyMedical" required="" type="checkbox"/> I authorize Y2L Academy to obtain emergency medical care for my child if necessary.</label><br/>
+<label><input id="emergencyContact" name="emergencyContact" required="" type="checkbox"/> I confirm I have provided accurate emergency contact information and consent to its use if needed.</label>
 </div>
-
 <!-- <hr class="section-divider"/>
 <h2>Waivers</h2>
 <div class="waiver-section">
