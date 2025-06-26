@@ -45,11 +45,11 @@ function calculateFee() {
   let discount = 0;
 
   const programFees = {
-    "Math": 160,
-    "Public Speaking": 160,
-    "Creative Writing": 160,
+    "Math": 195,
+    "Public Speaking": 185,
+    "Creative Writing": 175,
     "Chess": 300,
-    "Python": 170
+    "Python": 195
   };
 
   let chessWeeks = 0;
@@ -58,7 +58,7 @@ function calculateFee() {
   let siblingOtherWeeks = 0;
 
   const today = new Date();
-  const earlyBirdDeadline = new Date("2025-05-31");
+  const earlyBirdDeadline = new Date("2025-07-06");
   let earlyBirdDeadlinePassed = today > earlyBirdDeadline;
 
   let breakdown = {
