@@ -1,162 +1,288 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const checkboxes = document.querySelectorAll("input[type=checkbox]");
-  checkboxes.forEach(checkbox => {
-    checkbox.addEventListener("change", updateFeeSummary);
-  });
-  updateFeeSummary();
-});
+function buildPayload() {
+  const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
 
-function updateFeeSummary() {
-  const basePrices = {
-    "Math AM": 160,
-    "Math PM": 160,
-    "Public Speaking": 160,
-    "Creative Writing": 160,
-    "Python": 170,
-    "Chess AM": 300,
-    "Chess PM": 300
+  const data = {
+    parentName: getVal("parentName"),
+    email: getVal("email"),
+    phone: getVal("phone"),
+    billingAddress: getVal("billingAddress"),
+    student_1_name: getVal("student1Name"),
+    grade_1: getVal("grade1"),
+    school_1: getVal("school1"),
+    student_2_name: getVal("student2Name"),
+    grade_2: getVal("grade2"),
+    school_2: getVal("school2"),
+    emergency_name: getVal("emergencyContactName"),
+    emergency_phone: getVal("emergencyContactPhone"),
+    medical_conditions: getVal("medicalInfo"),
+    medications: getVal("medications"),
+    allergies: getVal("allergies"),
+    photo_consent: document.querySelector('[name="photoConsent"]')?.checked ? "Yes" : "No",
+    cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
+    medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
+    emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No"
   };
 
-  const discountEligiblePrograms = ["Math AM", "Math PM", "Public Speaking", "Creative Writing", "Python"];
-
-  let selections = { S1: [], S2: [] };
-
-  const students = ["S1", "S2"];
-  let totalBase = 0;
-  let totalDiscount = 0;
-
-  students.forEach(student => {
-    for (let week = 1; week <= 8; week++) {
-      const rowPrefix = `${student} - Week ${week}`;
-      const selected = [];
-
-      Object.keys(basePrices).forEach(program => {
-        const checkbox = document.querySelector(`input[name="${rowPrefix} - ${program}"]`);
-        if (checkbox && checkbox.checked) {
-          selected.push(program);
-          totalBase += basePrices[program];
-        }
-      });
-
-      selections[student] = selections[student].concat(selected);
+  // Include all program checkboxes
+  const checkboxes = document.querySelectorAll("input[type='checkbox']");
+  checkboxes.forEach(cb => {
+    if (cb.name && cb.checked && cb.name.includes(" - ")) {
+      data[cb.name] = "Yes";
     }
   });
 
-  // Apply discounts
-  const isEarlyBird = new Date() <= new Date("2025-05-21T23:59:59");
-
-  function countWeeks(studentPrograms) {
-    const weekSet = new Set();
-    studentPrograms.forEach((_, i) => {
-      const match = studentPrograms[i].match(/Week (\d)/);
-      if (match) weekSet.add(match[1]);
-    });
-    return weekSet.size;
-  }
-
-  const s1DiscountableCount = selections["S1"].filter(p => discountEligiblePrograms.includes(p)).length;
-  const s2DiscountableCount = selections["S2"].filter(p => discountEligiblePrograms.includes(p)).length;
-
-  if (isEarlyBird) {
-    const totalDiscountable = s1DiscountableCount + s2DiscountableCount;
-    totalDiscount += totalDiscountable * 10;
-
-    if (s1DiscountableCount >= 4) totalDiscount += s1DiscountableCount * 5;
-    if (s2DiscountableCount >= 4) totalDiscount += s2DiscountableCount * 5;
-
-    const chessWeeks = new Set();
-    students.forEach(student => {
-      for (let week = 1; week <= 8; week++) {
-        ["Chess AM", "Chess PM"].forEach(chessType => {
-          const checkbox = document.querySelector(`input[name="${student} - Week ${week} - ${chessType}"]`);
-          if (checkbox && checkbox.checked) {
-            chessWeeks.add(week);
-          }
-        });
-      }
-    });
-    totalDiscount += chessWeeks.size * 5;
-  }
-
-  document.getElementById("baseFee").textContent = "$" + totalBase;
-  document.getElementById("discount").textContent = "-$" + totalDiscount;
-  document.getElementById("finalFee").textContent = "$" + (totalBase - totalDiscount);
+  data.baseFee = getVal("baseFee");
+data.discount = getVal("discountValue");
+data.finalFee = getVal("finalFee");
+return data;
 }
 
-function buildPayload() {
-  const payload = {};
 
-  function val(id) {
-    const el = document.getElementById(id);
-    return el ? el.value : "";
+function calculateFee() {
+  
+
+  let totalFee = 0;
+  let discount = 0;
+
+  const programFees = {
+    "Math": 160,
+    "Public Speaking": 160,
+    "Creative Writing": 160,
+    "Chess": 300,
+    "Python": 170
+  };
+
+  let chessWeeks = 0;
+  let siblingChessWeeks = 0;
+  let otherWeeks = 0;
+  let siblingOtherWeeks = 0;
+
+  const today = new Date();
+  const earlyBirdDeadline = new Date("2025-05-31");
+  let earlyBirdDeadlinePassed = today > earlyBirdDeadline;
+
+  let breakdown = {
+    earlyBird: 0,
+    chessMultiWeek: 0,
+    chessSibling: 0,
+    multiWeek: 0
+  };
+
+  // Student 1
+  document.querySelectorAll('#program-grid input[type="checkbox"]').forEach(checkbox => {
+    if (checkbox.checked) {
+      for (const prog in programFees) {
+        if (checkbox.name.includes(prog)) {
+          totalFee += programFees[prog];
+          if (prog === "Chess") chessWeeks++;
+          else otherWeeks++;
+        }
+      }
+    }
+  });
+
+  // Student 2
+  if (document.getElementById('add-sibling-checkbox').checked) {
+    document.querySelectorAll('#sibling-program-grid input[type="checkbox"]').forEach(checkbox => {
+      if (checkbox.checked) {
+        for (const prog in programFees) {
+          if (checkbox.name.includes(prog)) {
+            totalFee += programFees[prog];
+            if (prog === "Chess") siblingChessWeeks++;
+            else siblingOtherWeeks++;
+          }
+        }
+      }
+    });
   }
 
-  payload.parentName = val("parentName");
-  payload.email = val("email");
-  payload.phone = val("phone");
-  payload.billingAddress = val("billingAddress");
+  // Early Bird Discount
+  if (!earlyBirdDeadlinePassed) {
+    breakdown.earlyBird += (chessWeeks + siblingChessWeeks) * 20;
+    breakdown.earlyBird += (otherWeeks + siblingOtherWeeks) * 10;
+  }
 
-  payload.student_1_name = val("student_1_name");
-  payload.grade_1 = val("grade_1");
-  payload.school_1 = val("school_1");
-
-  payload.student_2_name = val("student_2_name");
-  payload.grade_2 = val("grade_2");
-  payload.school_2 = val("school_2");
-
-  payload.emergency_name = val("emergency_name");
-  payload.emergency_phone = val("emergency_phone");
-
-  payload.medical_conditions = val("medical_conditions");
-  payload.allergies = val("allergies");
-  payload.medications = val("medications");
-
-  payload.photo_consent = document.getElementById("photo_consent")?.checked ? "Yes" : "No";
-  payload.cancellation_policy = document.getElementById("cancellation_policy")?.checked ? "Yes" : "No";
-  payload.medical_release = document.getElementById("medical_release")?.checked ? "Yes" : "No";
-  payload.emergency_contact_info = document.getElementById("emergency_contact_info")?.checked ? "Yes" : "No";
-
-  const students = ["S1", "S2"];
-  for (let student of students) {
-    for (let week = 1; week <= 8; week++) {
-      ["Math AM", "Math PM", "Public Speaking", "Creative Writing", "Python", "Chess AM", "Chess PM"].forEach(program => {
-        const checkbox = document.querySelector(`input[name="${student} - Week ${week} - ${program}"]`);
-        if (checkbox) {
-          payload[`${student} - Week ${week} - ${program}`] = checkbox.checked ? "Yes" : "";
-        }
-      });
+  // Sibling Chess Discount and Correct Multi-Week Logic
+  let sharedChessWeeks = 0;
+  for (let week = 1; week <= 8; week++) {
+    const w = `S1 - ${week} - Chess`;
+    const s = `S2 - ${week} - Chess`;
+    if (document.querySelector(`[name='${w}']`)?.checked && document.querySelector(`[name='${s}']`)?.checked) {
+      sharedChessWeeks++;
     }
   }
 
-  payload.baseFee = document.getElementById("baseFee").textContent.replace("$", "");
-  payload.discount = document.getElementById("discount").textContent.replace("-$", "");
-  payload.finalFee = document.getElementById("finalFee").textContent.replace("$", "");
+  if (sharedChessWeeks > 0) {
+    breakdown.chessSibling += sharedChessWeeks * 20;
+  } else if (chessWeeks === 0 && siblingChessWeeks >= 2) {
+    breakdown.chessMultiWeek += siblingChessWeeks * 5;
+  }
 
-  return payload;
+  if (chessWeeks >= 2) {
+    breakdown.chessMultiWeek += chessWeeks * 5;
+  }
+
+  // Multi-Program Discount
+  const totalWeeks = otherWeeks + siblingOtherWeeks;
+  if (totalWeeks >= 4) {
+    breakdown.multiWeek += totalWeeks * 5;
+  }
+
+  discount = breakdown.earlyBird + breakdown.chessMultiWeek + breakdown.chessSibling + breakdown.multiWeek;
+
+  document.getElementById('total-fee').innerText = "$" + totalFee;
+  document.getElementById('discount').innerText = "$" + discount;
+  document.getElementById('final-fee').innerText = "$" + (totalFee - discount);
+  const baseFeeInput = document.querySelector("[name='baseFee']");
+  const discountInput = document.querySelector("[name='discountValue']");
+  const finalFeeInput = document.querySelector("[name='finalFee']");
+  if (baseFeeInput) baseFeeInput.value = totalFee;
+  if (discountInput) discountInput.value = discount;
+  if (finalFeeInput) finalFeeInput.value = totalFee - discount;
+
+
+  // Update Discount Breakdown
+  let breakdownText = "";
+  if (discount > 0) {
+    breakdownText += "<h4>💸 Discounts Applied:</h4><ul style='margin:0;padding-left:20px'>";
+    if (breakdown.earlyBird > 0) breakdownText += `<li>Early Bird Discount: $${breakdown.earlyBird}</li>`;
+    if (breakdown.chessMultiWeek > 0) breakdownText += `<li>Chess Multi-Week Discount: $${breakdown.chessMultiWeek}</li>`;
+    if (breakdown.chessSibling > 0) breakdownText += `<li>Sibling Chess Discount: $${breakdown.chessSibling}</li>`;
+    if (breakdown.multiWeek > 0) breakdownText += `<li>Multi-Program Discount: $${breakdown.multiWeek}</li>`;
+    breakdownText += "</ul>";
+  }
+  const summaryDiv = document.getElementById("discount-breakdown");
+  summaryDiv.innerHTML = breakdownText;
+  summaryDiv.style.display = discount > 0 ? "block" : "none";
 }
 
-document.getElementById("enrollmentForm").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const submitBtn = document.getElementById("submitBtn");
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Submitting...";
+// Load Grids
+fetch('/grids/program_grid.html').then(r => r.text()).then(d => {
+  document.getElementById('program-grid').innerHTML = d;
+  document.querySelectorAll('#program-grid input[type="checkbox"]').forEach(cb => cb.onchange = calculateFee);
+  calculateFee();
+});
+fetch('/grids/sibling_program_grid.html').then(r => r.text()).then(d => {
+  document.getElementById('sibling-program-grid').innerHTML = d;
+  document.querySelectorAll('#sibling-program-grid input[type="checkbox"]').forEach(cb => cb.onchange = calculateFee);
+  calculateFee();
+});
 
-  const payload = buildPayload();
 
-  fetch("https://script.google.com/macros/s/AKfycbyv.../exec", {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+
+
+document.getElementById('add-sibling-checkbox').addEventListener('change', function () {
+  const section = document.getElementById('sibling-info-section');
+  if (this.checked) {
+    section.style.display = 'block';
+  } else {
+    section.style.display = 'none';
+  }
+  calculateFee();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const submitBtn = document.querySelector("button[type='submit']");
+  if (!submitBtn) return;
+
+  submitBtn.addEventListener("click", function (e) {
+    const waiverBoxes = document.querySelectorAll(".waiver-section input[type='checkbox']");
+    const requiredWaivers = [waiverBoxes[1], waiverBoxes[2], waiverBoxes[3]];
+    const parentFields = ["parentName", "email", "phone", "billingAddress"];
+    const studentFields = ["student1Name", "grade1", "school1"];
+    const emergencyFields = ["medicalInfo", "medications", "emergencyContactName", "emergencyContactPhone"];
+    const programBoxes = document.querySelectorAll("#program-grid input[type='checkbox']");
+
+    let errors = [];
+
+    for (let name of parentFields) {
+      const el = document.querySelector(`[name='${name}']`);
+      if (!el || el.value.trim() === "") {
+        errors.push("• Parent Information");
+        break;
+      }
+    }
+
+    for (let name of studentFields) {
+      const el = document.querySelector(`[name='${name}']`);
+      if (!el || el.value.trim() === "") {
+        errors.push("• Student Information");
+        break;
+      }
+    }
+
+    for (let name of emergencyFields) {
+      const el = document.querySelector(`[name='${name}']`);
+      if (!el || el.value.trim() === "") {
+        errors.push("• Emergency & Medical Info");
+        break;
+      }
+    }
+
+    
+    if (document.getElementById("add-sibling-checkbox")?.checked) {
+      const siblingFields = ["student2Name", "grade2", "school2"];
+      for (let name of siblingFields) {
+        const el = document.querySelector(`[name='${name}']`);
+        if (!el || el.value.trim() === "") {
+          errors.push("• Sibling Information");
+          break;
+        }
+      }
+    }
+
+
+    if (!requiredWaivers.every(cb => cb && cb.checked)) {
+      errors.push("• Required Waivers");
+    }
+
+    if (!Array.from(programBoxes).some(cb => cb.checked)) {
+      errors.push("• Program Selection");
+    }
+
+    const errorMsgBox = document.getElementById("form-error-msg");
+    if (errors.length > 0) {
+      e.preventDefault();
+      errorMsgBox.innerText = "⚠️ Please complete the following sections before submitting:\n" + errors.join("\n");
+      errorMsgBox.style.display = "block";
+      document.getElementById("submitting-overlay").style.display = "none";
+      console.warn("Validation failed:", errors);
+      return;
+    } else {
+      errorMsgBox.innerText = "";
+      errorMsgBox.style.display = "none";
+      document.getElementById("submitting-overlay").style.display = "flex";
+    }
+
+    const payload = buildPayload();
+    
+    
+    console.log("Waiver values being submitted:", {
+  photo_consent: payload.photo_consent,
+  cancellation_policy: payload.cancellation_policy,
+  medical_release: payload.medical_release,
+  emergency_contact_info: payload.emergency_contact_info
+});
+fetch("/.netlify/functions/submit", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
     .then(response => response.text())
     .then(result => {
-      window.top.location.href = "confirmation_screen.html";
+      if (result.trim() === "Submitted and emailed successfully.") {
+        window.top.location.href = "https://y2lacademy.com/summer-confirmation";
+      } else {
+        alert("Submission error: " + result);
+      }
     })
     .catch(error => {
-      alert("Submission failed. Please try again later.");
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Enrollment";
+      console.error("Submission failed:", error);
+      alert("There was an error submitting the form. Please try again.");
     });
+
+    
+  });
 });
