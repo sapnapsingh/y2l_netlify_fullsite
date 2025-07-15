@@ -60,9 +60,20 @@ function submitChessForm() {
   }
 
   const finalFee = base - discount;
+
+  // Show fees on page
   document.getElementById("total-fee").innerText = "$" + base;
   document.getElementById("discount").innerText = "$" + discount;
   document.getElementById("final-fee").innerText = "$" + finalFee;
+
+  // Set values to hidden inputs
+  const baseInput = document.getElementById("baseFee");
+  const discountInput = document.getElementById("discountValue");
+  const finalInput = document.getElementById("finalFee");
+
+  if (baseInput) baseInput.value = base;
+  if (discountInput) discountInput.value = discount;
+  if (finalInput) finalInput.value = finalFee;
 
   const data = {
     programType: "Chess",
@@ -71,14 +82,14 @@ function submitChessForm() {
     email: getVal("email"),
     phone: getVal("phone"),
     billingAddress: getVal("billingAddress"),
-    student1Name: getVal("student1Name"),
-    grade1: getVal("grade1"),
-    school1: getVal("school1"),
-    emergencyContactName: getVal("emergencyContactName"),
-    emergencyContactPhone: getVal("emergencyContactPhone"),
-    medicalInfo: getVal("medicalInfo"),
+    student_1_name: getVal("student1Name"),
+    grade_1: getVal("grade1"),
+    school_1: getVal("school1"),
+    emergency_name: getVal("emergencyContactName"),
+    emergency_phone: getVal("emergencyContactPhone"),
+    medical_conditions: getVal("medicalInfo"),
     medications: getVal("medications"),
-    photoConsent: getCheck("photoConsent") ? "Yes" : "No",
+    photo_consent: getCheck("photoConsent") ? "Yes" : "No",
     cancellation_policy: getCheck("refundPolicy") ? "Yes" : "No",
     medical_release: getCheck("emergencyMedical") ? "Yes" : "No",
     emergency_contact_info: getCheck("emergencyContact") ? "Yes" : "No",
