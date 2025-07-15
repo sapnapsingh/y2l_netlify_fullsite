@@ -1,10 +1,50 @@
 
 function submitChessForm() {
   const overlay = document.getElementById("submitting-overlay");
-  overlay.style.display = "flex";
+  const errorMsg = document.getElementById("form-error-msg");
+  errorMsg.innerText = "";
+  errorMsg.style.display = "none";
 
   const getVal = name => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
   const getRadio = name => document.querySelector(`[name='${name}']:checked`)?.value || "";
+  const getCheck = name => document.querySelector(`[name='${name}']`)?.checked;
+
+  const requiredFields = [
+    "parentName", "email", "phone", "billingAddress",
+    "student1Name", "grade1", "school1",
+    "medicalInfo", "medications",
+    "emergencyContactName", "emergencyContactPhone"
+  ];
+
+  const waiverFields = ["refundPolicy", "emergencyMedical", "emergencyContact"];
+  const errors = [];
+
+  for (const name of requiredFields) {
+    const value = getVal(name);
+    if (!value) {
+      errors.push(`• ${name.replace(/([A-Z])/g, ' $1')}`);
+    }
+  }
+
+  for (const waiver of waiverFields) {
+    if (!getCheck(waiver)) {
+      errors.push(`• Waiver: ${waiver}`);
+    }
+  }
+
+  if (!getRadio("chessSession")) {
+    errors.push("• Select a Chess Session (Beginner or Advanced)");
+  }
+
+  if (errors.length > 0) {
+    errorMsg.innerText = "⚠️ Please complete the following before submitting:
+" + errors.join("\n");
+    errorMsg.style.display = "block";
+    overlay.style.display = "none";
+    return;
+  }
+
+  overlay.style.display = "flex";
 
   const today = new Date();
   const earlyBirdDeadline = new Date("2025-08-15");
@@ -39,10 +79,10 @@ function submitChessForm() {
     emergency_phone: getVal("emergencyContactPhone"),
     medical_conditions: getVal("medicalInfo"),
     medications: getVal("medications"),
-    photo_consent: document.querySelector("[name='photoConsent']")?.checked ? "Yes" : "No",
-    cancellation_policy: document.querySelector("[name='refundPolicy']")?.checked ? "Yes" : "No",
-    medical_release: document.querySelector("[name='emergencyMedical']")?.checked ? "Yes" : "No",
-    emergency_contact_info: document.querySelector("[name='emergencyContact']")?.checked ? "Yes" : "No",
+    photo_consent: getCheck("photoConsent") ? "Yes" : "No",
+    cancellation_policy: getCheck("refundPolicy") ? "Yes" : "No",
+    medical_release: getCheck("emergencyMedical") ? "Yes" : "No",
+    emergency_contact_info: getCheck("emergencyContact") ? "Yes" : "No",
     baseFee: base,
     discountValue: discount,
     finalFee: finalFee
@@ -58,12 +98,14 @@ function submitChessForm() {
     if (result.includes("success") || result.includes("Submitted")) {
       window.location.href = "https://y2lacademy.com/summer-confirmation";
     } else {
-      document.getElementById("form-error-msg").innerText = "Submission failed: " + result;
+      errorMsg.innerText = "Submission failed: " + result;
+      errorMsg.style.display = "block";
       overlay.style.display = "none";
     }
   })
   .catch(err => {
-    document.getElementById("form-error-msg").innerText = "Submission error: " + err.message;
+    errorMsg.innerText = "Submission error: " + err.message;
+    errorMsg.style.display = "block";
     overlay.style.display = "none";
   });
 }
