@@ -22,13 +22,13 @@ function submitChessForm() {
   for (const name of requiredFields) {
     const value = getVal(name);
     if (!value) {
-      errors.push(`• ${name.replace(/([A-Z])/g, ' $1')}`);
+      errors.push("• " + name.replace(/([A-Z])/g, " $1"));
     }
   }
 
   for (const waiver of waiverFields) {
     if (!getCheck(waiver)) {
-      errors.push(`• Waiver: ${waiver}`);
+      errors.push("• Waiver: " + waiver);
     }
   }
 
@@ -37,8 +37,7 @@ function submitChessForm() {
   }
 
   if (errors.length > 0) {
-    errorMsg.innerText = "⚠️ Please complete the following before submitting:
-" + errors.join("\n");
+    errorMsg.innerText = "⚠️ Please complete the following before submitting:\n" + errors.join("\n");
     errorMsg.style.display = "block";
     overlay.style.display = "none";
     return;
@@ -72,14 +71,14 @@ function submitChessForm() {
     email: getVal("email"),
     phone: getVal("phone"),
     billingAddress: getVal("billingAddress"),
-    student_1_name: getVal("student1Name"),
-    grade_1: getVal("grade1"),
-    school_1: getVal("school1"),
-    emergency_name: getVal("emergencyContactName"),
-    emergency_phone: getVal("emergencyContactPhone"),
-    medical_conditions: getVal("medicalInfo"),
+    student1Name: getVal("student1Name"),
+    grade1: getVal("grade1"),
+    school1: getVal("school1"),
+    emergencyContactName: getVal("emergencyContactName"),
+    emergencyContactPhone: getVal("emergencyContactPhone"),
+    medicalInfo: getVal("medicalInfo"),
     medications: getVal("medications"),
-    photo_consent: getCheck("photoConsent") ? "Yes" : "No",
+    photoConsent: getCheck("photoConsent") ? "Yes" : "No",
     cancellation_policy: getCheck("refundPolicy") ? "Yes" : "No",
     medical_release: getCheck("emergencyMedical") ? "Yes" : "No",
     emergency_contact_info: getCheck("emergencyContact") ? "Yes" : "No",
@@ -93,19 +92,19 @@ function submitChessForm() {
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" }
   })
-  .then(res => res.text())
-  .then(result => {
-    if (result.includes("success") || result.includes("Submitted")) {
-      window.location.href = "https://y2lacademy.com/summer-confirmation";
-    } else {
-      errorMsg.innerText = "Submission failed: " + result;
+    .then(res => res.text())
+    .then(result => {
+      if (result.includes("success") || result.includes("Submitted")) {
+        window.location.href = "https://y2lacademy.com/summer-confirmation";
+      } else {
+        errorMsg.innerText = "Submission failed: " + result;
+        errorMsg.style.display = "block";
+        overlay.style.display = "none";
+      }
+    })
+    .catch(err => {
+      errorMsg.innerText = "Submission error: " + err.message;
       errorMsg.style.display = "block";
       overlay.style.display = "none";
-    }
-  })
-  .catch(err => {
-    errorMsg.innerText = "Submission error: " + err.message;
-    errorMsg.style.display = "block";
-    overlay.style.display = "none";
-  });
+    });
 }
