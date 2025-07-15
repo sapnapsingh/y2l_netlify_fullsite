@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Y2L Chess Academy Enrollment</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <style>
+    body { max-width: 800px; margin: auto; }
+    .info-section, .waiver-section, .fee-summary-box { margin-top: 30px; }
+    .session-option { margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Y2L Chess Academy Enrollment</h1>
+  <p><strong>Schedule:</strong> 12 Wednesdays from <strong>August 27 to November 12, 2025</strong></p>
+  <p><strong>Choose One Session:</strong></p>
+
+  <form id="chessEnrollmentForm">
+    <div class="info-section">
+      <h2>Parent Information</h2>
+      <label>Parent Name <input class="input-field" name="parentName" required></label>
+      <label>Email <input class="input-field" type="email" name="email" required></label>
+      <label>Phone <input class="input-field" type="tel" name="phone" required></label>
+      <label>Billing Address <input class="input-field" name="billingAddress" required></label>
+    </div>
+
+    <div class="info-section">
+      <h2>Student Information</h2>
+      <label>Student Name <input class="input-field" name="student1Name" required></label>
+      <label>Grade <input class="input-field" name="grade1" required></label>
+      <label>School <input class="input-field" name="school1" required></label>
+    </div>
+
+    <div class="info-section">
+      <h2>Session Selection</h2>
+      <label class="session-option">
+        <input type="radio" name="chessSession" value="Beginner" required>
+        Beginner to Intermediate (Wednesdays 3:30 – 4:45 PM)
+      </label>
+      <label class="session-option">
+        <input type="radio" name="chessSession" value="Advanced">
+        Intermediate to Advanced (Wednesdays 5:00 – 6:15 PM)
+      </label>
+    </div>
+
+    <div class="info-section">
+      <h2>Medical & Emergency Info</h2>
+      <label>Medical or Allergy Info <input class="input-field" name="medicalInfo" required></label>
+      <label>Medications <input class="input-field" name="medications" required></label>
+      <label>Emergency Contact Name <input class="input-field" name="emergencyContactName" required></label>
+      <label>Emergency Contact Phone <input class="input-field" name="emergencyContactPhone" required></label>
+    </div>
+
+    <div class="waiver-section">
+      <h2>Waivers</h2>
+      <label><input type="checkbox" name="photoConsent"> I give permission for photos/videos.</label><br>
+      <label><input type="checkbox" name="refundPolicy" required> I accept the <a href="https://y2lacademy.com/cancellation-policy" target="_blank">cancellation/refund policy</a>.</label><br>
+      <label><input type="checkbox" name="emergencyMedical" required> I authorize emergency medical care.</label><br>
+      <label><input type="checkbox" name="emergencyContact" required> I confirm the emergency contact is valid.</label>
+    </div>
+
+    <div class="fee-summary-box">
+      <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+      <input type="hidden" name="baseFee">
+      <input type="hidden" name="discountValue">
+      <input type="hidden" name="finalFee">
+    </div>
+
+    <div style="margin-top: 30px;">
+      <div id="form-error-msg" style="color:red; display:none;"></div>
+      <button class="submit-btn" type="submit">Submit Enrollment</button>
+    </div>
+  </form>
+
+  <script src="/scripts/main-chess.js"></script>
+</body>
+</html>
