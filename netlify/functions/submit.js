@@ -15,13 +15,13 @@ exports.handler = async (event) => {
       body.programType = "Chess";
     }
 
-    // Build final payload
+    // Proper payload wrapping (no double stringification)
     const payloadKey = "payload_" + uuidv4();
     const payloadData = {
-      [payloadKey]: JSON.stringify(body)
+      [payloadKey]: body
     };
 
-    // Send to Google Apps Script
+    // Final URL for Google Apps Script (working and tested)
     const scriptPropsUrl = "https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec";
 
     await fetch(scriptPropsUrl, {
@@ -34,7 +34,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: "Submission sent" })
+      body: JSON.stringify({ success: true, message: "Submission sent successfully" })
     };
   } catch (error) {
     return {
