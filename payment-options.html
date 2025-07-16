@@ -18,10 +18,14 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
     }
     h2 {
-      text-align: center;
       color: #003366;
+    }
+    .logo {
+      max-width: 150px;
+      margin-bottom: 20px;
     }
     .option-box {
       border: 1px solid #ccc;
@@ -29,6 +33,7 @@
       margin-top: 20px;
       border-radius: 8px;
       background: #fdfdfd;
+      text-align: left;
     }
     .option-box h3 {
       margin-top: 0;
@@ -52,14 +57,17 @@
 </head>
 <body>
   <div class="container">
+    <img src="images/Y2L.png" alt="Y2L Logo" class="logo" />
     <h2>Complete Your Payment</h2>
     <p id="sessionInfo">Processing your session...</p>
 
     <div class="option-box">
       <h3>Option 1: Pay with Zelle (No Fees)</h3>
-      <p>Send <strong>$300</strong> (Beginner) or <strong>$360</strong> (Advanced) to:</p>
+      <p>Send <strong>$325</strong> (Beginner) or <strong>$385</strong> (Advanced) to:</p>
       <p><strong>Zelle ID:</strong> 209-937-3171</p>
-      <p class="note">No processing fees apply. Please mention your child’s name in the note.</p>
+      <img src="images/ZelleQR.png" alt="Zelle QR Code" width="120" height="120" />
+      <p class="note">Scan the QR code or send manually via your Zelle app.</p>
+      <a href="/submitted.html" class="pay-btn">I Paid via Zelle – Complete Enrollment</a>
     </div>
 
     <div class="option-box">
