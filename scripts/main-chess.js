@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
-  const form = document.getElementById("enrollment-form");
+  const form = document.getElementById("chess-enrollment-form");
   if (!form) {
     console.error("❌ enrollment-form not found!");
     return;
