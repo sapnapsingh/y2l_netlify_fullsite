@@ -1,44 +1,34 @@
 
 const fetch = require("node-fetch");
 
-exports.handler = async function (event, context) {
+exports.handler = async function(event, context) {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: "Method Not Allowed",
+    };
+  }
+
   try {
-    const contentType = event.headers["content-type"];
-    let data = {};
-
-    if (contentType.includes("application/json")) {
-      data = JSON.parse(event.body);
-    } else if (contentType.includes("application/x-www-form-urlencoded")) {
-      const params = new URLSearchParams(event.body);
-      params.forEach((value, key) => {
-        data[key] = value;
-      });
-    } else if (contentType.includes("multipart/form-data")) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "multipart/form-data not supported. Please use JSON or urlencoded." })
-      };
-    } else {
-      const params = new URLSearchParams(event.body);
-      params.forEach((value, key) => {
-        data[key] = value;
-      });
-    }
-
-    const response = await fetch("https://script.google.com/macros/s/AKfycbzSGXUJKUZiUfwaxF6YxOH-7MeLMpqS-n7UvPTM4pFtP6NKg5oMyVUlDKBYm7mSydyf/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      body: event.body,
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+
+    const text = await response.text();
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Forwarded to Google Apps Script" })
+      body: text,
     };
-  } catch (error) {
+  } catch (err) {
+    console.error("Error in Netlify function:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message })
+      body: "Submission failed: " + err.message,
     };
   }
 };
