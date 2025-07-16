@@ -47,9 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
-  const form = document.getElementById("chess-enrollment-form");
+  calculateAndDisplayFee(); // ✅ Force run on load in case one is pre-selected
+
+  const form = document.getElementById("chess-enrollment-form"); // ✅ CORRECT ID
   if (!form) {
-    console.error("❌ enrollment-form not found!");
+    console.error("❌ chess-enrollment-form not found!");
     return;
   }
 
@@ -67,24 +69,24 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(jsonData)
     })
-    .then(response => response.json())
-    .then(result => {
-      if (result.success) {
-        const session = jsonData["chessSession"];
-        if (session === "Beginner to Intermediate") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
-        } else if (session === "Intermediate to Advanced") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          const session = jsonData["chessSession"];
+          if (session === "Beginner to Intermediate") {
+            window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+          } else if (session === "Intermediate to Advanced") {
+            window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+          } else {
+            alert("Unknown session. Please contact support.");
+          }
         } else {
-          alert("Unknown session. Please contact support.");
+          alert("Submission failed: " + result.error);
         }
-      } else {
-        alert("Submission failed: " + result.error);
-      }
-    })
-    .catch(error => {
-      console.error("Submission error:", error);
-      alert("An error occurred during submission.");
-    });
+      })
+      .catch(error => {
+        console.error("Submission error:", error);
+        alert("An error occurred during submission.");
+      });
   });
 });
