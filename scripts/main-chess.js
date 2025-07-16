@@ -75,39 +75,47 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-document.getElementById("enrollment-form").addEventListener("submit", function (e) {
-  e.preventDefault();
 
+
+document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("enrollment-form");
-  const formData = new FormData(form);
+  if (!form) {
+    console.error("❌ enrollment-form not found!");
+    return;
+  }
 
-  const jsonData = {};
-  formData.forEach((value, key) => {
-    jsonData[key] = value;
-  });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  fetch("/.netlify/functions/submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(jsonData)
-  })
-  .then(response => response.json())
-  .then(result => {
-    if (result.success) {
-      const session = jsonData["chessSession"];
-      if (session === "Beginner to Intermediate") {
-        window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
-      } else if (session === "Intermediate to Advanced") {
-        window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+    const formData = new FormData(form);
+    const jsonData = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value;
+    });
+
+    fetch("/.netlify/functions/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        const session = jsonData["chessSession"];
+        if (session === "Beginner to Intermediate") {
+          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+        } else if (session === "Intermediate to Advanced") {
+          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+        } else {
+          alert("Unknown session. Please contact support.");
+        }
       } else {
-        alert("Unknown session. Please contact support.");
+        alert("Submission failed: " + result.error);
       }
-    } else {
-      alert("Submission failed: " + result.error);
-    }
-  })
-  .catch(error => {
-    console.error("Submission error:", error);
-    alert("An error occurred during submission.");
+    })
+    .catch(error => {
+      console.error("Submission error:", error);
+      alert("An error occurred during submission.");
+    });
   });
 });
