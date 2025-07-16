@@ -56,15 +56,22 @@ document.addEventListener("DOMContentLoaded", function () {
   if (form) {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
+
       const formData = new FormData(form);
+      const plainObject = {};
+      formData.forEach((value, key) => {
+        plainObject[key] = value;
+      });
+
       const session = formData.get("chessSession");
+      const sessionType = (session === "Beginner to Intermediate") ? "beginner" : "advanced";
 
       fetch("/.netlify/functions/submit", {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(plainObject)
       })
       .then(() => {
-        const sessionType = (session === "Beginner to Intermediate") ? "beginner" : "advanced";
         window.location.href = "/payment-options.html?session=" + sessionType;
       })
       .catch(() => {
