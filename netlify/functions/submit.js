@@ -1,60 +1,41 @@
 
-const fetch = require("node-fetch");
-const { Buffer } = require("buffer");
+const { v4: uuidv4 } = require('uuid');
+const fetch = require('node-fetch');
 
-exports.handler = async function(event, context) {
+exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: "Method Not Allowed",
-    };
+    return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  const contentType = event.headers["content-type"] || "";
-  let jsonPayload = {};
-
   try {
-    if (contentType.includes("application/json")) {
-      jsonPayload = JSON.parse(event.body);
-    } else if (contentType.includes("application/x-www-form-urlencoded")) {
-      const params = new URLSearchParams(event.body);
-      params.forEach((value, key) => {
-        jsonPayload[key] = value;
-      });
-    } else if (contentType.includes("multipart/form-data")) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: "multipart/form-data is not supported in Netlify functions directly. Please convert FormData to a plain object in frontend.",
-        })
-      };
-    } else {
-      // Default fallback for any other content-type
-      const params = new URLSearchParams(event.body);
-      params.forEach((value, key) => {
-        jsonPayload[key] = value;
-      });
+    const body = JSON.parse(event.body);
+
+    // Inject programType for Chess if missing
+    if (body.chessSession && !body.programType) {
+      body.programType = "Chess";
     }
 
-    const response = await fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(jsonPayload),
-    });
+    const payloadKey = "payload_" + uuidv4();
+    const scriptPropsUrl = "https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec";
 
-    const text = await response.text();
+    await fetch(scriptPropsUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        [payloadKey]: JSON.stringify(body)
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
 
     return {
       statusCode: 200,
-      body: text,
+      body: JSON.stringify({ success: true, message: "Submission sent" })
     };
-  } catch (err) {
-    console.error("Error in Netlify function:", err);
+  } catch (error) {
     return {
       statusCode: 500,
-      body: "Submission failed: " + err.message,
+      body: JSON.stringify({ success: false, error: error.message })
     };
   }
 };
