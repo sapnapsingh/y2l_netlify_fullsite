@@ -3,7 +3,7 @@ function calculateAndDisplayFee() {
   console.log("🔧 Fee calc triggered");
 
   const today = new Date();
-  const earlyBirdDeadline = new Date("2025-08-15");
+  const earlyBirdDeadline = new Date("2025-08-10");
 
   const session = document.querySelector("input[name='chessSession']:checked")?.value || "";
   console.log("🎯 Session selected:", session);
@@ -12,10 +12,10 @@ function calculateAndDisplayFee() {
 
   if (session === "Beginner") {
     base = 360;
-    discount = today <= earlyBirdDeadline ? 60 : 0;
+    discount = today <= earlyBirdDeadline ? 35 : 0;
   } else if (session === "Advanced") {
     base = 420;
-    discount = today <= earlyBirdDeadline ? 60 : 0;
+    discount = today <= earlyBirdDeadline ? 35 : 0;
   }
 
   const finalFee = base - discount;
