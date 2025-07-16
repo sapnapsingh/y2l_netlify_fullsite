@@ -1,4 +1,3 @@
-
 function calculateAndDisplayFee() {
   console.log("🔧 Fee calc triggered");
 
@@ -10,10 +9,10 @@ function calculateAndDisplayFee() {
 
   let base = 0, discount = 0;
 
-  if (session === "Beginner") {
+  if (session === "Beginner to Intermediate") {
     base = 360;
     discount = today <= earlyBirdDeadline ? 35 : 0;
-  } else if (session === "Advanced") {
+  } else if (session === "Intermediate to Advanced") {
     base = 420;
     discount = today <= earlyBirdDeadline ? 35 : 0;
   }
@@ -30,8 +29,6 @@ function calculateAndDisplayFee() {
     discountSpan.innerText = "$" + discount;
     finalFeeSpan.innerText = "$" + finalFee;
     console.log("✅ Updated fee display elements");
-  } else {
-    console.warn("❌ Could not find one or more fee summary spans");
   }
 
   const baseInput = document.getElementById("baseFee");
@@ -43,8 +40,6 @@ function calculateAndDisplayFee() {
   if (finalInput) finalInput.value = finalFee;
 
   console.log("✅ Set input values");
-
-  return { session, base, discount, finalFee };
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -52,32 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
-  const form = document.getElementById("chess-enrollment-form");
-  if (form) {
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      const formData = new FormData(form);
-      const session = formData.get("chessSession");
-
-      fetch("/.netlify/functions/submit", {
-        method: "POST",
-        body: formData
-      })
-      .then(() => {
-        const sessionType = (session === "Beginner to Intermediate") ? "beginner" : "advanced";
-        window.location.href = "/payment-options.html?session=" + sessionType;
-      })
-      .catch(() => {
-        alert("Submission failed. Please try again.");
-      });
-    });
-  }
-});
-
-
-
-
-document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("enrollment-form");
   if (!form) {
     console.error("❌ enrollment-form not found!");
