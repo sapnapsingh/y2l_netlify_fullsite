@@ -14,7 +14,6 @@ exports.handler = async function (event, context) {
         data[key] = value;
       });
     } else if (contentType.includes("multipart/form-data")) {
-      const boundary = contentType.split("boundary=")[1];
       return {
         statusCode: 400,
         body: JSON.stringify({ error: "multipart/form-data not supported. Please use JSON or urlencoded." })
