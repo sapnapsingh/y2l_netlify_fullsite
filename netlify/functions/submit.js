@@ -8,21 +8,25 @@ exports.handler = async (event) => {
   }
 
   try {
-    const body = JSON.parse(event.body);
+    let body = JSON.parse(event.body);
 
-    // Inject programType for Chess if missing
+    // Inject programType if it looks like a Chess submission
     if (body.chessSession && !body.programType) {
       body.programType = "Chess";
     }
 
+    // Build final payload
     const payloadKey = "payload_" + uuidv4();
+    const payloadData = {
+      [payloadKey]: JSON.stringify(body)
+    };
+
+    // Send to Google Apps Script
     const scriptPropsUrl = "https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec";
 
     await fetch(scriptPropsUrl, {
       method: "POST",
-      body: JSON.stringify({
-        [payloadKey]: JSON.stringify(body)
-      }),
+      body: JSON.stringify(payloadData),
       headers: {
         "Content-Type": "application/json"
       }
