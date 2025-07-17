@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Complete Your Payment – Y2L Public Speaking &amp; Debate</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complete Your Payment – Y2L Academy</title>
+  <style>
     body {
       font-family: Verdana, sans-serif;
       padding: 30px;
@@ -57,39 +56,70 @@
   </style>
 </head>
 <body>
-<div class="container">
-<img alt="Y2L Logo" class="logo" src="images/Y2L.png"/>
-<h2>Complete Your Payment – Public Speaking &amp; Debate Program</h2>
-<p id="sessionInfo">Processing your session...</p>
-<div class="option-box">
-<h3>Option 1: Pay with Zelle (No Additional Fees)</h3>
-<p>Send <strong>$325</strong> (Beginner) or <strong>$385</strong> (Advanced) to:</p>
-<p><strong>Zelle ID:</strong> 209-937-3171</p>
-<img alt="Zelle QR Code" height="120" src="images/ZelleQR.png" width="120"/>
-<p class="note">Scan the QR code or send manually via your Zelle app.</p>
-<a class="pay-btn" href="https://y2lacademy.com/summer-confirmation">I Paid via Zelle – Complete Enrollment</a>
-</div>
-<div class="option-box">
-<h3>Option 2: Pay with Credit Card (2.95% Processing Fee Applies)</h3>
-<p>You will be redirected to Y2L Academy's secure payment portal:</p>
-<a class="pay-btn" href="#" id="payLink" target="_blank">Pay Now</a>
-<p class="note">A 2.95% processing fee is included in the total.</p>
-</div>
-</div>
+  <div class="container">
+    <img src="images/Y2L.png" alt="Y2L Logo" class="logo" />
+    <h2 id="programTitle">Complete Your Payment</h2>
+    <p id="sessionInfo">Processing your session...</p>
 
-<script>
-const params = new URLSearchParams(window.location.search);
-const session = (params.get("session") || "").toLowerCase();
-const sessionInfo = document.getElementById("sessionInfo");
-const payLink = document.getElementById("payLink");
+    <div class="option-box">
+      <h3>Option 1: Pay with Zelle (No Additional Fees)</h3>
+      <p id="zelleAmount">Send <strong>$335</strong> to:</p>
+      <p><strong>Zelle ID:</strong> 209-937-3171</p>
+      <img src="images/ZelleQR.png" alt="Zelle QR Code" width="120" height="120" />
+      <p class="note">Scan the QR code or send manually via your Zelle app.</p>
+      <a href="https://y2lacademy.com/summer-confirmation" class="pay-btn">I Paid via Zelle – Complete Enrollment</a>
+    </div>
 
-if (session === "beginner") {
-  sessionInfo.innerHTML = "You have enrolled in the <strong>Beginner Orators</strong> session.";
-  payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-publicspeaking";
-  document.querySelector(".option-box p").innerHTML = "Send <strong>$335</strong> to:";
-} else {
-  sessionInfo.innerText = "Unable to detect your session. Please check your enrollment.";
-  payLink.style.display = "none";
-}
-</script></body>
+    <div class="option-box">
+      <h3>Option 2: Pay with Credit Card (2.95% Processing Fee Applies)</h3>
+      <p>You will be redirected to Y2L Academy's secure payment portal:</p>
+      <a id="payLink" href="#" class="pay-btn" target="_blank">Pay Now</a>
+      <p class="note">A 2.95% processing fee is included in the total.</p>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const session = (params.get("session") || "").toLowerCase();
+    const sessionInfo = document.getElementById("sessionInfo");
+    const payLink = document.getElementById("payLink");
+    const zelleAmount = document.getElementById("zelleAmount");
+    const programTitle = document.getElementById("programTitle");
+
+    if (session === "beginner") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Beginner to Intermediate</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$325</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+      programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
+    } else if (session === "advanced") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Intermediate to Advanced</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+      programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
+    } else if (session === "beginner orators") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Public Speaking – Beginner Orators</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$335</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-publicspeaking";
+      programTitle.innerText = "Complete Your Payment – Public Speaking & Debate Program";
+    } else if (session === "python beginner") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Python Programming – Beginner</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$350</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-beginner";
+      programTitle.innerText = "Complete Your Payment – Python Programming";
+    } else if (session === "python intermediate") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Python Programming – Intermediate</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$400</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-intermediate";
+      programTitle.innerText = "Complete Your Payment – Python Programming";
+    } else if (session === "python advanced") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Python Programming – Advanced</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$500</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-advanced";
+      programTitle.innerText = "Complete Your Payment – Python Programming";
+    } else {
+      sessionInfo.innerText = "Unable to detect your session. Please check your enrollment.";
+      payLink.style.display = "none";
+    }
+  </script>
+</body>
 </html>

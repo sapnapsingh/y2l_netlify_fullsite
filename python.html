@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Y2L Python Programming Enrollment</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<form id="python-enrollment-form" name="enrollment" method="POST" action="/.netlify/functions/submit" netlify netlify-honeypot="bot-field">
+<div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; background-color: rgba(255,255,255,0.85); width: 100%; height: 100%; z-index: 1000; text-align: center; padding-top: 200px; font-size: 20px; color: #2a7ae2;">
+  Submitting your enrollment... Please wait.
+</div>
+
+<h2>Parent Information</h2>
+<div class="info-section">
+  <label>Parent Name <input class="input-field" name="parentName" required></label>
+  <label>Email <input class="input-field" type="email" name="email" required></label>
+  <label>Phone <input class="input-field" type="tel" name="phone" required></label>
+  <label>Billing Address <input class="input-field" name="billingAddress" required></label>
+</div>
+
+<hr class="section-divider"/>
+
+<h2>Student Information</h2>
+<div class="info-section">
+  <label>Student Name <input class="input-field" name="student1Name" required></label>
+  <label>Grade <input class="input-field" name="grade1" required></label>
+  <label>School <input class="input-field" name="school1" required></label>
+</div>
+
+<hr class="section-divider"/>
+
+<h2>Session Selection</h2>
+<div class="info-section">
+  <p><strong>Session Dates:</strong> 12 Weeks Program </p>
+  <label><input type="radio" name="pythonSession" value="Beginner" required> Beginner Programmers (Wednesday's 4:30 – 6:00 PM)</label><br/>
+  <label><input type="radio" name="pythonSession" value="Intermediate" /> Intermediate Programmers (Friday's 4:30 – 6:00 PM)</label><br />
+   <label><input type="radio" name="pythonSession" value="Advanced" disabled /> Advanced Programmers – TBD</label>
+</div>
+
+<hr class="section-divider"/>
+
+<h2>Medical & Emergency Info</h2>
+<div class="info-section">
+  <label>Medical or Allergy Info <input class="input-field" name="medicalInfo" required></label>
+  <label>Medications <input class="input-field" name="medications" required></label>
+  <label>Emergency Contact Name <input class="input-field" name="emergencyContactName" required></label>
+  <label>Emergency Contact Phone <input class="input-field" name="emergencyContactPhone" required></label>
+</div>
+
+<hr class="section-divider"/>
+
+<h2>Waivers</h2>
+<div class="waiver-section">
+  <label><input type="checkbox" name="photoConsent"> I give permission for my child to be photographed or recorded during the program.</label><br/>
+  <label><input type="checkbox" name="refundPolicy" required> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" target="_blank">program's cancellation and refund policy</a>.</label><br/>
+  <label><input type="checkbox" name="emergencyMedical" required> I authorize emergency medical care.</label><br/>
+  <label><input type="checkbox" name="emergencyContact" required> I confirm I have provided accurate emergency contact information.</label>
+</div>
+
+<hr class="section-divider"/>
+
+<h2>Fee Summary</h2>
+<div class="fee-summary-box">
+  <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+  <div class="fee-line"><span>Discount:</span><span id="discount">$0</span></div>
+  <div class="fee-line total"><span>Final Fee:</span><span id="final-fee">$0</span></div>
+</div>
+
+<input type="hidden" name="baseFee">
+<input type="hidden" name="discountValue">
+<input type="hidden" name="finalFee">
+
+<div id="form-error-msg" style="color:red; display:none; margin-top: 20px;"></div>
+
+<div style="margin-top: 30px;">
+  <button class="submit-btn" type="submit" >Submit Enrollment</button>
+</div>
+
+
+</form>
+<script src="/scripts/main-python.js?v=20250717"></script>
+</body>
+</html>
