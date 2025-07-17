@@ -8,9 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
+  const loader = document.getElementById("submission-loader");
+
   function calculateAndDisplayFee() {
     console.log("🔧 Fee calc triggered");
-
     const today = new Date();
     const earlyBirdDeadline = new Date("2025-08-10");
 
@@ -18,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("🎯 Session selected:", session);
 
     let base = 0, discount = 0;
-
     if (session === "Beginner") {
       base = 360;
       discount = today <= earlyBirdDeadline ? 60 : 0;
@@ -38,57 +38,71 @@ document.addEventListener("DOMContentLoaded", function () {
       totalFeeSpan.innerText = "$" + base;
       discountSpan.innerText = "$" + discount;
       finalFeeSpan.innerText = "$" + finalFee;
-      console.log("✅ Updated fee display elements");
     }
 
-    const baseInput = document.querySelector("input[name='baseFee']");
-    const discountInput = document.querySelector("input[name='discountValue']");
-    const finalInput = document.querySelector("input[name='finalFee']");
-
-    if (baseInput) baseInput.value = base;
-    if (discountInput) discountInput.value = discount;
-    if (finalInput) finalInput.value = finalFee;
-
-    console.log("✅ Set input values");
+    document.querySelector("input[name='baseFee']").value = base;
+    document.querySelector("input[name='discountValue']").value = discount;
+    document.querySelector("input[name='finalFee']").value = finalFee;
   }
 
   document.querySelectorAll("input[name='chessSession']").forEach(radio => {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
+  function buildPayload() {
+    const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
+
+    const data = {
+      programType: "Chess",
+      parentName: getVal("parentName"),
+      email: getVal("email"),
+      phone: getVal("phone"),
+      billingAddress: getVal("billingAddress"),
+      student_1_name: getVal("student1Name"),
+      grade_1: getVal("grade1"),
+      school_1: getVal("school1"),
+      emergency_name: getVal("emergencyContactName"),
+      emergency_phone: getVal("emergencyContactPhone"),
+      medical_conditions: getVal("medicalInfo"),
+      medications: getVal("medications"),
+      photo_consent: document.querySelector('[name="photoConsent"]')?.checked ? "Yes" : "No",
+      cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
+      medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
+      emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
+      chessSession: document.querySelector("input[name='chessSession']:checked")?.value || "",
+      baseFee: getVal("baseFee"),
+      discountValue: getVal("discountValue"),
+      finalFee: getVal("finalFee")
+    };
+
+    console.log("📦 Payload to submit:", data);
+    return data;
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const status = document.getElementById("form-status");
-    if (status) status.innerText = "Submitting your form...";
+    if (loader) loader.style.display = "block";
 
-    const formData = new FormData(form);
-    const payload = {};
-    formData.forEach((value, key) => {
-      payload[key] = value;
-    });
-
-    payload.programType = "Chess";
-
-    console.log("📦 Payload to submit:", payload);
+    const payload = buildPayload();
 
     fetch("/.netlify/functions/submit", {
       method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json"
-      }
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     })
     .then(response => response.text())
     .then(result => {
-      console.log("📬 Submission result:", result);
+      console.log("✅ Server responded:", result);
+      if (loader) loader.style.display = "none";
       if (result.trim() === "Submitted and emailed successfully.") {
-        window.top.location.href = "/payment-options.html";
+        window.location.href = "/payment-options.html";
       } else {
         alert("Submission error: " + result);
       }
     })
     .catch(error => {
+      if (loader) loader.style.display = "none";
       console.error("Submission failed:", error);
       alert("There was an error submitting the form. Please try again.");
     });
