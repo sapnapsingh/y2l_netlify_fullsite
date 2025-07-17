@@ -20,41 +20,28 @@ function calculateAndDisplayFee() {
   const finalFee = base - discount;
   console.log("💵 Base:", base, "| Discount:", discount, "| Final:", finalFee);
 
-  document.getElementById("total-fee").innerText = "$" + base;
-  document.getElementById("discount").innerText = "$" + discount;
-  document.getElementById("final-fee").innerText = "$" + finalFee;
+  // Update visible summary
+  const totalFeeSpan = document.getElementById("total-fee");
+  const discountSpan = document.getElementById("discount");
+  const finalFeeSpan = document.getElementById("final-fee");
 
-  document.getElementById("baseFee").value = base;
-  document.getElementById("discountValue").value = discount;
-  document.getElementById("finalFee").value = finalFee;
-}
+  if (totalFeeSpan && discountSpan && finalFeeSpan) {
+    totalFeeSpan.innerText = "$" + base;
+    discountSpan.innerText = "$" + discount;
+    finalFeeSpan.innerText = "$" + finalFee;
+    console.log("✅ Updated fee display elements");
+  }
 
-function buildChessPayload() {
-  const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
-  const getChecked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
+  // Set hidden field values by name
+  const baseInput = document.querySelector("input[name='baseFee']");
+  const discountInput = document.querySelector("input[name='discountValue']");
+  const finalInput = document.querySelector("input[name='finalFee']");
 
-  return {
-    programType: "Chess",
-    parentName: getVal("parentName"),
-    email: getVal("email"),
-    phone: getVal("phone"),
-    billingAddress: getVal("billingAddress"),
-    student_1_name: getVal("studentName"),
-    grade_1: getVal("grade"),
-    school_1: getVal("school"),
-    emergency_name: getVal("emergencyContactName"),
-    emergency_phone: getVal("emergencyContactPhone"),
-    medical_conditions: getVal("medicalInfo"),
-    medications: getVal("medications"),
-    photo_consent: getChecked("photoConsent"),
-    cancellation_policy: getChecked("refundPolicy"),
-    medical_release: getChecked("emergencyMedical"),
-    emergency_contact_info: getChecked("emergencyContact"),
-    chessSession: getVal("chessSession"),
-    baseFee: getVal("baseFee"),
-    discountValue: getVal("discountValue"),
-    finalFee: getVal("finalFee")
-  };
+  if (baseInput) baseInput.value = base;
+  if (discountInput) discountInput.value = discount;
+  if (finalInput) finalInput.value = finalFee;
+
+  console.log("✅ Set input values");
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -62,41 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
-  const form = document.getElementById("chess-enrollment-form");
-  if (!form) {
-    console.error("❌ Form ID not found: chess-enrollment-form");
-    return;
-  }
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const payload = buildChessPayload();
-    console.log("📦 Submitting payload:", payload);
-
-    fetch("/.netlify/functions/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(response => {
-      if (response.success) {
-        const session = payload.chessSession;
-        if (session === "Beginner to Intermediate") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
-        } else if (session === "Intermediate to Advanced") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
-        } else {
-          alert("Unknown session type selected.");
-        }
-      } else {
-        console.error("❌ Submission failed:", response.error);
-        alert("Submission failed: " + response.error);
-      }
-    })
-    .catch(err => {
-      console.error("❌ Fetch error:", err);
-      alert("Error submitting form. Please try again.");
-    });
-  });
+  // Trigger calculation initially if a radio is pre-selected
+  calculateAndDisplayFee();
 });
