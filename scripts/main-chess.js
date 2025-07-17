@@ -1,3 +1,4 @@
+
 function calculateAndDisplayFee() {
   console.log("🔧 Fee calc triggered");
 
@@ -47,9 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
-  calculateAndDisplayFee(); // ✅ Force run on load in case one is pre-selected
-
-  const form = document.getElementById("chess-enrollment-form"); // ✅ CORRECT ID
+  const form = document.getElementById("chess-enrollment-form");
   if (!form) {
     console.error("❌ chess-enrollment-form not found!");
     return;
@@ -69,24 +68,27 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(jsonData)
     })
-      .then(response => response.json())
-      .then(result => {
-        if (result.success) {
-          const session = jsonData["chessSession"];
-          if (session === "Beginner to Intermediate") {
-            window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
-          } else if (session === "Intermediate to Advanced") {
-            window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
-          } else {
-            alert("Unknown session. Please contact support.");
-          }
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        const session = jsonData["chessSession"];
+        if (session === "Beginner to Intermediate") {
+          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+        } else if (session === "Intermediate to Advanced") {
+          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
         } else {
-          alert("Submission failed: " + result.error);
+          alert("Unknown session. Please contact support.");
         }
-      })
-      .catch(error => {
-        console.error("Submission error:", error);
-        alert("An error occurred during submission.");
-      });
+      } else {
+        alert("Submission failed: " + result.error);
+      }
+    })
+    .catch(error => {
+      console.error("Submission error:", error);
+      alert("An error occurred during submission.");
+    });
   });
+
+  // Trigger fee calculation on page load if already selected
+  calculateAndDisplayFee();
 });
