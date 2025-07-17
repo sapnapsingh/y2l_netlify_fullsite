@@ -1,11 +1,12 @@
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🔧 Public Speaking form initialized");
 
-  const form = document.getElementById("publicspeaking-enrollment-form");
-  const loader = document.getElementById("submission-loader");
+  const form = document.getElementById("public-speaking-enrollment-form");
+  const loader = document.getElementById("submitting-overlay");
 
   if (!form) {
-    console.error("❌ publicspeaking-enrollment-form not found!");
+    console.error("❌ public-speaking-enrollment-form not found!");
     return;
   }
 
@@ -47,6 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
   function buildPayload() {
     const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
 
+    const session = document.querySelector("input[name='publicSpeakingSession']:checked")?.value || "";
+    const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
+    const discount = parseInt(document.querySelector("input[name='discountValue']").value) || 0;
+    const finalFee = parseInt(document.querySelector("input[name='finalFee']").value) || 0;
+
     const data = {
       programType: "Public Speaking",
       parentName: getVal("parentName"),
@@ -86,20 +92,21 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     })
-      .then(response => response.text())
-      .then(result => {
-        if (loader) loader.style.display = "none";
-        console.log("✅ Server responded:", result);
+    .then(response => response.text())
+    .then(result => {
+      if (loader) loader.style.display = "none";
+      console.log("✅ Server responded:", result);
 
-        if (result.trim() === "Submitted and emailed successfully.") {
-          window.location.href = "/payment-options.html";
-        } else {
-          alert("Submission error: " + result);
-        }
-      })
-      .catch(error => {
-        console.error("Submission failed:", error);
-        if (loader) loader.style.display = "none";
-        alert("There was an error submitting the form. Please try again.");
-      });
+      if (result.trim() === "Submitted and emailed successfully.") {
+        window.location.href = "/payment-options.html";
+      } else {
+        alert("Submission error: " + result);
+      }
+    })
+    .catch(error => {
+      console.error("Submission failed:", error);
+      if (loader) loader.style.display = "none";
+      alert("There was an error submitting the form. Please try again.");
+    });
+  });
 });
