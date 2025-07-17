@@ -70,7 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
       cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
       medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
       emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
-      publicSpeakingSession: session,
+      //publicSpeakingSession: session,
+      publicSpeakingSession: session === "Beginner" ? "Beginner Orators" : session,
       baseFee: base,
       discountValue: discount,
       finalFee: finalFee
