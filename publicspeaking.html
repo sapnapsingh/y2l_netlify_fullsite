@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Public Speaking & Debate Enrollment</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="main-publicspeaking.js"></script>
+</head>
+<body>
+  <h1>Public Speaking & Debate Enrollment</h1>
+  <form id="publicspeaking-enrollment-form">
+    <label>Parent Name: <input type="text" name="parentName" required></label><br/>
+    <label>Email: <input type="email" name="email" required></label><br/>
+    <label>Phone: <input type="tel" name="phone" required></label><br/>
+    <label>Billing Address: <input type="text" name="billingAddress" required></label><br/>
+
+    <h3>Student Information</h3>
+    <label>Name: <input type="text" name="student1Name" required></label><br/>
+    <label>Grade: <input type="text" name="grade1" required></label><br/>
+    <label>School: <input type="text" name="school1" required></label><br/>
+
+    <h3>Emergency Contact</h3>
+    <label>Contact Name: <input type="text" name="emergencyContactName" required></label><br/>
+    <label>Contact Phone: <input type="tel" name="emergencyContactPhone" required></label><br/>
+
+    <h3>Medical Info</h3>
+    <label>Conditions: <input type="text" name="medicalInfo"></label><br/>
+    <label>Medications: <input type="text" name="medications"></label><br/>
+
+    <h3>Session Selection</h3>
+    <label><input type="radio" name="psSession" value="Beginner" required> Beginner (Thurs 4:30–6:00 PM)</label><br/>
+    <label><input type="radio" name="psSession" value="Intermediate" disabled> Intermediate (TBD)</label><br/>
+    <label><input type="radio" name="psSession" value="Advanced" disabled> Advanced (TBD)</label><br/>
+
+    <h3>Waiver and Consent</h3>
+    <label><input type="checkbox" name="photoConsent" required> Photo Consent</label><br/>
+    <label><input type="checkbox" name="refundPolicy" required> Cancellation Policy</label><br/>
+    <label><input type="checkbox" name="medicalRelease" required> Medical Release</label><br/>
+    <label><input type="checkbox" name="emergencyContact" required> Emergency Info Consent</label><br/>
+
+    <input type="hidden" name="baseFee">
+    <input type="hidden" name="discountValue">
+    <input type="hidden" name="finalFee">
+
+    <div class="fee-summary-box">
+      <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+      <div class="fee-line"><span>Discount:</span><span id="discount">$0</span></div>
+      <div class="fee-line total"><span>Final Fee:</span><span id="final-fee">$0</span></div>
+    </div>
+
+    <div id="submission-loader" style="display:none;">Submitting your form...</div>
+
+    <button type="submit">Submit Enrollment</button>
+  </form>
+</body>
+</html>
