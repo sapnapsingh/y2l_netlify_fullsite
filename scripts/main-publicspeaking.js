@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("✅ Server responded:", result);
 
       if (result.trim() === "Submitted and emailed successfully.") {
-        window.location.href = "/payment-options.html";
+        window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.publicSpeakingSession);
       } else {
         alert("Submission error: " + result);
       }
