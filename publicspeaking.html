@@ -2,56 +2,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Public Speaking & Debate Enrollment</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="main-publicspeaking.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Public Speaking Enrollment</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Public Speaking & Debate Enrollment</h1>
-  <form id="publicspeaking-enrollment-form">
-    <label>Parent Name: <input type="text" name="parentName" required></label><br/>
-    <label>Email: <input type="email" name="email" required></label><br/>
-    <label>Phone: <input type="tel" name="phone" required></label><br/>
-    <label>Billing Address: <input type="text" name="billingAddress" required></label><br/>
+  <div class="form-container">
+    <h1>Enroll in Public Speaking & Debate Program</h1>
+    <form id="public-speaking-enrollment-form">
+      <fieldset>
+        <legend>Parent Information</legend>
+        <label>Parent Name: <input type="text" name="parentName" required /></label><br />
+        <label>Email: <input type="email" name="email" required /></label><br />
+        <label>Phone: <input type="tel" name="phone" required /></label><br />
+        <label>Billing Address: <input type="text" name="billingAddress" required /></label>
+      </fieldset>
 
-    <h3>Student Information</h3>
-    <label>Name: <input type="text" name="student1Name" required></label><br/>
-    <label>Grade: <input type="text" name="grade1" required></label><br/>
-    <label>School: <input type="text" name="school1" required></label><br/>
+      <fieldset>
+        <legend>Student Information</legend>
+        <label>Student Name: <input type="text" name="student1Name" required /></label><br />
+        <label>Grade: <input type="text" name="grade1" required /></label><br />
+        <label>School: <input type="text" name="school1" required /></label>
+      </fieldset>
 
-    <h3>Emergency Contact</h3>
-    <label>Contact Name: <input type="text" name="emergencyContactName" required></label><br/>
-    <label>Contact Phone: <input type="tel" name="emergencyContactPhone" required></label><br/>
+      <fieldset>
+        <legend>Emergency & Medical</legend>
+        <label>Emergency Contact Name: <input type="text" name="emergencyContactName" required /></label><br />
+        <label>Emergency Contact Phone: <input type="tel" name="emergencyContactPhone" required /></label><br />
+        <label>Medical Conditions: <input type="text" name="medicalInfo" /></label><br />
+        <label>Medications: <input type="text" name="medications" /></label>
+      </fieldset>
 
-    <h3>Medical Info</h3>
-    <label>Conditions: <input type="text" name="medicalInfo"></label><br/>
-    <label>Medications: <input type="text" name="medications"></label><br/>
+      <fieldset>
+        <legend>Program Selection</legend>
+        <p><strong>Session Dates:</strong> 12 Thursdays from August 28 – November 13, 2025</p>
+        <label><input type="radio" name="publicSpeakingSession" value="Beginner" required /> Beginner (4:30 – 6:00 PM)</label><br />
+        <label><input type="radio" name="publicSpeakingSession" value="Intermediate" disabled /> Intermediate – TBD</label><br />
+        <label><input type="radio" name="publicSpeakingSession" value="Advanced" disabled /> Advanced – TBD</label>
+      </fieldset>
 
-    <h3>Session Selection</h3>
-    <label><input type="radio" name="psSession" value="Beginner" required> Beginner (Thurs 4:30–6:00 PM)</label><br/>
-    <label><input type="radio" name="psSession" value="Intermediate" disabled> Intermediate (TBD)</label><br/>
-    <label><input type="radio" name="psSession" value="Advanced" disabled> Advanced (TBD)</label><br/>
+      <fieldset>
+        <legend>Waivers & Consents</legend>
+        <label><input type="checkbox" name="photoConsent" required /> I consent to use of photos.</label><br />
+        <label><input type="checkbox" name="refundPolicy" required /> I accept the refund policy.</label><br />
+        <label><input type="checkbox" name="emergencyMedical" required /> I authorize emergency medical care.</label><br />
+        <label><input type="checkbox" name="emergencyContact" required /> I consent to emergency contact information use.</label>
+      </fieldset>
 
-    <h3>Waiver and Consent</h3>
-    <label><input type="checkbox" name="photoConsent" required> Photo Consent</label><br/>
-    <label><input type="checkbox" name="refundPolicy" required> Cancellation Policy</label><br/>
-    <label><input type="checkbox" name="medicalRelease" required> Medical Release</label><br/>
-    <label><input type="checkbox" name="emergencyContact" required> Emergency Info Consent</label><br/>
+      <input type="hidden" name="baseFee" />
+      <input type="hidden" name="discountValue" />
+      <input type="hidden" name="finalFee" />
 
-    <input type="hidden" name="baseFee">
-    <input type="hidden" name="discountValue">
-    <input type="hidden" name="finalFee">
+      <div class="fee-summary">
+        <h2>Fee Summary</h2>
+        <div class="fee-line"><span>Total Fee:</span> <span id="total-fee">$0</span></div>
+        <div class="fee-line"><span>Discount:</span> <span id="discount">$0</span></div>
+        <div class="fee-line total"><span>Final Fee:</span> <span id="final-fee">$0</span></div>
+      </div>
 
-    <div class="fee-summary-box">
-      <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
-      <div class="fee-line"><span>Discount:</span><span id="discount">$0</span></div>
-      <div class="fee-line total"><span>Final Fee:</span><span id="final-fee">$0</span></div>
-    </div>
-
-    <div id="submission-loader" style="display:none;">Submitting your form...</div>
-
-    <button type="submit">Submit Enrollment</button>
-  </form>
+      <button type="submit">Submit Enrollment</button>
+      <div id="submission-loader" style="display:none;">Submitting your form...</div>
+    </form>
+  </div>
 </body>
 </html>
