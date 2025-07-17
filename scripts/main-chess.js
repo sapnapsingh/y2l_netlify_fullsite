@@ -21,10 +21,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let base = 0, discount = 0;
     if (session === "Beginner") {
       base = 360;
-      discount = today <= earlyBirdDeadline ? 60 : 0;
+      discount = today <= earlyBirdDeadline ? 35 : 0;
     } else if (session === "Advanced") {
       base = 420;
-      discount = today <= earlyBirdDeadline ? 60 : 0;
+      discount = today <= earlyBirdDeadline ? 35 : 0;
     }
 
     const finalFee = base - discount;
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (loader) loader.style.display = "none";
       if (result.trim() === "Submitted and emailed successfully.") {
         //window.location.href = "/payment-options.html";
-        const session = payload.chessSession?.toLowerCase().includes("Beginner") ? "Beginner" : "Advanced";
+        const session = payload.chessSession?.toLowerCase().includes("beginner") ? "beginner" : "advanced";
         window.top.location.href = `/payment-options.html?session=${session}`;
       } else {
         alert("Submission error: " + result);
