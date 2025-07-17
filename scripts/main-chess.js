@@ -96,7 +96,9 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("✅ Server responded:", result);
       if (loader) loader.style.display = "none";
       if (result.trim() === "Submitted and emailed successfully.") {
-        window.location.href = "/payment-options.html";
+        //window.location.href = "/payment-options.html";
+        const session = payload.chessSession?.toLowerCase().includes("Beginner") ? "Beginner" : "Advanced";
+        window.top.location.href = `/payment-options.html?session=${session}`;
       } else {
         alert("Submission error: " + result);
       }
