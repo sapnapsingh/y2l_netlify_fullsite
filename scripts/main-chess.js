@@ -1,6 +1,3 @@
-
-// main-chess.js — FINAL FULL VERSION
-
 function calculateAndDisplayFee() {
   console.log("🔧 Fee calc triggered");
 
@@ -14,10 +11,10 @@ function calculateAndDisplayFee() {
 
   if (session === "Beginner") {
     base = 360;
-    discount = today <= earlyBirdDeadline ? 60 : 0;
+    discount = today <= earlyBirdDeadline ? 35 : 0;
   } else if (session === "Advanced") {
     base = 420;
-    discount = today <= earlyBirdDeadline ? 60 : 0;
+    discount = today <= earlyBirdDeadline ? 35 : 0;
   }
 
   const finalFee = base - discount;
@@ -34,7 +31,7 @@ function calculateAndDisplayFee() {
     console.log("✅ Updated fee display elements");
   }
 
-  // Set hidden input values
+  // Set hidden input values for submission
   const baseInput = document.querySelector("input[name='baseFee']");
   const discountInput = document.querySelector("input[name='discountValue']");
   const finalInput = document.querySelector("input[name='finalFee']");
@@ -73,19 +70,20 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(jsonData)
     })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(result => {
-      if (result.success) {
+      console.log("📩 Raw response:", result);
+      if (result.trim() === "Submitted and emailed successfully.") {
         const session = jsonData["chessSession"];
         if (session === "Beginner") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+          window.top.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
         } else if (session === "Advanced") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+          window.top.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
         } else {
           alert("Unknown session. Please contact support.");
         }
       } else {
-        alert("Submission failed: " + result.error);
+        alert("Submission failed: " + result);
       }
     })
     .catch(error => {
