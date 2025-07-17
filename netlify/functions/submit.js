@@ -1,45 +1,34 @@
 
-const { v4: uuidv4 } = require('uuid');
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 
-exports.handler = async (event) => {
+exports.handler = async function(event, context) {
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return {
+      statusCode: 405,
+      body: "Method Not Allowed",
+    };
   }
 
   try {
-    let body = JSON.parse(event.body);
-
-    // Inject programType if it looks like a Chess submission
-    if (body.chessSession && !body.programType) {
-      body.programType = "Chess";
-    }
-
-    // Proper payload wrapping (no double stringification)
-    const payloadKey = "payload_" + uuidv4();
-    const payloadData = {
-      [payloadKey]: body
-    };
-
-    // Final URL for Google Apps Script (working and tested)
-    const scriptPropsUrl = "https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec";
-
-    await fetch(scriptPropsUrl, {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbyHfEeb6w_EXWd951Lq043WYuw_H1VCtu-vJQQOYGSjF5vEYpdoNpL_eqRb5kuNFQzF/exec", {
       method: "POST",
-      body: JSON.stringify(payloadData),
+      body: event.body,
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
+
+    const text = await response.text();
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, message: "Submission sent successfully" })
+      body: text,
     };
-  } catch (error) {
+  } catch (err) {
+    console.error("Error in Netlify function:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ success: false, error: error.message })
+      body: "Submission failed: " + err.message,
     };
   }
 };
