@@ -3,19 +3,19 @@ function calculateAndDisplayFee() {
   console.log("🔧 Fee calc triggered");
 
   const today = new Date();
-  const earlyBirdDeadline = new Date("2025-08-10");
+  const earlyBirdDeadline = new Date("2025-08-15");
 
   const session = document.querySelector("input[name='chessSession']:checked")?.value || "";
   console.log("🎯 Session selected:", session);
 
   let base = 0, discount = 0;
 
-  if (session === "Beginner to Intermediate") {
+  if (session === "Beginner") {
     base = 360;
-    discount = today <= earlyBirdDeadline ? 35 : 0;
-  } else if (session === "Intermediate to Advanced") {
+    discount = today <= earlyBirdDeadline ? 60 : 0;
+  } else if (session === "Advanced") {
     base = 420;
-    discount = today <= earlyBirdDeadline ? 35 : 0;
+    discount = today <= earlyBirdDeadline ? 60 : 0;
   }
 
   const finalFee = base - discount;
@@ -30,6 +30,8 @@ function calculateAndDisplayFee() {
     discountSpan.innerText = "$" + discount;
     finalFeeSpan.innerText = "$" + finalFee;
     console.log("✅ Updated fee display elements");
+  } else {
+    console.warn("❌ Could not find one or more fee summary spans");
   }
 
   const baseInput = document.getElementById("baseFee");
@@ -41,54 +43,107 @@ function calculateAndDisplayFee() {
   if (finalInput) finalInput.value = finalFee;
 
   console.log("✅ Set input values");
+
+  return { session, base, discount, finalFee };
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll("input[name='chessSession']").forEach(radio => {
-    radio.addEventListener("change", calculateAndDisplayFee);
-  });
+function submitChessForm() {
+  const overlay = document.getElementById("submitting-overlay");
+  const errorMsg = document.getElementById("form-error-msg");
+  errorMsg.innerText = "";
+  errorMsg.style.display = "none";
 
-  const form = document.getElementById("chess-enrollment-form");
-  if (!form) {
-    console.error("❌ chess-enrollment-form not found!");
+  const getVal = name => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
+  const getRadio = name => document.querySelector(`[name='${name}']:checked`)?.value || "";
+  const getCheck = name => document.querySelector(`[name='${name}']`)?.checked;
+
+  const requiredFields = [
+    "parentName", "email", "phone", "billingAddress",
+    "student1Name", "grade1", "school1",
+    "medicalInfo", "medications",
+    "emergencyContactName", "emergencyContactPhone"
+  ];
+
+  const waiverFields = ["refundPolicy", "emergencyMedical", "emergencyContact"];
+  const errors = [];
+
+  for (const name of requiredFields) {
+    const value = getVal(name);
+    if (!value) {
+      errors.push("• " + name.replace(/([A-Z])/g, " $1"));
+    }
+  }
+
+  for (const waiver of waiverFields) {
+    if (!getCheck(waiver)) {
+      errors.push("• Waiver: " + waiver);
+    }
+  }
+
+  if (!getRadio("chessSession")) {
+    errors.push("• Select a Chess Session (Beginner or Advanced)");
+  }
+
+  if (errors.length > 0) {
+    errorMsg.innerText = "⚠️ Please complete the following before submitting:\n" + errors.join("\n");
+    errorMsg.style.display = "block";
+    overlay.style.display = "none";
     return;
   }
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  overlay.style.display = "flex";
 
-    const formData = new FormData(form);
-    const jsonData = {};
-    formData.forEach((value, key) => {
-      jsonData[key] = value;
-    });
+  const { session, base, discount, finalFee } = calculateAndDisplayFee();
 
-    fetch("/.netlify/functions/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(jsonData)
-    })
-    .then(response => response.json())
+  const data = {
+    programType: "Chess",
+    chessSession: session,
+    parentName: getVal("parentName"),
+    email: getVal("email"),
+    phone: getVal("phone"),
+    billingAddress: getVal("billingAddress"),
+    student_1_name: getVal("student1Name"),
+    grade_1: getVal("grade1"),
+    school_1: getVal("school1"),
+    emergency_name: getVal("emergencyContactName"),
+    emergency_phone: getVal("emergencyContactPhone"),
+    medical_conditions: getVal("medicalInfo"),
+    medications: getVal("medications"),
+    photo_consent: getCheck("photoConsent") ? "Yes" : "No",
+    cancellation_policy: getCheck("refundPolicy") ? "Yes" : "No",
+    medical_release: getCheck("emergencyMedical") ? "Yes" : "No",
+    emergency_contact_info: getCheck("emergencyContact") ? "Yes" : "No",
+    baseFee: base,
+    discountValue: discount,
+    finalFee: finalFee
+  };
+
+  fetch("/.netlify/functions/submit", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" }
+  })
+    .then(res => res.text())
     .then(result => {
-      if (result.success) {
-        const session = jsonData["chessSession"];
-        if (session === "Beginner to Intermediate") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
-        } else if (session === "Intermediate to Advanced") {
-          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
-        } else {
-          alert("Unknown session. Please contact support.");
-        }
+      if (result.includes("success") || result.includes("Submitted")) {
+        window.location.href = "https://y2lacademy.com/summer-confirmation";
       } else {
-        alert("Submission failed: " + result.error);
+        errorMsg.innerText = "Submission failed: " + result;
+        errorMsg.style.display = "block";
+        overlay.style.display = "none";
       }
     })
-    .catch(error => {
-      console.error("Submission error:", error);
-      alert("An error occurred during submission.");
+    .catch(err => {
+      errorMsg.innerText = "Submission error: " + err.message;
+      errorMsg.style.display = "block";
+      overlay.style.display = "none";
     });
-  });
+}
 
-  // Trigger fee calculation on page load if already selected
-  calculateAndDisplayFee();
+// Trigger fee update when session is selected
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("🟢 DOM Loaded. Binding session fee listeners.");
+  document.querySelectorAll("input[name='chessSession']").forEach(radio => {
+    radio.addEventListener("change", calculateAndDisplayFee);
+  });
 });
