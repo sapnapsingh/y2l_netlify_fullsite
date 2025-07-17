@@ -1,3 +1,6 @@
+
+// main-chess.js — FINAL FULL VERSION
+
 function calculateAndDisplayFee() {
   console.log("🔧 Fee calc triggered");
 
@@ -9,18 +12,17 @@ function calculateAndDisplayFee() {
 
   let base = 0, discount = 0;
 
-  if (session === "Beginner to Intermediate") {
+  if (session === "Beginner") {
     base = 360;
-    discount = today <= earlyBirdDeadline ? 35 : 0;
-  } else if (session === "Intermediate to Advanced") {
+    discount = today <= earlyBirdDeadline ? 60 : 0;
+  } else if (session === "Advanced") {
     base = 420;
-    discount = today <= earlyBirdDeadline ? 35 : 0;
+    discount = today <= earlyBirdDeadline ? 60 : 0;
   }
 
   const finalFee = base - discount;
   console.log("💵 Base:", base, "| Discount:", discount, "| Final:", finalFee);
 
-  // Update visible summary
   const totalFeeSpan = document.getElementById("total-fee");
   const discountSpan = document.getElementById("discount");
   const finalFeeSpan = document.getElementById("final-fee");
@@ -32,7 +34,7 @@ function calculateAndDisplayFee() {
     console.log("✅ Updated fee display elements");
   }
 
-  // Set hidden field values by name
+  // Set hidden input values
   const baseInput = document.querySelector("input[name='baseFee']");
   const discountInput = document.querySelector("input[name='discountValue']");
   const finalInput = document.querySelector("input[name='finalFee']");
@@ -49,6 +51,46 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
-  // Trigger calculation initially if a radio is pre-selected
-  calculateAndDisplayFee();
+  const form = document.getElementById("chess-enrollment-form");
+  if (!form) {
+    console.error("❌ chess-enrollment-form not found!");
+    return;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const jsonData = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value;
+    });
+
+    jsonData["programType"] = "Chess";
+
+    fetch("/.netlify/functions/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        const session = jsonData["chessSession"];
+        if (session === "Beginner") {
+          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+        } else if (session === "Advanced") {
+          window.location.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+        } else {
+          alert("Unknown session. Please contact support.");
+        }
+      } else {
+        alert("Submission failed: " + result.error);
+      }
+    })
+    .catch(error => {
+      console.error("Submission error:", error);
+      alert("An error occurred during submission.");
+    });
+  });
 });
