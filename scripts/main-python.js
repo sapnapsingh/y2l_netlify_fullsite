@@ -58,9 +58,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
 
     const session = document.querySelector("input[name='pythonSession']:checked")?.value || "";
-    //const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
-   //const discount = parseInt(document.querySelector("input[name='discountValue']").value) || 0;
-   // const finalFee = parseInt(document.querySelector("input[name='finalFee']").value) || 0;
+    const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
+    const discount = parseInt(document.querySelector("input[name='discountValue']").value) || 0;
+    const finalFee = parseInt(document.querySelector("input[name='finalFee']").value) || 0;
 
     const data = {
       programType: "Python Programming",
