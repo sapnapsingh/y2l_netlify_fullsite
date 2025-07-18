@@ -107,6 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("✅ Server responded:", result);
 
       if (result.trim() === "Submitted and emailed successfully.") {
+        sessionStorage.setItem("programType", "Python Programming");
+        sessionStorage.setItem("pythonSession", payload.pythonSession);
         window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.pythonSession);
       } else {
         alert("Submission error: " + result);
