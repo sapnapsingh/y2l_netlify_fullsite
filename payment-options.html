@@ -79,55 +79,55 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const session = (params.get("session") || "").toLowerCase();
-    const finalFee = params.get("finalFee");
-    const sessionInfo = document.getElementById("sessionInfo");
-    const payLink = document.getElementById("payLink");
-    const zelleAmount = document.getElementById("zelleAmount");
-    const programTitle = document.getElementById("programTitle");
+  const params = new URLSearchParams(window.location.search);
+  const programType = sessionStorage.getItem("programType") || "";
+  const sessionFromStorage =
+    sessionStorage.getItem("pythonSession") ||
+    sessionStorage.getItem("publicSpeakingSession") ||
+    sessionStorage.getItem("chessSession") || "";
 
-    let feeDisplayHandled = false;
+  const session = (params.get("session") || sessionFromStorage || "").toLowerCase();
+  const sessionInfo = document.getElementById("sessionInfo");
+  const payLink = document.getElementById("payLink");
+  const zelleAmount = document.getElementById("zelleAmount");
+  const programTitle = document.getElementById("programTitle");
 
-    if (finalFee) {
-      zelleAmount.innerHTML = "Send <strong>$" + finalFee + "</strong> to:";
-      feeDisplayHandled = true;
-    }
-
+  if (programType === "Python Programming") {
     if (session === "beginner") {
-      sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Beginner to Intermediate</strong> session.";
-      if (!feeDisplayHandled) zelleAmount.innerHTML = "Send <strong>$325</strong> to:";
-      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
-      programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
-    } else if (session === "advanced") {
-      sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Intermediate to Advanced</strong> session.";
-      if (!feeDisplayHandled) zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
-      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
-      programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
-    } else if (session === "beginner orators") {
-      sessionInfo.innerHTML = "You have enrolled in the <strong>Public Speaking – Beginner Orators</strong> session.";
-      if (!feeDisplayHandled) zelleAmount.innerHTML = "Send <strong>$335</strong> to:";
-      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-publicspeaking";
-      programTitle.innerText = "Complete Your Payment – Public Speaking & Debate Program";
-    } else if (session === "python beginner") {
       sessionInfo.innerHTML = "You have enrolled in the <strong>Python Programming – Beginner</strong> session.";
-      if (!feeDisplayHandled) zelleAmount.innerHTML = "Send <strong>$350</strong> to:";
+      zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-beginner";
       programTitle.innerText = "Complete Your Payment – Python Programming";
-    } else if (session === "python intermediate") {
+    } else if (session === "intermediate") {
       sessionInfo.innerHTML = "You have enrolled in the <strong>Python Programming – Intermediate</strong> session.";
-      if (!feeDisplayHandled) zelleAmount.innerHTML = "Send <strong>$400</strong> to:";
+      zelleAmount.innerHTML = "Send <strong>$440</strong> to:";
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-intermediate";
       programTitle.innerText = "Complete Your Payment – Python Programming";
-    } else if (session === "python advanced") {
+    } else if (session === "advanced") {
       sessionInfo.innerHTML = "You have enrolled in the <strong>Python Programming – Advanced</strong> session.";
-      if (!feeDisplayHandled) zelleAmount.innerHTML = "Send <strong>$500</strong> to:";
+      zelleAmount.innerHTML = "Send <strong>$550</strong> to:";
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-advanced";
       programTitle.innerText = "Complete Your Payment – Python Programming";
-    } else {
-      sessionInfo.innerText = "Unable to detect your session. Please check your enrollment.";
-      payLink.style.display = "none";
     }
+  } else if (session === "beginner") {
+    sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Beginner to Intermediate</strong> session.";
+    zelleAmount.innerHTML = "Send <strong>$330</strong> to:";
+    payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+    programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
+  } else if (session === "advanced") {
+    sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Intermediate to Advanced</strong> session.";
+    zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
+    payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+    programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
+  } else if (session === "beginner orators") {
+    sessionInfo.innerHTML = "You have enrolled in the <strong>Public Speaking – Beginner Orators</strong> session.";
+    zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
+    payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-publicspeaking";
+    programTitle.innerText = "Complete Your Payment – Public Speaking & Debate Program";
+  } else {
+    sessionInfo.innerText = "Unable to detect your session. Please check your enrollment.";
+    payLink.style.display = "none";
+  }
 </script>
 </body>
 </html>
