@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let base = 0, discount = 0;
     if (session === "Beginner") {
       base = 360;
-      discount = today <= earlyBirdDeadline ? 35 : 0;
+      discount = today <= earlyBirdDeadline ? 30 : 0;
     } else if (session === "Advanced") {
       base = 420;
       discount = today <= earlyBirdDeadline ? 35 : 0;
