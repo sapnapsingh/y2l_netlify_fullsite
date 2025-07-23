@@ -18,9 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const session = document.querySelector("input[name='publicSpeakingSession']:checked")?.value || "";
     console.log("🎯 Session selected:", session);
 
-    let base = 360, discount = 0;
+    let base = 420, discount = 0;
     if (session === "Beginner") {
-      discount = today <= earlyBirdDeadline ? 25 : 0;
+      discount = today <= earlyBirdDeadline ? 35 : 0;
     }
 
     const finalFee = base - discount;
