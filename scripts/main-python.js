@@ -22,13 +22,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let base = 0, discount = 0;
     if (session === "Beginner") {
       base = 420;
-      discount = today <= earlyBirdDeadline ? 70 : 0;
+      discount = today <= earlyBirdDeadline ? 35 : 0;
     } else if (session === "Intermediate") {
       base = 480;
-      discount = today <= earlyBirdDeadline ? 80 : 0;
+      discount = today <= earlyBirdDeadline ? 40 : 0;
     } else if (session === "Advanced") {
       base = 600;
-      discount = today <= earlyBirdDeadline ? 100 : 0;
+      discount = today <= earlyBirdDeadline ? 50 : 0;
     }
 
 
