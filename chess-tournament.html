@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Y2L Chess Tournament Registration</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; }
+    h2 { color: #2c3e50; }
+    label { display: block; margin: 10px 0; }
+    .fee-summary { margin-top: 20px; font-weight: bold; background: #f0f0f0; padding: 10px; border-radius: 5px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Chess Tournament Registration</h2>
+
+  <form id="tournamentForm">
+    <label>Parent Name: <input type="text" name="parentName" required></label>
+    <label>Email: <input type="email" name="email" required></label>
+    <label>Phone: <input type="text" name="phone" required></label>
+
+    <hr>
+    <label>Does your child have a USCF ID?</label>
+    <label><input type="radio" name="hasUscfId" value="yes" required> Yes</label>
+    <label><input type="radio" name="hasUscfId" value="no"> No</label>
+
+    <div id="uscfIdSection" style="display: none;">
+      <label>USCF ID: <input type="text" name="uscfId" id="uscfIdInput"></label>
+    </div>
+
+    <div id="uscfPurchaseSection" style="display: none;">
+      <label><input type="checkbox" id="purchaseUscfCheckbox"> I want to purchase a USCF ID for $20</label>
+    </div>
+
+    <hr>
+    <label>Player Name: <input type="text" name="playerName" required></label>
+    <label>Grade: <input type="text" name="grade" required></label>
+    <label>School: <input type="text" name="school" required></label>
+
+    <label>Choose Rating Category:</label>
+    <label><input type="radio" name="ratingCategory" value="under400" required> Under 400 – $25</label>
+    <label><input type="radio" name="ratingCategory" value="401to800"> 401–800 – $30</label>
+    <label><input type="radio" name="ratingCategory" value="800plus"> 800+ – $35</label>
+
+    <div class="fee-summary" id="feeSummary">💵 Base: $0 | USCF Fee: $0 | Final: $0</div>
+
+    <button type="submit">Submit Registration</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("tournamentForm");
+    const feeSummary = document.getElementById("feeSummary");
+    const purchaseCheckbox = document.getElementById("purchaseUscfCheckbox");
+
+    function updateFeeSummary() {
+      let baseFee = 0;
+      const rating = form.ratingCategory.value;
+
+      if (rating === "under400") baseFee = 25;
+      else if (rating === "401to800") baseFee = 30;
+      else if (rating === "800plus") baseFee = 35;
+
+      const uscfFee = purchaseCheckbox.checked ? 20 : 0;
+      const total = baseFee + uscfFee;
+
+      feeSummary.textContent = `💵 Base: $${baseFee} | USCF Fee: $${uscfFee} | Final: $${total}`;
+    }
+
+    // Show/hide USCF fields
+    const uscfRadios = form.hasUscfId;
+    for (let radio of uscfRadios) {
+      radio.addEventListener("change", () => {
+        document.getElementById("uscfIdSection").style.display = radio.value === "yes" ? "block" : "none";
+        document.getElementById("uscfPurchaseSection").style.display = radio.value === "no" ? "block" : "none";
+        updateFeeSummary();
+      });
+    }
+
+    // Add listeners
+    form.ratingCategory.forEach(radio => radio.addEventListener("change", updateFeeSummary));
+    purchaseCheckbox.addEventListener("change", updateFeeSummary);
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      alert("Submission logic not added here. This is a layout test.");
+    });
+  </script>
+</body>
+</html>
