@@ -6,8 +6,8 @@
   <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-<form id="tournament-registration-form" name="tournamentRegistration">
- <div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; background-color: rgba(255,255,255,0.85); width: 100%; height: 100%; z-index: 1000; text-align: center; padding-top: 200px; font-size: 20px; color: #2a7ae2;">
+<form id="tournament-registration-form" name="tournamentRegistration" method="POST" action="/.netlify/functions/submit" netlify netlify-honeypot="bot-field">
+<div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; background-color: rgba(255,255,255,0.85); width: 100%; height: 100%; z-index: 1000; text-align: center; padding-top: 200px; font-size: 20px; color: #2a7ae2;">
   Submitting your registration... Please wait.
 </div>
 
@@ -75,6 +75,6 @@
 </div>
 
 </form>
-<script src="/scripts/main-tournament.js?v=20250723"></script>
+<script src="/scripts/main-tournament.js?v=20250724"></script>
 </body>
 </html>
