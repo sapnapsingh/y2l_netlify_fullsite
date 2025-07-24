@@ -47,6 +47,15 @@
 
 <hr class="section-divider"/>
 
+<h2>Select Player Category</h2>
+<div class="info-section">
+  <label><input type="radio" name="chessLevel" value="Beginner" required> Beginner (Rating 0–400) – $25</label><br/>
+  <label><input type="radio" name="chessLevel" value="Intermediate"> Intermediate (401–800) – $30</label><br/>
+  <label><input type="radio" name="chessLevel" value="Advanced"> Advanced (801+) – $35</label>
+</div>
+
+<hr class="section-divider"/>
+
 <h2>Fee Summary</h2>
 <div class="fee-summary-box">
   <div class="fee-line"><span>Base Fee:</span><span id="base-fee">$0</span></div>
@@ -57,6 +66,7 @@
 <input type="hidden" name="baseFee">
 <input type="hidden" name="uscfFee">
 <input type="hidden" name="finalFee">
+<input type="hidden" name="chessLevelSession">
 
 <div id="form-error-msg" style="color:red; display:none; margin-top: 20px;"></div>
 
