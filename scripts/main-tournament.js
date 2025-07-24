@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
   hasUscfRadios.forEach(radio => radio.addEventListener("change", toggleSections));
   if (purchaseUscfCheckbox) purchaseUscfCheckbox.addEventListener("change", calculateFee);
 
+  /*
   function buildPayload() {
     const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
     const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
@@ -77,6 +78,38 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("📦 Payload to submit:", JSON.stringify(data));
     return data;
   }
+  */
+
+  function buildPayload() {
+  const getVal = (name) => {
+    const el = document.querySelector(`[name='${name}']:checked`) || document.querySelector(`[name='${name}']`);
+    return el ? el.value.trim() : "";
+  };
+  const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
+
+  const data = {
+    programType: "ChessTournament",
+    parentName: getVal("parentName"),
+    email: getVal("email"),
+    phone: getVal("phone"),
+    playerName: getVal("playerName"),
+    studentName: getVal("playerName"),
+    grade: getVal("grade"),
+    school: getVal("school"),
+    hasUscf: getVal("hasUscf"),
+    uscfId: getVal("uscfId"),
+    uscfRating: getVal("uscfRating"),
+    purchaseUSCF: checked("purchaseUscfId"),
+    dob: getVal("dob"),
+    chessLevel: getVal("chessLevel"),
+    baseFee: parseInt(getVal("baseFee")) || 0,
+    uscfFee: parseInt(getVal("uscfFee")) || 0,
+    finalFee: parseInt(getVal("finalFee")) || 0
+  };
+
+  console.log("📦 Payload to submit:", JSON.stringify(data));
+  return data;
+}
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
