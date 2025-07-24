@@ -167,12 +167,20 @@ document.addEventListener("DOMContentLoaded", function () {
       dobField.required = false;
     }
   }
-
-else if (selected === "no") {
+else if (hasUscfIdYes.checked) {
+  uscfIdFieldContainer.style.display = "block";
+  uscfIdInput.required = true;
+  dobInput.required = false;
+  purchaseCheckbox.checked = false;
+} else if (hasUscfIdNo.checked) {
+  uscfIdFieldContainer.style.display = "none";
+  uscfIdInput.required = false;
+}
+/*else if (selected === "no") {
       uscfIdSection.style.display = "none";
       uscfPurchaseSection.style.display = "block";
       dobField.required = purchaseUscfCheckbox?.checked;
-    }
+    }*/
   }
 
   hasUscfRadios.forEach(radio => {
