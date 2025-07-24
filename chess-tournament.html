@@ -89,7 +89,7 @@
 <div id="uscfPurchaseSection" style="display: none;">
 <label><input id="purchaseUscfCheckbox" type="checkbox"/> I want to purchase a USCF ID for $20</label>
 <label id="dobField" style="display:none;">Date of Birth (MM/DD/YYYY): 
-  <input type="text" id="dobInput" name="dob" />
+  <input id="dobInput" name="dob" type="text"/>
 </label>
 </div>
 <hr/>
@@ -156,15 +156,11 @@ purchaseCheckbox.addEventListener("change", () => {
   </script><div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;background-color: rgba(0,0,0,0.5); z-index: 1000; text-align: center; padding-top: 20%;"><div style="color: white; font-size: 1.5em;">Submitting your registration...</div></div>
 <div id="submitOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
   background:rgba(255,255,255,0.9); z-index:9999; text-align:center; padding-top:20%;">
-  <h2>Submitting your form...</h2>
+<h2>Submitting your form...</h2>
 </div>
-
-
-
 <div id="submittingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); color:white; font-size:24px; text-align:center; padding-top:20%; z-index:1000;">
   Submitting your registration...
 </div>
 
-<script src="/scripts/main-tournament.js?v=20250723"></script>
-</body>
+<div id="submittingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.8); z-index: 9999; text-align: center; padding-top: 20%; font-size: 24px; color: #333;">Submitting your registration...</div><script src="/scripts/main-tournament.js"></script></body>
 </html>
