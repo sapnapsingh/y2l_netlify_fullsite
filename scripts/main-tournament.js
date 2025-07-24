@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
       studentName: getVal("playerName"),
       grade: getVal("grade"),
       school: getVal("school"),
-      hasUscf: (getVal("uscfId") !== "") ? "Yes" : "No",
+      hasUscf: getVal("hasUscf"),
       uscfId: getVal("uscfId"),
       uscfRating: getVal("uscfRating"),
       purchaseUSCF: checked("purchaseUscfId"),
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     studentName: getVal("playerName"),
     grade: getVal("grade"),
     school: getVal("school"),
-    hasUscf: (getVal("uscfId") !== "") ? "Yes" : "No",
+    hasUscf: getVal("hasUscf"),
     uscfId: getVal("uscfId"),
     uscfRating: getVal("uscfRating"),
     purchaseUSCF: checked("purchaseUscfId"),
@@ -147,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const uscfIdSection = document.getElementById("uscf-id-section");
   const uscfPurchaseSection = document.getElementById("uscf-purchase-section");
   const dobField = document.querySelector("input[name='dob']");
-  const uscfIdField = document.querySelector("input[name='uscfId']");
   const purchaseUscfCheckbox = document.querySelector("input[name='purchaseUscfId']");
 
   function toggleUSCFSections() {
@@ -156,31 +155,11 @@ document.addEventListener("DOMContentLoaded", function () {
       uscfIdSection.style.display = "block";
       uscfPurchaseSection.style.display = "none";
       dobField.required = false;
-      uscfIdField.required = true;
     } else if (selected === "no") {
       uscfIdSection.style.display = "none";
       uscfPurchaseSection.style.display = "block";
       dobField.required = purchaseUscfCheckbox?.checked;
-      uscfIdField.required = false;
-    } else {
-      uscfIdField.required = false;
-      dobField.required = false;
     }
-  }
- if (hasUscfIdYes.checked) {
-  uscfIdFieldContainer.style.display = "block";
-  uscfIdInput.required = true;
-  dobInput.required = false;
-  purchaseCheckbox.checked = false;
-} else if (hasUscfIdNo.checked) {
-  uscfIdFieldContainer.style.display = "none";
-  uscfIdInput.required = false;
-}
-/*else if (selected === "no") {
-      uscfIdSection.style.display = "none";
-      uscfPurchaseSection.style.display = "block";
-      dobField.required = purchaseUscfCheckbox?.checked;
-    }*/
   }
 
   hasUscfRadios.forEach(radio => {
