@@ -92,7 +92,24 @@
   const zelleAmount = document.getElementById("zelleAmount");
   const programTitle = document.getElementById("programTitle");
 
-  if (programType === "Python Programming") {
+  if (programType === "ChessTournament") {
+    if (session === "Under 400") {
+      sessionInfo.innerHTML = "You are registering for the <strong>Y2L's Back 2 School Chess tournament</strong>.";
+      zelleAmount.innerHTML = "Please send <strong>$25</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-beginner";
+      programTitle.innerText = "Complete Your Payment – Y2L's Back 2 School Chess tournament";
+    } else if (session === "400 - 800") {
+      sessionInfo.innerHTML = "You are registering for the <strong>Y2L's Back 2 School Chess tournament</strong>.";
+      zelleAmount.innerHTML = "Send <strong>$30</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-intermediate";
+      programTitle.innerText = "Complete Your Payment – Complete Your Payment – Y2L's Back 2 School Chess tournament";
+    } else if (session === "Above 800") {
+      sessionInfo.innerHTML = "You are registering for the <strong>Y2L's Back 2 School Chess tournament</strong>.";
+      zelleAmount.innerHTML = "Send <strong>$35</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-advanced";
+      programTitle.innerText = "Complete Your Payment – Y2L's Back 2 School Chess tournament";
+    }
+  } else if (programType === "Python Programming") {
     if (session === "beginner") {
       sessionInfo.innerHTML = "You have enrolled in the <strong>Python Programming – Beginner</strong> session.";
       zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
