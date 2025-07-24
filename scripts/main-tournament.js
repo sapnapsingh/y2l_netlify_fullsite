@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
     const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
 
-    return {
+    const data = {
       programType: "ChessTournament",
       parentName: getVal("parentName"),
       email: getVal("email"),
@@ -74,7 +74,12 @@ document.addEventListener("DOMContentLoaded", function () {
       uscfFee: parseInt(getVal("uscfFee")) || 0,
       finalFee: parseInt(getVal("finalFee")) || 0
     };
+
+    console.log("📦 Payload to submit:", data);
+    return data;
+    
   }
+
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
