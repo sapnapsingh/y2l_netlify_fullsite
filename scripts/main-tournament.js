@@ -1,63 +1,106 @@
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("📋 Chess Tournament Registration loaded");
+
   const form = document.getElementById("tournamentForm");
-  const baseFeeElem = document.getElementById("baseFee");
-  const uscfFeeElem = document.getElementById("uscfFee");
-  const finalFeeElem = document.getElementById("finalFee");
+  const loader = document.getElementById("submitting-overlay");
 
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
+  if (!form) {
+    console.error("❌ Form not found!");
+    return;
+  }
 
-    const formData = new FormData(form);
+  // Fee calculation logic
+  function calculateAndDisplayFee() {
+    const ratingCategory = document.querySelector("input[name='ratingCategory']:checked")?.value || "";
+    const wantsToPurchase = document.getElementById("purchaseUscf")?.checked || false;
 
-    const ratingCategory = formData.get("rating");
-    const hasUscfId = formData.get("hasUscfId") === "yes";
-    const purchaseUscf = formData.get("purchaseUscf") === "yes";
+    let base = 0;
+    if (ratingCategory === "Under 400") base = 25;
+    else if (ratingCategory === "401–800") base = 30;
+    else if (ratingCategory === "800+") base = 35;
 
-    let baseFee = 0;
-    if (ratingCategory === "under400") baseFee = 25;
-    else if (ratingCategory === "401to800") baseFee = 30;
-    else if (ratingCategory === "800plus") baseFee = 35;
+    const uscfFee = wantsToPurchase ? 20 : 0;
+    const finalFee = base + uscfFee;
 
-    const uscfFee = (!hasUscfId && purchaseUscf) ? 25 : 0;
-    const finalFee = baseFee + uscfFee;
+    // Update summary UI
+    document.getElementById("base-fee").innerText = "$" + base;
+    document.getElementById("uscf-fee").innerText = "$" + uscfFee;
+    document.getElementById("final-fee").innerText = "$" + finalFee;
 
-    const payload = {
+    // Set form fields
+    document.querySelector("input[name='baseFee']").value = base;
+    document.querySelector("input[name='uscfFee']").value = uscfFee;
+    document.querySelector("input[name='finalFee']").value = finalFee;
+  }
+
+  // Trigger fee calc on changes
+  document.querySelectorAll("input[name='ratingCategory']").forEach(radio =>
+    radio.addEventListener("change", calculateAndDisplayFee)
+  );
+  document.getElementById("purchaseUscf")?.addEventListener("change", calculateAndDisplayFee);
+
+  // Build payload
+  function buildPayload() {
+    const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
+
+    const ratingCategory = document.querySelector("input[name='ratingCategory']:checked")?.value || "";
+    const hasUscf = document.querySelector("input[name='hasUscf'][value='yes']")?.checked;
+    const wantsToPurchase = document.getElementById("purchaseUscf")?.checked;
+
+    const baseFee = parseInt(getVal("baseFee")) || 0;
+    const uscfFee = parseInt(getVal("uscfFee")) || 0;
+    const finalFee = parseInt(getVal("finalFee")) || 0;
+
+    const data = {
       programType: "ChessTournament",
       timestamp: new Date().toISOString(),
-      parentName: formData.get("parentName"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      playerName: formData.get("studentName"),
-      grade: formData.get("grade"),
-      school: formData.get("school"),
-      ratingCategory: formData.get("rating"),
-      hasUscfId: hasUscfId ? "Yes" : "No",
-      uscfId: formData.get("uscfId") || "",
-      wantsToPurchaseUscf: purchaseUscf ? "Yes" : "No",
-      baseFee: baseFee,
-      uscfFee: uscfFee,
-      finalFee: finalFee
+      parentName: getVal("parentName"),
+      email: getVal("email"),
+      phone: getVal("phone"),
+      studentName: getVal("studentName"),
+      dob: wantsToPurchase ? getVal("dob") : "",
+      grade: getVal("grade"),
+      school: getVal("school"),
+      ratingCategory: ratingCategory,
+      hasUscfId: hasUscf ? "Yes" : "No",
+      uscfId: hasUscf ? getVal("uscfId") : "",
+      purchaseUSCF: wantsToPurchase ? "Yes" : "No",
+      baseFee,
+      uscfFee,
+      finalFee
     };
 
-    try {
-      const response = await fetch(
-        "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL/exec",
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    console.log("📦 Payload ready:", data);
+    return data;
+  }
 
-      if (response.ok) {
-        window.location.href = "/payment-options.html?session=" + ratingCategory + "&programType=ChessTournament&finalFee=" + finalFee;
-      } else {
-        alert("Error submitting form. Please try again.");
-      }
-    } catch (err) {
-      alert("Error submitting form.");
-    }
+  // Submit handler
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (loader) loader.style.display = "block";
+
+    const payload = buildPayload();
+
+    fetch("/.netlify/functions/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.text())
+      .then(result => {
+        console.log("✅ Submission result:", result);
+        if (loader) loader.style.display = "none";
+
+        if (result.trim() === "Submitted and emailed successfully.") {
+          window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.ratingCategory);
+        } else {
+          alert("Submission failed: " + result);
+        }
+      })
+      .catch(err => {
+        console.error("❌ Submission error:", err);
+        if (loader) loader.style.display = "none";
+        alert("There was an error submitting the form. Please try again.");
+      });
   });
 });
