@@ -1,66 +1,33 @@
+
+// ✅ main-tournament.js – FINAL FIXED VERSION for Chess Tournament
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log("♟️ Chess Tournament Form initialized");
 
-  const hasUscfRadios = document.getElementsByName("hasUscf");
-  const uscfIdSection = document.getElementById("uscf-id-section");
-  const uscfPurchaseSection = document.getElementById("uscf-purchase-section");
-  const purchaseUscfCheckbox = document.querySelector("input[name='purchaseUscfId']");
-
-  function updateUscfSections() {
-    const selected = Array.from(hasUscfRadios).find(r => r.checked)?.value;
-    if (selected === "yes") {
-      uscfIdSection.style.display = "block";
-      uscfPurchaseSection.style.display = "none";
-      document.querySelector("input[name='uscfId']").required = true;
-    } else if (selected === "no") {
-      uscfIdSection.style.display = "none";
-      uscfPurchaseSection.style.display = "block";
-      document.querySelector("input[name='uscfId']").required = false;
-    }
-  }
-
-  hasUscfRadios.forEach(r => r.addEventListener("change", updateUscfSections));
-  updateUscfSections();
-
   const form = document.getElementById("tournament-registration-form");
+  const purchaseUscfCheckbox = document.querySelector("[name='purchaseUscfId']");
+  const uscfIdInput = document.querySelector("[name='uscfId']");
+  const dobInput = document.querySelector("[name='dob']");
+  const hasUscfRadios = document.getElementsByName("hasUscf");
+  const chessLevelRadios = document.querySelectorAll("input[name='chessLevel']");
 
-  function calculateFee() {
-    let base = 0;
-    let uscfFee = purchaseUscfCheckbox?.checked ? 24 : 0;
-    const level = document.querySelector("input[name='chessLevel']:checked")?.value || "";
-
-    if (level === "Under 400") base = 25;
-    else if (level === "400 - 800") base = 30;
-    else if (level === "Above 800") base = 35;
-
-    const total = base + uscfFee;
-
-    document.getElementById("base-fee").innerText = "$" + base;
-    document.getElementById("uscf-fee").innerText = "$" + uscfFee;
-    document.getElementById("total-fee").innerText = "$" + total;
-
-    document.querySelector("input[name='baseFee']").value = base;
-    document.querySelector("input[name='uscfFee']").value = uscfFee;
-    document.querySelector("input[name='finalFee']").value = total;
-    document.querySelector("input[name='chessLevelSession']").value = level;
-  }
-
-  form.addEventListener("change", calculateFee);
-  calculateFee();
-
-  form.addEventListener("submit", async function (e) {
-    document.getElementById("submitting-overlay").style.display = "block";
-
+  function buildPayload() {
     const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
     const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
+    let hasUscf = getVal("hasUscf");
+    if (purchaseUscfCheckbox.checked) {
+      hasUscf = "No";
+    }
 
-    const hasUscf = getVal("hasUscf");
-    const uscfId = getVal("uscfId");
-    const uscfRating = getVal("uscfRating");
-    const purchaseUSCF = checked("purchaseUscfId");
-    const uscfIdFinal = (hasUscf === "yes") ? uscfId : "Not Available";
+    let level = "";
+    for (const radio of chessLevelRadios) {
+      if (radio.checked) {
+        level = radio.value;
+        break;
+      }
+    }
 
-    const payload = {
+    const data = {
       programType: "ChessTournament",
       parentName: getVal("parentName"),
       email: getVal("email"),
@@ -69,34 +36,49 @@ document.addEventListener("DOMContentLoaded", function () {
       studentName: getVal("playerName"),
       grade: getVal("grade"),
       school: getVal("school"),
-      hasUscf: hasUscf,
-      uscfId: uscfIdFinal,
-      uscfRating: uscfRating,
-      purchaseUSCF: purchaseUSCF,
+      hasUscf,
+      uscfId: getVal("uscfId"),
+      uscfRating: getVal("uscfRating"),
+      purchaseUSCF: checked("purchaseUscfId"),
       dob: getVal("dob"),
-      chessLevel: getVal("chessLevel"),
+      chessLevel: level,
       baseFee: parseInt(getVal("baseFee")) || 0,
       uscfFee: parseInt(getVal("uscfFee")) || 0,
       finalFee: parseInt(getVal("finalFee")) || 0
     };
 
-    console.log("📦 Payload to submit:", JSON.stringify(payload));
+    console.log("📦 Payload to submit:", JSON.stringify(data));
+    return data;
+  }
+
+  // Require DOB if purchasing USCF ID
+  function toggleDobRequirement() {
+    if (purchaseUscfCheckbox.checked) {
+      dobInput.required = true;
+    } else {
+      dobInput.required = false;
+    }
+  }
+
+  purchaseUscfCheckbox.addEventListener("change", toggleDobRequirement);
+  toggleDobRequirement();
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const payload = buildPayload();
 
     try {
-      const response = await fetch(form.action, {
+      const res = await fetch("/.netlify/functions/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
-
-      const result = await response.text();
-      console.log("✅ Server responded:", result);
-      window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel) + "&fee=" + encodeURIComponent(payload.finalFee);
-    } catch (error) {
-      document.getElementById("submitting-overlay").style.display = "none";
-      document.getElementById("form-error-msg").innerText = "Error submitting form. Please try again.";
-      document.getElementById("form-error-msg").style.display = "block";
-      console.error("❌ Submission failed:", error);
+      const result = await res.json();
+      console.log("✅ Server responded:", result.message);
+      window.location.href = "/payment-options.html";
+    } catch (err) {
+      console.error("❌ Submission failed:", err);
+      alert("Something went wrong. Please try again.");
     }
   });
 });
