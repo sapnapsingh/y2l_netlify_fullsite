@@ -88,6 +88,9 @@
 </div>
 <div id="uscfPurchaseSection" style="display: none;">
 <label><input id="purchaseUscfCheckbox" type="checkbox"/> I want to purchase a USCF ID for $20</label>
+<label id="dobField" style="display:none;">Date of Birth (MM/DD/YYYY): 
+  <input type="text" id="dobInput" name="dob" />
+</label>
 </div>
 <hr/>
 <label>Player Name: <input name="playerName" required="" type="text"/></label>
@@ -132,13 +135,25 @@
 
     // Add listeners
     form.ratingCategory.forEach(radio => radio.addEventListener("change", updateFeeSummary));
-    purchaseCheckbox.addEventListener("change", updateFeeSummary);
+    
+purchaseCheckbox.addEventListener("change", () => {
+  updateFeeSummary();
+  const dobField = document.getElementById("dobField");
+  if (purchaseCheckbox.checked) {
+    dobField.style.display = "block";
+    document.getElementById("dobInput").required = true;
+  } else {
+    dobField.style.display = "none";
+    document.getElementById("dobInput").required = false;
+  }
+});
+
 
     form.addEventListener("submit", e => {
       e.preventDefault();
       alert("Submission logic not added here. This is a layout test.");
     });
-  </script><script src="main-tournament.js"></script><div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;background-color: rgba(0,0,0,0.5); z-index: 1000; text-align: center; padding-top: 20%;"><div style="color: white; font-size: 1.5em;">Submitting your registration...</div></div>
+  </script><div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;background-color: rgba(0,0,0,0.5); z-index: 1000; text-align: center; padding-top: 20%;"><div style="color: white; font-size: 1.5em;">Submitting your registration...</div></div>
 <div id="submitOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
   background:rgba(255,255,255,0.9); z-index:9999; text-align:center; padding-top:20%;">
   <h2>Submitting your form...</h2>
