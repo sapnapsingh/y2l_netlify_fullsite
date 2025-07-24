@@ -80,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
   }
 
-
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (loader) loader.style.display = "block";
@@ -94,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(response => response.text())
     .then(result => {
       if (loader) loader.style.display = "none";
+      console.log("✅ Server responded:", result);
       if (result.trim() === "Submitted and emailed successfully.") {
         sessionStorage.setItem("programType", "ChessTournament");
         sessionStorage.setItem("session", payload.chessLevel);
