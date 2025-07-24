@@ -1,87 +1,105 @@
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("♟️ Chess Tournament Form initialized");
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("tournamentForm");
-  const overlay = document.getElementById("submittingOverlay");
-  const categoryRadios = document.querySelectorAll("input[name='ratingCategory']");
-  const purchaseCheckbox = document.getElementById("purchaseUSCF");
-  const dobField = document.getElementById("dobField");
-  const dobInput = document.getElementById("dobInput");
+  const form = document.getElementById("tournament-registration-form");
+  const loader = document.getElementById("submitting-overlay");
 
-  function updateFeeSummary() {
+  const hasUscfRadios = document.querySelectorAll("input[name='hasUscf']");
+  const uscfIdSection = document.getElementById("uscf-id-section");
+  const uscfPurchaseSection = document.getElementById("uscf-purchase-section");
+  const purchaseUscfCheckbox = document.querySelector("input[name='purchaseUscfId']");
+  const uscfRatingField = document.querySelector("input[name='uscfRating']");
+
+  function toggleSections() {
+    const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
+
+    if (selected === "yes") {
+      uscfIdSection.style.display = "block";
+      uscfPurchaseSection.style.display = "none";
+    } else if (selected === "no") {
+      uscfIdSection.style.display = "none";
+      uscfPurchaseSection.style.display = "block";
+    } else {
+      uscfIdSection.style.display = "none";
+      uscfPurchaseSection.style.display = "none";
+    }
+
+    calculateFee();
+  }
+
+  function calculateFee() {
     let base = 0;
-    let uscfFee = 0;
+    let uscfFee = purchaseUscfCheckbox?.checked ? 24 : 0;
+    const rating = parseInt(uscfRatingField?.value || "0");
 
-    const category = document.querySelector("input[name='ratingCategory']:checked");
-    if (category) {
-      if (category.value === "under400") base = 25;
-      else if (category.value === "401to800") base = 30;
-      else if (category.value === "800plus") base = 35;
+    if (!isNaN(rating) && rating > 0) {
+      if (rating <= 400) base = 25;
+      else if (rating <= 800) base = 30;
+      else base = 35;
     }
 
-    if (purchaseCheckbox && purchaseCheckbox.checked) {
-      uscfFee = 20;
-    }
+    const total = base + uscfFee;
 
-    const final = base + uscfFee;
+    document.getElementById("base-fee").innerText = "$" + base;
+    document.getElementById("uscf-fee").innerText = "$" + uscfFee;
+    document.getElementById("total-fee").innerText = "$" + total;
 
-    document.getElementById("baseFee").innerText = base;
-    document.getElementById("uscfFee").innerText = uscfFee;
-    document.getElementById("finalFee").innerText = final;
+    document.querySelector("input[name='baseFee']").value = base;
+    document.querySelector("input[name='uscfFee']").value = uscfFee;
+    document.querySelector("input[name='finalFee']").value = total;
   }
 
-  categoryRadios.forEach(radio => {
-    radio.addEventListener("change", updateFeeSummary);
-  });
+  hasUscfRadios.forEach(radio => radio.addEventListener("change", toggleSections));
+  if (purchaseUscfCheckbox) purchaseUscfCheckbox.addEventListener("change", calculateFee);
+  if (uscfRatingField) uscfRatingField.addEventListener("input", calculateFee);
 
-  if (purchaseCheckbox) {
-    purchaseCheckbox.addEventListener("change", () => {
-      updateFeeSummary();
-      if (purchaseCheckbox.checked) {
-        dobField.style.display = "block";
-        dobInput.required = true;
-      } else {
-        dobField.style.display = "none";
-        dobInput.required = false;
-      }
-    });
-  }
+  function buildPayload() {
+    const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
+    const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    overlay.style.display = "flex";
-
-    const payload = {
-      programType: "ChessTournament",
-      parentName: form.parentName.value.trim(),
-      email: form.email.value.trim(),
-      phone: form.phone.value.trim(),
-      studentName: form.studentName.value.trim(),
-      grade: form.grade.value.trim(),
-      school: form.school.value.trim(),
-      uscfId: form.uscfId.value.trim(),
-      purchaseUSCF: form.purchaseUSCF.checked ? "Yes" : "No",
-      dob: form.purchaseUSCF.checked ? form.dob.value.trim() : "",
-      ratingCategory: form.ratingCategory.value,
-      baseFee: parseInt(document.getElementById("baseFee").innerText),
-      uscfFee: parseInt(document.getElementById("uscfFee").innerText),
-      finalFee: parseInt(document.getElementById("finalFee").innerText)
+    return {
+      programType: "Chess Tournament",
+      parentName: getVal("parentName"),
+      email: getVal("email"),
+      phone: getVal("phone"),
+      playerName: getVal("playerName"),
+      grade: getVal("grade"),
+      school: getVal("school"),
+      hasUscf: getVal("hasUscf"),
+      uscfId: getVal("uscfId"),
+      uscfRating: getVal("uscfRating"),
+      purchaseUscfId: checked("purchaseUscfId"),
+      dob: getVal("dob"),
+      baseFee: parseInt(getVal("baseFee")) || 0,
+      uscfFee: parseInt(getVal("uscfFee")) || 0,
+      finalFee: parseInt(getVal("finalFee")) || 0
     };
+  }
 
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (loader) loader.style.display = "block";
+
+    const payload = buildPayload();
     fetch("/.netlify/functions/submit", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     })
-      .then(() => {
+    .then(response => response.text())
+    .then(result => {
+      if (loader) loader.style.display = "none";
+      if (result.trim() === "Submitted and emailed successfully.") {
+        sessionStorage.setItem("programType", "Chess Tournament");
+        sessionStorage.setItem("fee", payload.finalFee);
         window.location.href = "/payment-options.html";
-      })
-      .catch(() => {
-        overlay.style.display = "none";
-        alert("Something went wrong. Please try again.");
-      });
+      } else {
+        alert("Submission error: " + result);
+      }
+    })
+    .catch(error => {
+      if (loader) loader.style.display = "none";
+      alert("There was an error submitting the form. Please try again.");
+    });
   });
-
-  updateFeeSummary();
 });
