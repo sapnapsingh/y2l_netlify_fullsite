@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
 
     return {
-      programType: "Chess Tournament",
+      programType: "ChessTournament",
       parentName: getVal("parentName"),
       email: getVal("email"),
       phone: getVal("phone"),
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(result => {
       if (loader) loader.style.display = "none";
       if (result.trim() === "Submitted and emailed successfully.") {
-        sessionStorage.setItem("programType", "Chess Tournament");
+        sessionStorage.setItem("programType", "ChessTournament");
         sessionStorage.setItem("session", payload.chessLevel);
         window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel);
       } else {
