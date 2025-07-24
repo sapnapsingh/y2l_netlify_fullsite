@@ -29,9 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let uscfFee = purchaseUscfCheckbox?.checked ? 24 : 0;
     const level = document.querySelector("input[name='chessLevel']:checked")?.value || "";
 
-    if (level === "Beginner") base = 25;
-    else if (level === "Intermediate") base = 30;
-    else if (level === "Advanced") base = 35;
+   
+    if (level === "Under 400") base = 25;
+    else if (level === "400 - 800") base = 30;
+    else if (level === "Above 800") base = 35;
 
     const total = base + uscfFee;
 
