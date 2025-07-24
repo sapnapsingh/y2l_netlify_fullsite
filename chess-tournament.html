@@ -101,5 +101,49 @@
 <button style="margin-top: 20px;" type="submit">Submit Registration</button>
 </form>
 </div>
-<div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;background-color: rgba(0,0,0,0.5); z-index: 1000; text-align: center; padding-top: 20%;"><div style="color: white; font-size: 1.5em;">Submitting your registration...</div></div><script src="scripts/main-tournament.js"></script></body>
+<script>
+    const form = document.getElementById("tournamentForm");
+    const feeSummary = document.getElementById("feeSummary");
+    const purchaseCheckbox = document.getElementById("purchaseUscfCheckbox");
+
+    function updateFeeSummary() {
+      let baseFee = 0;
+      const rating = form.ratingCategory.value;
+
+      if (rating === "under400") baseFee = 25;
+      else if (rating === "401to800") baseFee = 30;
+      else if (rating === "800plus") baseFee = 35;
+
+      const uscfFee = purchaseCheckbox.checked ? 20 : 0;
+      const total = baseFee + uscfFee;
+
+      feeSummary.textContent = `💵 Base: $${baseFee} | USCF Fee: $${uscfFee} | Final: $${total}`;
+    }
+
+    // Show/hide USCF fields
+    const uscfRadios = form.hasUscfId;
+    for (let radio of uscfRadios) {
+      radio.addEventListener("change", () => {
+        document.getElementById("uscfIdSection").style.display = radio.value === "yes" ? "block" : "none";
+        document.getElementById("uscfPurchaseSection").style.display = radio.value === "no" ? "block" : "none";
+        updateFeeSummary();
+      });
+    }
+
+    // Add listeners
+    form.ratingCategory.forEach(radio => radio.addEventListener("change", updateFeeSummary));
+    purchaseCheckbox.addEventListener("change", updateFeeSummary);
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      alert("Submission logic not added here. This is a layout test.");
+    });
+  </script><script src="main-tournament.js"></script><div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;background-color: rgba(0,0,0,0.5); z-index: 1000; text-align: center; padding-top: 20%;"><div style="color: white; font-size: 1.5em;">Submitting your registration...</div></div>
+<div id="submitOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(255,255,255,0.9); z-index:9999; text-align:center; padding-top:20%;">
+  <h2>Submitting your form...</h2>
+</div>
+<script src="scripts/main-tournament.js?v=20250723"></script>
+
+</body>
 </html>
