@@ -1,163 +1,70 @@
-
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Y2L Chess Tournament Registration</title>
-<style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 2em;
-    }
-    .container {
-      background: #fff;
-      padding: 2em;
-      border-radius: 10px;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      color: #333;
-    }
-    fieldset {
-      border: none;
-      margin-bottom: 2em;
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5em;
-      font-weight: 500;
-    }
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="number"] {
-      width: 100%;
-      padding: 0.6em;
-      margin-bottom: 1em;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    .radio-group {
-      margin-bottom: 1.5em;
-    }
-    .radio-group label {
-      font-weight: normal;
-    }
-    .fee-summary {
-      background: #f0f8ff;
-      padding: 1em;
-      border: 1px solid #b3d4fc;
-      border-radius: 8px;
-      margin-top: 1.5em;
-      font-weight: 500;
-    }
-    button {
-      padding: 0.8em 1.5em;
-      background-color: #1976d2;
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1565c0;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Y2L Chess Tournament Registration</title>
+  <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-<div class="container">
-<h2>Y2L Chess Tournament Registration</h2>
-<form id="tournamentForm">
-<label>Parent Name: <input name="parentName" required="" type="text"/></label>
-<label>Email: <input name="email" required="" type="email"/></label>
-<label>Phone: <input name="phone" required="" type="text"/></label>
-<hr/>
-<label>Does your child have a USCF ID?</label>
-<label><input name="hasUscfId" required="" type="radio" value="yes"/> Yes</label>
-<label><input name="hasUscfId" type="radio" value="no"/> No</label>
-<div id="uscfIdSection" style="display: none;">
-<label>USCF ID: <input id="uscfIdInput" name="uscfId" type="text"/></label>
+<form id="tournament-registration-form" name="tournamentRegistration" method="POST" action="/.netlify/functions/submit" netlify netlify-honeypot="bot-field">
+<div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; background-color: rgba(255,255,255,0.85); width: 100%; height: 100%; z-index: 1000; text-align: center; padding-top: 200px; font-size: 20px; color: #2a7ae2;">
+  Submitting your registration... Please wait.
 </div>
-<div id="uscfPurchaseSection" style="display: none;">
-<label><input id="purchaseUscfCheckbox" type="checkbox"/> I want to purchase a USCF ID for $20</label>
-<label id="dobField" style="display:none;">Date of Birth (MM/DD/YYYY): 
-  <input id="dobInput" name="dob" type="text"/>
-</label>
+
+<h2>Parent Information</h2>
+<div class="info-section">
+  <label>Parent Name <input class="input-field" name="parentName" required></label>
+  <label>Email <input class="input-field" type="email" name="email" required></label>
+  <label>Phone <input class="input-field" type="tel" name="phone" required></label>
 </div>
-<hr/>
-<label>Player Name: <input name="playerName" required="" type="text"/></label>
-<label>Grade: <input name="grade" required="" type="text"/></label>
-<label>School: <input name="school" required="" type="text"/></label>
-<label>Choose Rating Category:</label>
-<label><input name="ratingCategory" required="" type="radio" value="under400"/> Under 400 – $25</label>
-<label><input name="ratingCategory" type="radio" value="401to800"/> 401–800 – $30</label>
-<label><input name="ratingCategory" type="radio" value="800plus"/> 800+ – $35</label>
-<div class="fee-summary" id="feeSummary">💵 Base: $0 | USCF Fee: $0 | Final: $0</div>
-<button style="margin-top: 20px;" type="submit">Submit Registration</button>
+
+<hr class="section-divider"/>
+
+<h2>Player Information</h2>
+<div class="info-section">
+  <label>Player Name <input class="input-field" name="playerName" required></label>
+  <label>Grade <input class="input-field" name="grade" required></label>
+  <label>School <input class="input-field" name="school" required></label>
+</div>
+
+<hr class="section-divider"/>
+
+<h2>USCF Membership</h2>
+<div class="info-section">
+  <label><input type="radio" name="hasUscf" value="yes" required> Yes, my child has a USCF ID</label><br/>
+  <label><input type="radio" name="hasUscf" value="no"> No, please assist with purchasing a USCF ID</label><br/>
+
+  <div id="uscf-id-section" class="nested-info" style="display:none;">
+    <label>USCF ID <input class="input-field" name="uscfId"></label>
+    <label>USCF Rating <input class="input-field" name="uscfRating" type="number" min="0" max="3000"></label>
+  </div>
+
+  <div id="uscf-purchase-section" class="nested-info" style="display:none;">
+    <label><input type="checkbox" name="purchaseUscfId"> I want to purchase a USCF membership through Y2L ($24)</label><br/>
+    <label>Student Date of Birth <input class="input-field" name="dob" type="date"></label>
+  </div>
+</div>
+
+<hr class="section-divider"/>
+
+<h2>Fee Summary</h2>
+<div class="fee-summary-box">
+  <div class="fee-line"><span>Base Fee:</span><span id="base-fee">$0</span></div>
+  <div class="fee-line"><span>USCF Add-on:</span><span id="uscf-fee">$0</span></div>
+  <div class="fee-line total"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+</div>
+
+<input type="hidden" name="baseFee">
+<input type="hidden" name="uscfFee">
+<input type="hidden" name="finalFee">
+
+<div id="form-error-msg" style="color:red; display:none; margin-top: 20px;"></div>
+
+<div style="margin-top: 30px;">
+  <button class="submit-btn" type="submit" >Submit Registration</button>
+</div>
+
 </form>
-</div>
-<script>
-    const form = document.getElementById("tournamentForm");
-    const feeSummary = document.getElementById("feeSummary");
-    const purchaseCheckbox = document.getElementById("purchaseUscfCheckbox");
-
-    function updateFeeSummary() {
-      let baseFee = 0;
-      const rating = form.ratingCategory.value;
-
-      if (rating === "under400") baseFee = 25;
-      else if (rating === "401to800") baseFee = 30;
-      else if (rating === "800plus") baseFee = 35;
-
-      const uscfFee = purchaseCheckbox.checked ? 20 : 0;
-      const total = baseFee + uscfFee;
-
-      feeSummary.textContent = `💵 Base: $${baseFee} | USCF Fee: $${uscfFee} | Final: $${total}`;
-    }
-
-    // Show/hide USCF fields
-    const uscfRadios = form.hasUscfId;
-    for (let radio of uscfRadios) {
-      radio.addEventListener("change", () => {
-        document.getElementById("uscfIdSection").style.display = radio.value === "yes" ? "block" : "none";
-        document.getElementById("uscfPurchaseSection").style.display = radio.value === "no" ? "block" : "none";
-        updateFeeSummary();
-      });
-    }
-
-    // Add listeners
-    form.ratingCategory.forEach(radio => radio.addEventListener("change", updateFeeSummary));
-    
-purchaseCheckbox.addEventListener("change", () => {
-  updateFeeSummary();
-  const dobField = document.getElementById("dobField");
-  if (purchaseCheckbox.checked) {
-    dobField.style.display = "block";
-    document.getElementById("dobInput").required = true;
-  } else {
-    dobField.style.display = "none";
-    document.getElementById("dobInput").required = false;
-  }
-});
-
-
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      alert("Submission logic not added here. This is a layout test.");
-    });
-  </script><div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;background-color: rgba(0,0,0,0.5); z-index: 1000; text-align: center; padding-top: 20%;"><div style="color: white; font-size: 1.5em;">Submitting your registration...</div></div>
-<div id="submitOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-  background:rgba(255,255,255,0.9); z-index:9999; text-align:center; padding-top:20%;">
-<h2>Submitting your form...</h2>
-</div>
-
-<script src="/scripts/main-tournament.js"></script><div id="submittingOverlay" style="display:none;">Submitting your registration...</div></body>
+<script src="/scripts/main-tournament.js?v=20250723"></script>
+</body>
 </html>
