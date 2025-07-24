@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
     if (selected === "yes") {
       uscfIdSection.style.display = "block";
+      uscfIdSection.required = true;
       uscfPurchaseSection.style.display = "none";
     } else if (selected === "no") {
       uscfIdSection.style.display = "none";
