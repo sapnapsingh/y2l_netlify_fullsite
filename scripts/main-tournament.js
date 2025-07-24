@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let uscfFee = purchaseUscfCheckbox?.checked ? 24 : 0;
     const level = document.querySelector("input[name='chessLevel']:checked")?.value || "";
 
-   
     if (level === "Under 400") base = 25;
     else if (level === "400 - 800") base = 30;
     else if (level === "Above 800") base = 35;
@@ -43,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("input[name='baseFee']").value = base;
     document.querySelector("input[name='uscfFee']").value = uscfFee;
     document.querySelector("input[name='finalFee']").value = total;
-    document.querySelector("input[name='chessLevelSession']").value = level;
   }
 
   document.querySelectorAll("input[name='chessLevel']").forEach(radio =>
@@ -62,12 +60,13 @@ document.addEventListener("DOMContentLoaded", function () {
       email: getVal("email"),
       phone: getVal("phone"),
       playerName: getVal("playerName"),
+      studentName: getVal("playerName"),
       grade: getVal("grade"),
       school: getVal("school"),
       hasUscf: getVal("hasUscf"),
       uscfId: getVal("uscfId"),
       uscfRating: getVal("uscfRating"),
-      purchaseUscfId: checked("purchaseUscfId"),
+      purchaseUSCF: checked("purchaseUscfId"),
       dob: getVal("dob"),
       chessLevel: getVal("chessLevel"),
       baseFee: parseInt(getVal("baseFee")) || 0,
@@ -75,9 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
       finalFee: parseInt(getVal("finalFee")) || 0
     };
 
-    console.log("📦 Payload to submit:", data);
+    console.log("📦 Payload to submit:", JSON.stringify(data));
     return data;
-    
   }
 
   form.addEventListener("submit", function (e) {
@@ -97,9 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (result.trim() === "Submitted and emailed successfully.") {
         sessionStorage.setItem("programType", "ChessTournament");
         sessionStorage.setItem("session", payload.chessLevel);
-        //window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel);
         window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel) + "&fee=" + encodeURIComponent(payload.finalFee);
-       // With program type window.location.href = "/payment-options.html?program=ChessTournament&session=" + encodeURIComponent(payload.chessLevel) + "&fee=" + encodeURIComponent(payload.finalFee);
       } else {
         alert("Submission error: " + result);
       }
