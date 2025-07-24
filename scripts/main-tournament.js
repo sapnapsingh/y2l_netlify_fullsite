@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
       dobField.required = false;
     }
   }
-else if (hasUscfIdYes.checked) {
+ if (hasUscfIdYes.checked) {
   uscfIdFieldContainer.style.display = "block";
   uscfIdInput.required = true;
   dobInput.required = false;
