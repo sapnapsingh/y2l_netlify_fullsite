@@ -8,11 +8,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const uscfIdSection = document.getElementById("uscf-id-section");
   const uscfPurchaseSection = document.getElementById("uscf-purchase-section");
   const purchaseUscfCheckbox = document.querySelector("input[name='purchaseUscfId']");
-  const uscfRatingField = document.querySelector("input[name='uscfRating']");
 
   function toggleSections() {
     const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
-
     if (selected === "yes") {
       uscfIdSection.style.display = "block";
       uscfPurchaseSection.style.display = "none";
@@ -23,20 +21,17 @@ document.addEventListener("DOMContentLoaded", function () {
       uscfIdSection.style.display = "none";
       uscfPurchaseSection.style.display = "none";
     }
-
     calculateFee();
   }
 
   function calculateFee() {
     let base = 0;
     let uscfFee = purchaseUscfCheckbox?.checked ? 24 : 0;
-    const rating = parseInt(uscfRatingField?.value || "0");
+    const level = document.querySelector("input[name='chessLevel']:checked")?.value || "";
 
-    if (!isNaN(rating) && rating > 0) {
-      if (rating <= 400) base = 25;
-      else if (rating <= 800) base = 30;
-      else base = 35;
-    }
+    if (level === "Beginner") base = 25;
+    else if (level === "Intermediate") base = 30;
+    else if (level === "Advanced") base = 35;
 
     const total = base + uscfFee;
 
@@ -47,11 +42,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("input[name='baseFee']").value = base;
     document.querySelector("input[name='uscfFee']").value = uscfFee;
     document.querySelector("input[name='finalFee']").value = total;
+    document.querySelector("input[name='chessLevelSession']").value = level;
   }
 
+  document.querySelectorAll("input[name='chessLevel']").forEach(radio =>
+    radio.addEventListener("change", calculateFee)
+  );
   hasUscfRadios.forEach(radio => radio.addEventListener("change", toggleSections));
   if (purchaseUscfCheckbox) purchaseUscfCheckbox.addEventListener("change", calculateFee);
-  if (uscfRatingField) uscfRatingField.addEventListener("input", calculateFee);
 
   function buildPayload() {
     const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
@@ -70,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
       uscfRating: getVal("uscfRating"),
       purchaseUscfId: checked("purchaseUscfId"),
       dob: getVal("dob"),
+      chessLevel: getVal("chessLevel"),
       baseFee: parseInt(getVal("baseFee")) || 0,
       uscfFee: parseInt(getVal("uscfFee")) || 0,
       finalFee: parseInt(getVal("finalFee")) || 0
@@ -91,8 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (loader) loader.style.display = "none";
       if (result.trim() === "Submitted and emailed successfully.") {
         sessionStorage.setItem("programType", "Chess Tournament");
-        sessionStorage.setItem("fee", payload.finalFee);
-        window.location.href = "/payment-options.html";
+        sessionStorage.setItem("session", payload.chessLevel);
+        window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel);
       } else {
         alert("Submission error: " + result);
       }
