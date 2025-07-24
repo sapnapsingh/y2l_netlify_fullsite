@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("enrollmentForm");
+  const form = document.getElementById("tournamentForm");
   const overlay = document.getElementById("submittingOverlay");
   const categoryRadios = document.querySelectorAll("input[name='ratingCategory']");
   const purchaseCheckbox = document.getElementById("purchaseUSCF");
