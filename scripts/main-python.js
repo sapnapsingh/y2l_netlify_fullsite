@@ -1,6 +1,22 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🔧 Python Programming form initialized");
+
+  // === Session Details Mapping: EDIT HERE IF SESSIONS CHANGE ===
+  const sessionDetails = {
+    "Beginner": {
+      sessionDates: "Aug 27 – Nov 19, 2025 - No Class: Oct 8",
+      sessionTimings: "5:30 pm – 7:00 pm"
+    },
+    "Intermediate": {
+      sessionDates: "Aug 29 – Nov 21, 2025 - No Class: Oct 10",
+      sessionTimings: "5:30 pm – 7:00 pm"
+    },
+    "Advanced": {
+      sessionDates: "TBD",
+      sessionTimings: "TBD"
+    }
+  };
+  // === End Session Details Mapping ===
 
   const form = document.getElementById("python-enrollment-form");
   const loader = document.getElementById("submitting-overlay");
@@ -62,6 +78,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const discount = parseInt(document.querySelector("input[name='discountValue']").value) || 0;
     const finalFee = parseInt(document.querySelector("input[name='finalFee']").value) || 0;
 
+    // Get session details (dates & timings) from mapping above
+    const details = sessionDetails[session] || { sessionDates: "", sessionTimings: "" };
+
     const data = {
       programType: "Python Programming",
       parentName: getVal("parentName"),
@@ -80,6 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
       medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
       emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
       pythonSession: session,
+      sessionDates: details.sessionDates,
+      sessionTimings: details.sessionTimings,
       baseFee: base,
       discountValue: discount,
       finalFee: finalFee
