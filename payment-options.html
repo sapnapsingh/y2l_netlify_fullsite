@@ -124,17 +124,19 @@
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-advanced";
       programTitle.innerText = "Complete Your Payment – Python Programming";
     }
-  } else if (session === "beginner") {
-    sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Beginner to Intermediate</strong> session.";
-    zelleAmount.innerHTML = "Send <strong>$330</strong> to:";
-    payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
-    programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
-  } else if (session === "advanced") {
-    sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Intermediate to Advanced</strong> session.";
-    zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
-    payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
-    programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
-  } else if (session === "beginner orators") {
+  } else  if (programType === "Chess") {
+      if (session === "beginner to intermediate") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Beginner to Intermediate</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$330</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
+      programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
+    } else if (session === "intermediate to advanced") {
+      sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Intermediate to Advanced</strong> session.";
+      zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
+      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
+      programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
+    } 
+  }else if (session === "beginner orators") {
     sessionInfo.innerHTML = "You have enrolled in the <strong>Public Speaking – Beginner Orators</strong> session.";
     zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
     payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-publicspeaking";
