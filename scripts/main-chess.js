@@ -1,14 +1,26 @@
-
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("🔧 Chess form initialized");
+  console.log("🔧 Chess Program form initialized");
+
+  // === Session Details Mapping: EDIT HERE IF SESSIONS CHANGE ===
+  const sessionDetails = {
+    "Beginner to Intermediate": {
+      sessionDates: "Aug 27 – Nov 12, 2025",
+      sessionTimings: "Wednesdays, 3:30–4:45 pm"
+    },
+    "Intermediate to Advanced": {
+      sessionDates: "Aug 27 – Nov 12, 2025",
+      sessionTimings: "Wednesdays, 5:00–6:15 pm"
+    }
+  };
+  // === End Session Details Mapping ===
 
   const form = document.getElementById("chess-enrollment-form");
+  const loader = document.getElementById("submitting-overlay");
+
   if (!form) {
     console.error("❌ chess-enrollment-form not found!");
     return;
   }
-
-  const loader = document.getElementById("submission-loader");
 
   function calculateAndDisplayFee() {
     console.log("🔧 Fee calc triggered");
@@ -19,12 +31,12 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("🎯 Session selected:", session);
 
     let base = 0, discount = 0;
-    if (session === "Beginner") {
+    if (session === "Beginner to Intermediate") {
       base = 360;
-      discount = today <= earlyBirdDeadline ? 30 : 0;
-    } else if (session === "Advanced") {
+      discount = today <= earlyBirdDeadline ? 60 : 0;
+    } else if (session === "Intermediate to Advanced") {
       base = 420;
-      discount = today <= earlyBirdDeadline ? 35 : 0;
+      discount = today <= earlyBirdDeadline ? 60 : 0;
     }
 
     const finalFee = base - discount;
@@ -52,6 +64,14 @@ document.addEventListener("DOMContentLoaded", function () {
   function buildPayload() {
     const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
 
+    const session = document.querySelector("input[name='chessSession']:checked")?.value || "";
+    const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
+    const discount = parseInt(document.querySelector("input[name='discountValue']").value) || 0;
+    const finalFee = parseInt(document.querySelector("input[name='finalFee']").value) || 0;
+
+    // Get session details (dates & timings) from mapping above
+    const details = sessionDetails[session] || { sessionDates: "", sessionTimings: "" };
+
     const data = {
       programType: "Chess",
       parentName: getVal("parentName"),
@@ -69,10 +89,12 @@ document.addEventListener("DOMContentLoaded", function () {
       cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
       medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
       emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
-      chessSession: document.querySelector("input[name='chessSession']:checked")?.value || "",
-      baseFee: getVal("baseFee"),
-      discountValue: getVal("discountValue"),
-      finalFee: getVal("finalFee")
+      chessSession: session,
+      sessionDates: details.sessionDates,
+      sessionTimings: details.sessionTimings,
+      baseFee: base,
+      discountValue: discount,
+      finalFee: finalFee
     };
 
     console.log("📦 Payload to submit:", data);
@@ -93,19 +115,20 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => response.text())
     .then(result => {
-      console.log("✅ Server responded:", result);
       if (loader) loader.style.display = "none";
+      console.log("✅ Server responded:", result);
+
       if (result.trim() === "Submitted and emailed successfully.") {
-        //window.location.href = "/payment-options.html";
-        const session = payload.chessSession?.toLowerCase().includes("beginner") ? "beginner" : "advanced";
-        window.top.location.href = `/payment-options.html?session=${session}`;
+        sessionStorage.setItem("programType", "Chess");
+        sessionStorage.setItem("chessSession", payload.chessSession);
+        window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessSession);
       } else {
         alert("Submission error: " + result);
       }
     })
     .catch(error => {
-      if (loader) loader.style.display = "none";
       console.error("Submission failed:", error);
+      if (loader) loader.style.display = "none";
       alert("There was an error submitting the form. Please try again.");
     });
   });
