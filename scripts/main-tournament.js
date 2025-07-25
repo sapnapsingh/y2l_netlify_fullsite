@@ -50,36 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
   hasUscfRadios.forEach(radio => radio.addEventListener("change", toggleSections));
   if (purchaseUscfCheckbox) purchaseUscfCheckbox.addEventListener("change", calculateFee);
 
-  /*
-  function buildPayload() {
-    const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
-    const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
-
-    const data = {
-      programType: "ChessTournament",
-      parentName: getVal("parentName"),
-      email: getVal("email"),
-      phone: getVal("phone"),
-      playerName: getVal("playerName"),
-      studentName: getVal("playerName"),
-      grade: getVal("grade"),
-      school: getVal("school"),
-      hasUscf: getVal("hasUscf"),
-      uscfId: getVal("uscfId"),
-      uscfRating: getVal("uscfRating"),
-      purchaseUSCF: checked("purchaseUscfId"),
-      dob: getVal("dob"),
-      chessLevel: getVal("chessLevel"),
-      baseFee: parseInt(getVal("baseFee")) || 0,
-      uscfFee: parseInt(getVal("uscfFee")) || 0,
-      finalFee: parseInt(getVal("finalFee")) || 0
-    };
-
-    console.log("📦 Payload to submit:", JSON.stringify(data));
-    return data;
-  }
-  */
-
   function buildPayload() {
   const getVal = (name) => {
     const el = document.querySelector(`[name='${name}']:checked`) || document.querySelector(`[name='${name}']`);
@@ -102,6 +72,9 @@ document.addEventListener("DOMContentLoaded", function () {
     purchaseUSCF: checked("purchaseUscfId"),
     dob: getVal("dob"),
     chessLevel: getVal("chessLevel"),
+    photo_consent: checked("photoConsent"),
+    medical_release: checked("emergencyMedical"),
+    cancellation_policy: checked("refundPolicy"),
     baseFee: parseInt(getVal("baseFee")) || 0,
     uscfFee: parseInt(getVal("uscfFee")) || 0,
     finalFee: parseInt(getVal("finalFee")) || 0
@@ -139,8 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
   const hasUscfRadios = document.querySelectorAll("input[name='hasUscf']");
