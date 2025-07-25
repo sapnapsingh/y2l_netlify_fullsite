@@ -33,10 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let base = 0, discount = 0;
     if (session === "Beginner to Intermediate") {
       base = 360;
-      discount = today <= earlyBirdDeadline ? 60 : 0;
+      discount = today <= earlyBirdDeadline ? 30 : 0;
     } else if (session === "Intermediate to Advanced") {
       base = 420;
-      discount = today <= earlyBirdDeadline ? 60 : 0;
+      discount = today <= earlyBirdDeadline ? 35 : 0;
     }
 
     const finalFee = base - discount;
