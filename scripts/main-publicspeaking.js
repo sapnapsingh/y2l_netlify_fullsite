@@ -1,6 +1,16 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🔧 Public Speaking form initialized");
+
+  // === Session Details Mapping: EDIT HERE IF SESSIONS CHANGE ===
+  const sessionDetails = {
+    "Beginner Orators": {
+      sessionDates: "Aug 28 – Nov 13, 2025",
+      sessionTimings: "Thursdays, 4:30–6:00 pm"
+    }
+    // If you add Intermediate Orators, add here
+    // "Intermediate Orators": { sessionDates: "...", sessionTimings: "..." }
+  };
+  // === End Session Details Mapping ===
 
   const form = document.getElementById("public-speaking-enrollment-form");
   const loader = document.getElementById("submitting-overlay");
@@ -18,10 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const session = document.querySelector("input[name='publicSpeakingSession']:checked")?.value || "";
     console.log("🎯 Session selected:", session);
 
-    let base = 420, discount = 0;
+    let base = 0, discount = 0;
     if (session === "Beginner") {
-      discount = today <= earlyBirdDeadline ? 35 : 0;
+      base = 420;
+      discount = today <= earlyBirdDeadline ? 30 : 0;
     }
+    // Prep for more levels if needed
+    // else if (session === "Intermediate") { ... }
 
     const finalFee = base - discount;
     console.log("💵 Base:", base, "| Discount:", discount, "| Final:", finalFee);
@@ -53,6 +66,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const discount = parseInt(document.querySelector("input[name='discountValue']").value) || 0;
     const finalFee = parseInt(document.querySelector("input[name='finalFee']").value) || 0;
 
+    // For public speaking, you use session name mapping
+    // Only Beginner Orators for now
+    let sessionName = "";
+    if (session === "Beginner") {
+      sessionName = "Beginner Orators";
+    }
+    // else if (session === "Intermediate") { sessionName = "Intermediate Orators"; }
+
+    const details = sessionDetails[sessionName] || { sessionDates: "", sessionTimings: "" };
+
     const data = {
       programType: "Public Speaking",
       parentName: getVal("parentName"),
@@ -70,8 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
       cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
       medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
       emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
-      //publicSpeakingSession: session,
-      publicSpeakingSession: session === "Beginner" ? "Beginner Orators" : session,
+      publicSpeakingSession: sessionName,
+      sessionDates: details.sessionDates,
+      sessionTimings: details.sessionTimings,
       baseFee: base,
       discountValue: discount,
       finalFee: finalFee
@@ -99,6 +123,8 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("✅ Server responded:", result);
 
       if (result.trim() === "Submitted and emailed successfully.") {
+        sessionStorage.setItem("programType", "Public Speaking");
+        sessionStorage.setItem("publicSpeakingSession", payload.publicSpeakingSession);
         window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.publicSpeakingSession);
       } else {
         alert("Submission error: " + result);
