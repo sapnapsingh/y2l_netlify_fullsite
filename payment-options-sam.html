@@ -43,11 +43,11 @@
     </div>
   </div>
   <script>
-    // --- Logic for SAM Singapore Math payment options ---
+    // Always use URL params first, fallback to sessionStorage
     const params = new URLSearchParams(window.location.search);
-    const programType = sessionStorage.getItem("programType") || "";
-    const level = (sessionStorage.getItem("samLevel") || params.get("level") || "").toUpperCase();
-    const sessionType = (sessionStorage.getItem("samSession") || params.get("session") || "").toLowerCase();
+    const level = (params.get("level") || sessionStorage.getItem("samLevel") || "").toUpperCase();
+    const sessionType = (params.get("session") || sessionStorage.getItem("samSession") || "").toLowerCase();
+    const programType = sessionStorage.getItem("programType") || "SAM Singapore Math";
 
     // DOM elements
     const sessionInfo = document.getElementById("sessionInfo");
