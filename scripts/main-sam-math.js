@@ -81,14 +81,14 @@ document.addEventListener("DOMContentLoaded", function () {
         saveMsg = `You save $${savings} compared to monthly pricing!`;
       }
     }
-    updateFeeSummary(base, saveMsg);
+    updateFeeSummary(base, saveMsg, session);
     // Store values for logging even if not visible
     document.querySelector("input[name='baseFee']").value = base;
     document.querySelector("input[name='discountValue']").value = ""; // no discount field shown
     document.querySelector("input[name='finalFee']").value = base;
   }
 
-  function updateFeeSummary(total, saveMsg) {
+  function updateFeeSummary(total, saveMsg, session) {
     // Only show total
     const totalFeeSpan = document.getElementById("total-fee");
     if (totalFeeSpan) totalFeeSpan.innerText = total ? "$" + total : "$0";
@@ -107,6 +107,18 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelector(".fee-summary-box").appendChild(saveMsgDiv);
     }
     saveMsgDiv.innerText = saveMsg || "";
+
+    // Show/hide installment info
+    let installmentDiv = document.getElementById("installment-info");
+    if (installmentDiv) {
+      if (session === "6 Months") {
+        installmentDiv.innerText = "Note: The fee for a 6-month session is payable in 2 installments.";
+      } else if (session === "1 Year") {
+        installmentDiv.innerText = "Note: The fee for a 1-year session is payable in 3 installments.";
+      } else {
+        installmentDiv.innerText = "";
+      }
+    }
   }
 
   // Listen to both session selection and level field
