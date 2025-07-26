@@ -195,8 +195,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (result.trim() === "Submitted and emailed successfully.") {
         sessionStorage.setItem("programType", "SAM Singapore Math");
-        sessionStorage.setItem("samSession", payload.samSession);
-        window.top.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.samSession);
+        sessionStorage.setItem("samLevel", payload.samLevel);      // e.g. "2"
+        sessionStorage.setItem("samSession", payload.samSession);  // e.g. "monthly"
+        window.top.location.href = "/payment-options-sam.html?level=" + encodeURIComponent(payload.samLevel) + "&session=" + encodeURIComponent(payload.samSession);
       } else {
         alert("Submission error: " + result);
       }
