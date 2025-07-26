@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function calculateAndDisplayFee() {
-    // Example fee calculation logic. Adjust as needed!
     const session = document.querySelector("input[name='samSession']:checked")?.value || "";
     let base = 0, discount = 0;
     if (session === "Monthly") {
@@ -30,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (session === "1 Year") {
       base = 1600;
     }
-
     const finalFee = base - discount;
 
     // Display
@@ -53,9 +51,11 @@ document.addEventListener("DOMContentLoaded", function () {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
 
-  function buildPayload() {
-    const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
+  function getVal(name) {
+    return document.querySelector(`[name='${name}']`)?.value?.trim() || "";
+  }
 
+  function buildPayload() {
     const session = document.querySelector("input[name='samSession']:checked")?.value || "";
     const details = sessionDetails[session] || { sessionLabel: "", sessionLength: "" };
     const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
       samSession: session,
       sessionLabel: details.sessionLabel,
       sessionLength: details.sessionLength,
+      preferredSlot: getVal("preferredSlot"),
       baseFee: base,
       discountValue: discount,
       finalFee: finalFee
