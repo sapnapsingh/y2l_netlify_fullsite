@@ -11,7 +11,7 @@
     h2 { color: #005599; margin-top: 0; font-size: 1.6em; }
     .option-box { border: 1px solid #d0d0d0; padding: 16px 15px 18px 15px; margin-top: 22px; border-radius: 8px; background: #fdfdfd; text-align: left; margin-bottom: 18px; }
     .option-box h3 { margin-top: 0; color: #0078a6; font-size: 1.13em; font-weight: 600; }
-    .pay-btn { display: inline-block; margin-top: 12px; padding: 11px 22px; background: #1867c0; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 1.05em; transition: background 0.2s; }
+    .pay-btn { display: inline-block; margin-top: 12px; padding: 11px 22px; background-color: #1867c0; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 1.05em; transition: background 0.2s; }
     .pay-btn[disabled], .pay-btn[aria-disabled="true"] { background: #aaa; cursor: not-allowed; }
     .note { font-size: 0.98em; color: #666; margin-top: 10px; }
     .zelle-qr { display: block; margin: 12px auto 5px auto; width: 110px; height: 110px; border-radius: 10px; box-shadow: 0 0 6px #0001; }
@@ -136,6 +136,12 @@
       }
       installmentNote.innerHTML = note;
     }
+
+    // Ensure the confirmation page always opens in top-level window
+    document.getElementById('zelleDoneBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      window.top.location.href = this.href;
+    });
   </script>
 </body>
 </html>
