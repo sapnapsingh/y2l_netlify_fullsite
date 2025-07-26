@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("✅ Server responded:", result);
 
       if (result.trim() === "Submitted and emailed successfully.") {
-        window.top.location.href = "/sam-confirmation";
+        window.top.location.href = "https://y2lacademy.com/summer-confirmation";
       } else {
         alert("Submission error: " + result);
       }
