@@ -128,15 +128,18 @@
   <hr class="section-divider"/>
 
   <h2>Fee Summary</h2>
-  <div class="fee-summary-box">
-    <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
-    <div class="fee-line"><span>Discount:</span><span id="discount">$0</span></div>
-    <div class="fee-line total"><span>Final Fee:</span><span id="final-fee">$0</span></div>
+ <div class="fee-summary-box">
+  <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+  <div class="fee-line" id="discount-line" style="display:none;"><span>Discount:</span><span id="discount">$0</span></div>
+  <div class="fee-line total" id="final-fee-line" style="display:none;"><span>Final Fee:</span><span id="final-fee">$0</span></div>
   </div>
+
+  <div id="installment-info" style="font-weight:bold;color:#ff6600; margin-top:8px;"></div>
 
   <input type="hidden" name="baseFee">
   <input type="hidden" name="discountValue">
   <input type="hidden" name="finalFee">
+  
 
   <div id="form-error-msg" style="color:red; display:none; margin-top: 20px;"></div>
 
