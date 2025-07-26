@@ -128,18 +128,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const samLevelInput = document.querySelector("[name='samLevel']");
   if (samLevelInput) samLevelInput.addEventListener("change", calculateAndDisplayFee);
 
-  // ----------- BUILD PAYLOAD AS BEFORE -----------
+  // ----------- BUILD PAYLOAD (patched for lowercase session!) -----------
   function buildPayload() {
-    const session = document.querySelector("input[name='samSession']:checked")?.value || "";
+    const sessionRaw = document.querySelector("input[name='samSession']:checked")?.value || "";
+    const session = sessionRaw.trim().toLowerCase(); // always store lowercase
     const sessionDetails = {
-      "Monthly":    { sessionLabel: "Monthly",    sessionLength: "1 month" },
-      "Quarterly":  { sessionLabel: "Quarterly",  sessionLength: "3 months" },
-      "6 Months":   { sessionLabel: "6 Months",   sessionLength: "6 months" },
-      "1 Year":     { sessionLabel: "1 Year",     sessionLength: "12 months" }
+      "monthly":    { sessionLabel: "Monthly",    sessionLength: "1 month" },
+      "quarterly":  { sessionLabel: "Quarterly",  sessionLength: "3 months" },
+      "6 months":   { sessionLabel: "6 Months",   sessionLength: "6 months" },
+      "1 year":     { sessionLabel: "1 Year",     sessionLength: "12 months" }
     };
     const details = sessionDetails[session] || { sessionLabel: "", sessionLength: "" };
     const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
-    // discount and finalFee still logged for future use, but not displayed
     const discount = "";
     const finalFee = base;
 
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
       school_1: getVal("school1"),
       nationality: getVal("nationality"),
       dob: getVal("dob"),
-      samLevel: getVal("samLevel"),
+      samLevel: getVal("samLevel"),  // this is as selected (should match payment page logic)
       emergency_name: getVal("emergencyContactName"),
       emergency_phone: getVal("emergencyContactPhone"),
       medical_conditions: getVal("medicalInfo"),
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
       cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
       medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
       emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
-      samSession: session,
+      samSession: session,                 // always lowercase
       sessionLabel: details.sessionLabel,
       sessionLength: details.sessionLength,
       preferredSlot: getVal("preferredSlot"),
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (result.trim() === "Submitted and emailed successfully.") {
         sessionStorage.setItem("programType", "SAM Singapore Math");
-        sessionStorage.setItem("samLevel", payload.samLevel);      // e.g. "2"
+        sessionStorage.setItem("samLevel", payload.samLevel);      // e.g. "5"
         sessionStorage.setItem("samSession", payload.samSession);  // e.g. "monthly"
         window.top.location.href = "/payment-options-sam.html?level=" + encodeURIComponent(payload.samLevel) + "&session=" + encodeURIComponent(payload.samSession);
       } else {
