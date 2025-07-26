@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const uscfIdSection = document.getElementById("uscf-id-section");
   const uscfPurchaseSection = document.getElementById("uscf-purchase-section");
   const purchaseUscfCheckbox = document.querySelector("input[name='purchaseUscfId']");
+  const uscfIdField = document.querySelector("input[name='uscfId']");
 
   function toggleSections() {
     const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
@@ -21,7 +22,20 @@ document.addEventListener("DOMContentLoaded", function () {
       uscfIdSection.style.display = "none";
       uscfPurchaseSection.style.display = "none";
     }
+    updateUscfIdRequired();
     calculateFee();
+  }
+
+  // ---- Add USCF ID required logic here ----
+  function updateUscfIdRequired() {
+    const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
+    if (!uscfIdField) return;
+    if (selected === "yes") {
+      uscfIdField.required = true;
+    } else {
+      uscfIdField.required = false;
+      uscfIdField.value = ""; // Optionally clear when not required
+    }
   }
 
   function calculateFee() {
@@ -51,41 +65,51 @@ document.addEventListener("DOMContentLoaded", function () {
   if (purchaseUscfCheckbox) purchaseUscfCheckbox.addEventListener("change", calculateFee);
 
   function buildPayload() {
-  const getVal = (name) => {
-    const el = document.querySelector(`[name='${name}']:checked`) || document.querySelector(`[name='${name}']`);
-    return el ? el.value.trim() : "";
-  };
-  const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
+    const getVal = (name) => {
+      const el = document.querySelector(`[name='${name}']:checked`) || document.querySelector(`[name='${name}']`);
+      return el ? el.value.trim() : "";
+    };
+    const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
 
-  const data = {
-    programType: "ChessTournament",
-    parentName: getVal("parentName"),
-    email: getVal("email"),
-    phone: getVal("phone"),
-    playerName: getVal("playerName"),
-    studentName: getVal("playerName"),
-    grade: getVal("grade"),
-    school: getVal("school"),
-    hasUscf: getVal("hasUscf"),
-    uscfId: getVal("uscfId"),
-    uscfRating: getVal("uscfRating"),
-    purchaseUSCF: checked("purchaseUscfId"),
-    dob: getVal("dob"),
-    chessLevel: getVal("chessLevel"),
-    photo_consent: checked("photoConsent"),
-    medical_release: checked("emergencyMedical"),
-    cancellation_policy: checked("refundPolicy"),
-    baseFee: parseInt(getVal("baseFee")) || 0,
-    uscfFee: parseInt(getVal("uscfFee")) || 0,
-    finalFee: parseInt(getVal("finalFee")) || 0
-  };
+    const data = {
+      programType: "ChessTournament",
+      parentName: getVal("parentName"),
+      email: getVal("email"),
+      phone: getVal("phone"),
+      playerName: getVal("playerName"),
+      studentName: getVal("playerName"),
+      grade: getVal("grade"),
+      school: getVal("school"),
+      hasUscf: getVal("hasUscf"),
+      uscfId: getVal("uscfId"),
+      uscfRating: getVal("uscfRating"),
+      purchaseUSCF: checked("purchaseUscfId"),
+      dob: getVal("dob"),
+      chessLevel: getVal("chessLevel"),
+      photo_consent: checked("photoConsent"),
+      medical_release: checked("emergencyMedical"),
+      cancellation_policy: checked("refundPolicy"),
+      baseFee: parseInt(getVal("baseFee")) || 0,
+      uscfFee: parseInt(getVal("uscfFee")) || 0,
+      finalFee: parseInt(getVal("finalFee")) || 0
+    };
 
-  console.log("📦 Payload to submit:", JSON.stringify(data));
-  return data;
-}
+    console.log("📦 Payload to submit:", JSON.stringify(data));
+    return data;
+  }
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+
+    // ---- USCF ID must be filled if required ----
+    const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
+    if (selected === "yes" && uscfIdField && !uscfIdField.value.trim()) {
+      uscfIdField.focus();
+      alert("Please enter your child's USCF ID.");
+      if (loader) loader.style.display = "none";
+      return false;
+    }
+
     if (loader) loader.style.display = "block";
 
     const payload = buildPayload();
