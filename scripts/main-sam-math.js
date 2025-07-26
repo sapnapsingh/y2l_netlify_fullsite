@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🔧 SAM Singapore Math form initialized");
 
-  // Level/fee matrix (matching your actual levels)
+  // Level/fee matrix (update as needed)
   const FEE_TABLE = [
     {
       levels: ["0A", "0B", "0C", "1"],
@@ -66,11 +66,14 @@ document.addEventListener("DOMContentLoaded", function () {
   function calculateAndDisplayFee() {
     const session = document.querySelector("input[name='samSession']:checked")?.value || "";
     const samLevel = getVal("samLevel");
+    const isNew = document.getElementById("isNewStudent").checked ? "yes" : "no";
     if (!session || !samLevel) {
-      updateFeeSummary(0, "");
+      updateFeeSummary(0, "", 0, session);
       return;
     }
     const base = lookupFee(samLevel, session);
+    let registrationFee = (isNew === "yes") ? 50 : 0;
+
     // Calculate savings compared to monthly
     let saveMsg = "";
     if (session !== "Monthly") {
@@ -81,17 +84,31 @@ document.addEventListener("DOMContentLoaded", function () {
         saveMsg = `You save $${savings} compared to monthly pricing!`;
       }
     }
-    updateFeeSummary(base, saveMsg, session);
+    updateFeeSummary(base, saveMsg, registrationFee, session);
+
     // Store values for logging even if not visible
     document.querySelector("input[name='baseFee']").value = base;
+    document.querySelector("input[name='registrationFee']").value = registrationFee;
     document.querySelector("input[name='discountValue']").value = ""; // no discount field shown
-    document.querySelector("input[name='finalFee']").value = base;
+    document.querySelector("input[name='finalFee']").value = base + registrationFee;
   }
 
-  function updateFeeSummary(total, saveMsg, session) {
-    // Only show total
+  function updateFeeSummary(tuition, saveMsg, registrationFee, session) {
+    // Tuition
     const totalFeeSpan = document.getElementById("total-fee");
-    if (totalFeeSpan) totalFeeSpan.innerText = total ? "$" + total : "$0";
+    if (totalFeeSpan) totalFeeSpan.innerText = tuition ? "$" + tuition : "$0";
+    // Registration Fee
+    const regLine = document.getElementById("registration-fee-line");
+    const regSpan = document.getElementById("registration-fee");
+    if (regLine && regSpan) {
+      if (registrationFee && registrationFee > 0) {
+        regLine.style.display = "";
+        regSpan.innerText = "$" + registrationFee;
+      } else {
+        regLine.style.display = "none";
+        regSpan.innerText = "$0";
+      }
+    }
     // Hide discount and final fee lines
     const discountLine = document.getElementById("discount-line");
     const finalLine = document.getElementById("final-fee-line");
@@ -121,14 +138,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Listen to both session selection and level field
+  // Listen to both session selection, level, and new-student field
   document.querySelectorAll("input[name='samSession']").forEach(radio => {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
   const samLevelInput = document.querySelector("[name='samLevel']");
   if (samLevelInput) samLevelInput.addEventListener("change", calculateAndDisplayFee);
+  document.getElementById("isNewStudent").addEventListener("change", calculateAndDisplayFee);
 
-  // ----------- BUILD PAYLOAD (patched for lowercase session!) -----------
+  // ----------- BUILD PAYLOAD -----------
   function buildPayload() {
     const sessionRaw = document.querySelector("input[name='samSession']:checked")?.value || "";
     const session = sessionRaw.trim().toLowerCase(); // always store lowercase
@@ -140,8 +158,11 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     const details = sessionDetails[session] || { sessionLabel: "", sessionLength: "" };
     const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
+    const registrationFee = parseInt(document.querySelector("input[name='registrationFee']").value) || 0;
     const discount = "";
-    const finalFee = base;
+    const finalFee = base + registrationFee;
+
+    const isNew = document.getElementById("isNewStudent").checked ? "yes" : "no";
 
     const data = {
       programType: "SAM Singapore Math",
@@ -154,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
       school_1: getVal("school1"),
       nationality: getVal("nationality"),
       dob: getVal("dob"),
-      samLevel: getVal("samLevel"),  // this is as selected (should match payment page logic)
+      samLevel: getVal("samLevel"),
       emergency_name: getVal("emergencyContactName"),
       emergency_phone: getVal("emergencyContactPhone"),
       medical_conditions: getVal("medicalInfo"),
@@ -163,13 +184,15 @@ document.addEventListener("DOMContentLoaded", function () {
       cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
       medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
       emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
-      samSession: session,                 // always lowercase
+      samSession: session,
       sessionLabel: details.sessionLabel,
       sessionLength: details.sessionLength,
       preferredSlot: getVal("preferredSlot"),
       baseFee: base,
+      registrationFee: registrationFee,
       discountValue: discount,
-      finalFee: finalFee
+      finalFee: finalFee,
+      isNewStudent: isNew
     };
 
     console.log("📦 Payload to submit:", data);
@@ -194,10 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("✅ Server responded:", result);
 
       if (result.trim() === "Submitted and emailed successfully.") {
-        sessionStorage.setItem("programType", "SAM Singapore Math");
-        sessionStorage.setItem("samLevel", payload.samLevel);      // e.g. "5"
-        sessionStorage.setItem("samSession", payload.samSession);  // e.g. "monthly"
-        window.top.location.href = "/payment-options-sam.html?level=" + encodeURIComponent(payload.samLevel) + "&session=" + encodeURIComponent(payload.samSession);
+        window.top.location.href = "/sam-confirmation";
       } else {
         alert("Submission error: " + result);
       }
@@ -208,4 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("There was an error submitting the form. Please try again.");
     });
   });
+
+  // Initialize fee summary once on load
+  calculateAndDisplayFee();
 });
