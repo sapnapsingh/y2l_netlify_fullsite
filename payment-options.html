@@ -94,12 +94,20 @@
   const zelleAmount = document.getElementById("zelleAmount");
   const programTitle = document.getElementById("programTitle");
 
-    
+  // Confirmation page links per program type
+  function getConfirmationUrl() {
+    if (programType === "Python Programming") return "https://y2lacademy.com/python-confirmation";
+    if (programType === "ChessTournament") return "https://y2lacademy.com/chess-tournament-confirmation";
+    if (programType === "Chess") return "https://y2lacademy.com/chess-confirmation";
+    if (programType === "Public Speaking") return "https://y2lacademy.com/ps-confirmation";
+    return "https://y2lacademy.com/summer-confirmation";
+  }
+
   if (programType === "ChessTournament") {
     const fee = params.get("fee") || "0";
     sessionInfo.innerHTML = "You are registering for the <strong>Y2L's Back 2 School Chess tournament</strong>.";
     zelleAmount.innerHTML = "Please send <strong>$" + fee + "</strong> to:";
-  
+
     if (session === "under 400") {
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/834b67a9-67e3-4888-9d8f-4d5";
     } else if (session === "400 - 800") {
@@ -107,7 +115,7 @@
     } else if (session === "above 800") {
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/bfd43145-a314-4c71-86a9-8d6";
     }
-  
+
     programTitle.innerText = "Complete Your Payment – Y2L's Back 2 School Chess tournament";
   } else if (programType === "Python Programming") {
     if (session === "beginner") {
@@ -126,8 +134,8 @@
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/python-advanced";
       programTitle.innerText = "Complete Your Payment – Python Programming";
     }
-  } else  if (programType === "Chess") {
-      if (session === "beginner to intermediate") {
+  } else if (programType === "Chess") {
+    if (session === "beginner to intermediate") {
       sessionInfo.innerHTML = "You have enrolled in the <strong>Chess – Beginner to Intermediate</strong> session.";
       zelleAmount.innerHTML = "Send <strong>$330</strong> to:";
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-beginner";
@@ -138,7 +146,7 @@
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-chess-advanced";
       programTitle.innerText = "Complete Your Payment – Y2L Chess Academy";
     } 
-  }else if (session === "beginner orators") {
+  } else if (session === "beginner orators") {
     sessionInfo.innerHTML = "You have enrolled in the <strong>Public Speaking – Beginner Orators</strong> session.";
     zelleAmount.innerHTML = "Send <strong>$385</strong> to:";
     payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/y2l-fall-publicspeaking";
@@ -148,10 +156,18 @@
     payLink.style.display = "none";
   }
 
-    document.getElementById('zelleDoneBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-      window.top.location.href = this.href;
-    });
-</script>
+  document.getElementById('zelleDoneBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.top.location.href = this.href;
+  });
+
+  // --- AUTO-REDIRECT TO CONFIRMATION AFTER PAY NOW ---
+  payLink.addEventListener('click', function(e) {
+    // Let the GoDaddy link open in new tab as normal
+    setTimeout(function() {
+      window.top.location.href = getConfirmationUrl();
+    }, 500); // Delay ensures the new tab opens first
+  });
+  </script>
 </body>
 </html>
