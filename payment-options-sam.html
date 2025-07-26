@@ -137,10 +137,18 @@
       installmentNote.innerHTML = note;
     }
 
-    // Ensure the confirmation page always opens in top-level window
+    // Ensure the confirmation page always opens in top-level window (Zelle)
     document.getElementById('zelleDoneBtn').addEventListener('click', function(e) {
       e.preventDefault();
       window.top.location.href = this.href;
+    });
+
+    // --- AUTO-REDIRECT TO CONFIRMATION AFTER PAY NOW ---
+    payLink.addEventListener('click', function(e) {
+      // Let the GoDaddy link open in new tab as normal
+      setTimeout(function() {
+        window.top.location.href = "https://y2lacademy.com/sam-confirmation";
+      }, 500); // Delay ensures the new tab opens first
     });
   </script>
 </body>
