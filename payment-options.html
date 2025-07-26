@@ -67,7 +67,9 @@
       <p><strong>Zelle ID:</strong> 209-937-3171</p>
       <img src="images/ZelleQR.png" alt="Zelle QR Code" width="120" height="120" />
       <p class="note">Scan the QR code or send manually via your Zelle app.</p>
-      <a href="https://y2lacademy.com/summer-confirmation" class="pay-btn">I Paid via Zelle – Complete Enrollment</a>
+      <a href="https://y2lacademy.com/summer-confirmation" class="pay-btn" id="zelleDoneBtn">
+      I Paid via Zelle – Complete Enrollment
+      </a>
     </div>
 
     <div class="option-box">
@@ -145,6 +147,11 @@
     sessionInfo.innerText = "Unable to detect your session. Please check your enrollment.";
     payLink.style.display = "none";
   }
+
+    document.getElementById('zelleDoneBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      window.top.location.href = this.href;
+    });
 </script>
 </body>
 </html>
