@@ -1,86 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SAM Singapore Math Enrollment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-  <form id="sam-math-enrollment-form" autocomplete="off">
-    <h1>SAM Singapore Math Enrollment</h1>
 
-    <h2>Parent Information</h2>
-    <div class="info-section">
-      <label>Parent Name <input class="input-field" name="parentName" required></label>
-      <label>Email <input class="input-field" type="email" name="email" required></label>
-      <label>Phone <input class="input-field" name="phone" required></label>
-      <label>Billing Address <input class="input-field" name="billingAddress"></label>
-    </div>
+<form id="sam-math-enrollment-form" name="enrollment" method="POST" action="/.netlify/functions/submit" netlify netlify-honeypot="bot-field">
+  <div id="submitting-overlay" style="display: none; position: fixed; top: 0; left: 0; background-color: rgba(255,255,255,0.85); width: 100%; height: 100%; z-index: 1000; text-align: center; padding-top: 200px; font-size: 20px; color: #2a7ae2;">
+    Submitting your enrollment... Please wait.
+  </div>
 
-    <h2>Student Information</h2>
-    <div class="info-section">
-      <label>Student Name <input class="input-field" name="student1Name" required></label>
-      <label>Grade <input class="input-field" name="grade1" required></label>
-      <label>School <input class="input-field" name="school1" required></label>
-      <label>Nationality
-        <select class="input-field" name="nationality" required>
-          <option value="">Select nationality</option>
-          <option value="United States">United States</option>
-          <option value="India">India</option>
-          <option value="Canada">Canada</option>
-          <option value="United Kingdom">United Kingdom</option>
-          <option value="Australia">Australia</option>
-          <!-- Add more as needed -->
-        </select>
-      </label>
-      <label>Date of Birth <input class="input-field" type="date" name="dob" required></label>
-    </div>
+  <h2>Parent Information</h2>
+  <div class="info-section">
+    <label>Parent Name <input class="input-field" name="parentName" required></label>
+    <label>Email <input class="input-field" type="email" name="email" required></label>
+    <label>Phone <input class="input-field" type="tel" name="phone" required></label>
+    <label>Billing Address <input class="input-field" name="billingAddress" required></label>
+  </div>
 
-    <h2>Enrollment Term</h2>
-    <div class="info-section">
-      <label><input type="radio" name="samSession" value="Monthly" required> Monthly</label><br/>
-      <label><input type="radio" name="samSession" value="Quarterly"> Quarterly</label><br/>
-      <label><input type="radio" name="samSession" value="6 Months"> 6 Months</label><br/>
-      <label><input type="radio" name="samSession" value="1 Year"> 1 Year</label>
-    </div>
+  <hr class="section-divider"/>
 
-    <h2>Emergency & Medical</h2>
-    <div class="info-section">
-      <label>Emergency Contact Name <input class="input-field" name="emergencyContactName" required></label>
-      <label>Emergency Contact Phone <input class="input-field" name="emergencyContactPhone" required></label>
-      <label>Medical Conditions <input class="input-field" name="medicalInfo"></label>
-      <label>Medications <input class="input-field" name="medications"></label>
-    </div>
+  <h2>Student Information</h2>
+  <div class="info-section">
+    <label>Student Name <input class="input-field" name="student1Name" required></label>
+    <label>Grade <input class="input-field" name="grade1" required></label>
+    <label>School <input class="input-field" name="school1" required></label>
+    <label>Nationality
+      <select class="input-field" name="nationality" required>
+        <option value="">Select nationality</option>
+        <option value="United States">United States</option>
+        <option value="India">India</option>
+        <option value="Canada">Canada</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="Australia">Australia</option>
+        <!-- Add more as needed -->
+      </select>
+    </label>
+    <label>Date of Birth <input class="input-field" type="date" name="dob" required></label>
+  </div>
 
-    <h2>Waiver & Consent</h2>
-    <div class="info-section">
-      <label>
-        <input type="checkbox" name="photoConsent" required>
-        I give permission for my child’s photo/media to be used for promotional purposes.
-      </label><br>
-      <label>
-        <input type="checkbox" name="emergencyMedical" required>
-        I authorize emergency medical care for my child as needed during the program.
-      </label><br>
-      <label>
-        <input type="checkbox" name="refundPolicy" required>
-        I agree to the program’s cancellation and refund policy.
-      </label>
-    </div>
+  <hr class="section-divider"/>
 
-    <div class="fee-summary">
-      <p>Base Fee: <span id="total-fee">$0</span></p>
-      <p>Discount: <span id="discount">$0</span></p>
-      <p><strong>Final Fee: <span id="final-fee">$0</span></strong></p>
-      <input type="hidden" name="baseFee" value="0">
-      <input type="hidden" name="discountValue" value="0">
-      <input type="hidden" name="finalFee" value="0">
-    </div>
+  <h2>Session Selection</h2>
+  <div class="info-section">
+    <label><input type="radio" name="samSession" value="Monthly" required> Monthly</label><br/>
+    <label><input type="radio" name="samSession" value="Quarterly"> Quarterly</label><br/>
+    <label><input type="radio" name="samSession" value="6 Months"> 6 Months</label><br/>
+    <label><input type="radio" name="samSession" value="1 Year"> 1 Year</label>
+  </div>
 
-    <button type="submit" class="submit-btn">Submit Enrollment</button>
-    <div id="submitting-overlay" style="display:none">Submitting...</div>
-  </form>
-  <script src="main-sam-math.js"></script>
+  <hr class="section-divider"/>
+
+  <h2>Medical & Emergency Info</h2>
+  <div class="info-section">
+    <label>Medical or Allergy Info <input class="input-field" name="medicalInfo" required></label>
+    <label>Medications <input class="input-field" name="medications" required></label>
+    <label>Emergency Contact Name <input class="input-field" name="emergencyContactName" required></label>
+    <label>Emergency Contact Phone <input class="input-field" name="emergencyContactPhone" required></label>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <h2>Waivers</h2>
+  <div class="waiver-section">
+    <label><input type="checkbox" name="photoConsent"> I give permission for my child to be photographed or recorded during the program.</label><br/>
+    <label><input type="checkbox" name="refundPolicy" required> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" target="_blank">program's cancellation and refund policy</a>.</label><br/>
+    <label><input type="checkbox" name="emergencyMedical" required> I authorize emergency medical care.</label><br/>
+    <label><input type="checkbox" name="emergencyContact" required> I confirm I have provided accurate emergency contact information.</label>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <h2>Fee Summary</h2>
+  <div class="fee-summary-box">
+    <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+    <div class="fee-line"><span>Discount:</span><span id="discount">$0</span></div>
+    <div class="fee-line total"><span>Final Fee:</span><span id="final-fee">$0</span></div>
+  </div>
+
+  <input type="hidden" name="baseFee">
+  <input type="hidden" name="discountValue">
+  <input type="hidden" name="finalFee">
+
+  <div id="form-error-msg" style="color:red; display:none; margin-top: 20px;"></div>
+
+  <div style="margin-top: 30px;">
+    <button class="submit-btn" type="submit" >Submit Enrollment</button>
+  </div>
+</form>
+<script src="/scripts/main-sam-math.js"></script>
 </body>
 </html>
