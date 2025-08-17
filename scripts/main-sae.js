@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("📝 SAE form initialized");
 
-  // ====== FEE MATRIX (PLACEHOLDER — please adjust to SAE pricing when ready) ======
-  // Structure matches SAM style so you can reuse quickly.
+  // ====== FEE MATRIX (PLACEHOLDER — set to your SAE pricing) ======
   const FEE_TABLE = [
     { levels: ["Beginner"],     monthly: 200, quarterly: 575,  sixmo: 1125, yearly: 1750 },
     { levels: ["Intermediate"], monthly: 220, quarterly: 635,  sixmo: 1245, yearly: 1940 },
@@ -13,9 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const level = (levelRaw || "").trim();
     let found = FEE_TABLE[0];
     for (const group of FEE_TABLE) {
-      if (group.levels.includes(level)) {
-        found = group; break;
-      }
+      if (group.levels.includes(level)) { found = group; break; }
     }
     if (session === "Monthly")   return found.monthly;
     if (session === "Quarterly") return found.quarterly;
@@ -151,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
       nationality: getVal("nationality"),
       dob: getVal("dob"),
 
-      saeLevel: getVal("saeLevel"),           // Beginner / Intermediate / Advanced
+      saeLevel: getVal("saeLevel"),           // maps to "SAE Assessed Level" in sheet
       saeSession: session,                    // monthly/quarterly/6 months/1 year
       sessionLabel: details.sessionLabel,
       sessionLength: details.sessionLength,
