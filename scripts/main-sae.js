@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(result => {
         if (loader) loader.style.display = "none";
         if (result.trim() === "Submitted and emailed successfully.") {
-          window.top.location.href = "/sae-confirmation";
+          window.top.location.href = "https://y2lacademy.com/summer-confirmation";
         } else {
           alert("Submission error: " + result);
         }
