@@ -4,10 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=480, initial-scale=1.0"/>
   <title>SAE – Seriously Active English Enrollment</title>
-  <!-- keep or remove if you don’t use a shared css -->
   <link rel="stylesheet" href="/styles/main.css">
   <style>
-    /* Lightweight helpers; keep or delete if your global CSS already handles these */
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#222; }
     h1,h2 { margin: 18px 0 10px; }
     .info-section { display: grid; gap: 8px; }
@@ -250,8 +248,8 @@
 
     <label>Date of Birth <input class="input-field" type="date" name="dob" required></label>
 
-    <!-- SAE Level: tweak options as you finalize your catalog -->
-    <label>SAE Level
+    <!-- SAE Assessed Level -->
+    <label>SAE Assessed Level
       <select class="input-field" name="saeLevel" required>
         <option value="">Select Level</option>
         <option value="Beginner">Beginner</option>
@@ -330,7 +328,7 @@
 
   <h2>Fee Summary</h2>
 
-  <!-- Registration acknowledgement checkbox -->
+  <!-- New Student acknowledgement -->
   <div style="margin:10px 0;">
     <label>
       <input type="checkbox" id="isNewStudent" name="isNewStudent" value="yes" />
@@ -348,7 +346,7 @@
   </div>
   <div id="installment-info" style="font-weight:bold;color:#ff6600; margin-top:8px;"></div>
 
-  <!-- hidden fields for logging -->
+  <!-- hidden fields for backend logging -->
   <input type="hidden" name="baseFee">
   <input type="hidden" name="registrationFee">
   <input type="hidden" name="discountValue">
