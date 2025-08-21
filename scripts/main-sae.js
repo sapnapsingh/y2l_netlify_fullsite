@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🔧 SAE English form initialized");
 
-  // ---- Fee table (identical to SAM) ----
+  // Level/fee matrix (mirrors SAM; update if SAE pricing differs)
   const FEE_TABLE = [
     {
       levels: ["0A", "0B", "0C", "1"],
@@ -42,16 +42,62 @@ document.addEventListener("DOMContentLoaded", function () {
     return 0;
   }
 
-  function getVal(name) {
-    const el = document.querySelector(`[name="${name}"]`);
-    return el ? el.value.trim() : "";
+  function getMonthCount(session) {
+    if (session === "Monthly") return 1;
+    if (session === "Quarterly") return 3;
+    if (session === "6 Months") return 6;
+    if (session === "1 Year") return 12;
+    return 1;
   }
 
-  // ---- Fee summary update ----
+  const form = document.getElementById("sae-english-enrollment-form");
+  const loader = document.getElementById("submitting-overlay");
+
+  if (!form) {
+    console.error("❌ sae-english-enrollment-form not found!");
+    return;
+  }
+
+  function getVal(name) {
+    return document.querySelector(`[name='${name}']`)?.value?.trim() || "";
+  }
+
+  // --- FEE CALCULATION ---
+  function calculateAndDisplayFee() {
+    const session = document.querySelector("input[name='saeSession']:checked")?.value || "";
+    const saeLevel = getVal("saeLevel");
+    const isNew = document.getElementById("isNewStudent").checked ? "yes" : "no";
+    if (!session || !saeLevel) {
+      updateFeeSummary(0, "", 0, session);
+      return;
+    }
+    const base = lookupFee(saeLevel, session);
+    let registrationFee = (isNew === "yes") ? 50 : 0;
+
+    // Calculate savings compared to monthly
+    let saveMsg = "";
+    if (session !== "Monthly") {
+      const months = getMonthCount(session);
+      const monthlyFee = lookupFee(saeLevel, "Monthly") * months;
+      const savings = monthlyFee - base;
+      if (savings > 0) {
+        saveMsg = `You save $${savings} compared to monthly pricing!`;
+      }
+    }
+    updateFeeSummary(base, saveMsg, registrationFee, session);
+
+    // Store values for logging even if not visible
+    document.querySelector("input[name='baseFee']").value = base;
+    document.querySelector("input[name='registrationFee']").value = registrationFee;
+    document.querySelector("input[name='discountValue']").value = ""; // no discount field shown
+    document.querySelector("input[name='finalFee']").value = base + registrationFee;
+  }
+
   function updateFeeSummary(tuition, saveMsg, registrationFee, session) {
+    // Tuition
     const totalFeeSpan = document.getElementById("total-fee");
     if (totalFeeSpan) totalFeeSpan.innerText = tuition ? "$" + tuition : "$0";
-
+    // Registration Fee
     const regLine = document.getElementById("registration-fee-line");
     const regSpan = document.getElementById("registration-fee");
     if (regLine && regSpan) {
@@ -63,24 +109,24 @@ document.addEventListener("DOMContentLoaded", function () {
         regSpan.innerText = "$0";
       }
     }
-
+    // Hide discount and final fee lines
     const discountLine = document.getElementById("discount-line");
     const finalLine = document.getElementById("final-fee-line");
     if (discountLine) discountLine.style.display = "none";
     if (finalLine) finalLine.style.display = "none";
-
+    // Show/hide savings message
     let saveMsgDiv = document.getElementById("fee-save-msg");
     if (!saveMsgDiv) {
       saveMsgDiv = document.createElement("div");
       saveMsgDiv.id = "fee-save-msg";
       saveMsgDiv.style.fontWeight = "bold";
       saveMsgDiv.style.color = "#2a7ae2";
-      const box = document.querySelector(".fee-summary-box");
-      if (box) box.appendChild(saveMsgDiv);
+      document.querySelector(".fee-summary-box").appendChild(saveMsgDiv);
     }
     saveMsgDiv.innerText = saveMsg || "";
 
-    const installmentDiv = document.getElementById("installment-info");
+    // Show/hide installment info
+    let installmentDiv = document.getElementById("installment-info");
     if (installmentDiv) {
       if (session === "6 Months") {
         installmentDiv.innerText = "Note: The fee for a 6-month session is payable in 2 installments.";
@@ -92,54 +138,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // ---- Calculate and display fee ----
-  function calculateAndDisplayFee() {
-    const session = document.querySelector("input[name='saeSession']:checked")?.value || "";
-    const level = getVal("saeLevel");
-    const isNew = document.getElementById("isNewStudent").checked ? "yes" : "no";
-    if (!session || !level) {
-      updateFeeSummary(0, "", 0, session);
-      return;
-    }
-    const base = lookupFee(level, session);
-    const registrationFee = (isNew === "yes") ? 50 : 0;
-
-    // Savings message compared to monthly
-    let saveMsg = "";
-    if (session === "Quarterly" || session === "6 Months" || session === "1 Year") {
-      const monthly = lookupFee(level, "Monthly");
-      const months = (session === "Quarterly") ? 3 : (session === "6 Months") ? 6 : 12;
-      const monthlyTotal = monthly * months;
-      const chosenTotal = base;
-      const diff = monthlyTotal - chosenTotal;
-      if (diff > 0) saveMsg = `You save $${diff} compared to paying monthly.`;
-    }
-
-    updateFeeSummary(base, saveMsg, registrationFee, session);
-
-    // Store into hidden fields
-    const baseInput = document.querySelector("input[name='baseFee']");
-    const regInput  = document.querySelector("input[name='registrationFee']");
-    const discInput = document.querySelector("input[name='discountValue']");
-    const finalInput= document.querySelector("input[name='finalFee']");
-    if (baseInput) baseInput.value = base;
-    if (regInput)  regInput.value  = registrationFee;
-    if (discInput) discInput.value = ""; // not used now
-    if (finalInput)finalInput.value= base + registrationFee;
-  }
-
-  // Events
+  // Listen to session selection, level, and new-student field
   document.querySelectorAll("input[name='saeSession']").forEach(radio => {
     radio.addEventListener("change", calculateAndDisplayFee);
   });
-  const levelInput = document.querySelector("[name='saeLevel']");
-  if (levelInput) levelInput.addEventListener("change", calculateAndDisplayFee);
+  const saeLevelInput = document.querySelector("[name='saeLevel']");
+  if (saeLevelInput) saeLevelInput.addEventListener("change", calculateAndDisplayFee);
   document.getElementById("isNewStudent").addEventListener("change", calculateAndDisplayFee);
 
-  // ---- Build payload ----
+  // ----------- BUILD PAYLOAD -----------
   function buildPayload() {
     const sessionRaw = document.querySelector("input[name='saeSession']:checked")?.value || "";
-    const session = sessionRaw.trim().toLowerCase();
+    const session = sessionRaw.trim().toLowerCase(); // always store lowercase
     const sessionDetails = {
       "monthly":    { sessionLabel: "Monthly",    sessionLength: "1 month" },
       "quarterly":  { sessionLabel: "Quarterly",  sessionLength: "3 months" },
@@ -147,16 +157,16 @@ document.addEventListener("DOMContentLoaded", function () {
       "1 year":     { sessionLabel: "1 Year",     sessionLength: "12 months" }
     };
     const details = sessionDetails[session] || { sessionLabel: "", sessionLength: "" };
-
     const base = parseInt(document.querySelector("input[name='baseFee']").value) || 0;
     const registrationFee = parseInt(document.querySelector("input[name='registrationFee']").value) || 0;
-    const finalFee = base + registrationFee;
     const discount = "";
+    const finalFee = base + registrationFee;
 
     const isNew = document.getElementById("isNewStudent").checked ? "yes" : "no";
+    const saeLevel = getVal("saeLevel");
 
     const data = {
-      programType: "SAE – Seriously Active English",
+      programType: "SAE English",
       parentName: getVal("parentName"),
       email: getVal("email"),
       phone: getVal("phone"),
@@ -166,7 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
       school_1: getVal("school1"),
       nationality: getVal("nationality"),
       dob: getVal("dob"),
-      saeLevel: getVal("saeLevel"),
+      // Keep both keys to mirror SAM while naming SAE — avoids server-side breakage.
+      saeLevel: saeLevel,
+      samLevel: saeLevel,
       emergency_name: getVal("emergencyContactName"),
       emergency_phone: getVal("emergencyContactPhone"),
       medical_conditions: getVal("medicalInfo"),
@@ -175,7 +187,8 @@ document.addEventListener("DOMContentLoaded", function () {
       cancellation_policy: document.querySelector('[name="refundPolicy"]')?.checked ? "Yes" : "No",
       medical_release: document.querySelector('[name="emergencyMedical"]')?.checked ? "Yes" : "No",
       emergency_contact_info: document.querySelector('[name="emergencyContact"]')?.checked ? "Yes" : "No",
-      saeSession: sessionRaw, // keep original case for sheet readability
+      // For compatibility with existing logging, include samSession as well.
+      samSession: session,
       sessionLabel: details.sessionLabel,
       sessionLength: details.sessionLength,
       preferredSlot: getVal("preferredSlot"),
@@ -186,46 +199,40 @@ document.addEventListener("DOMContentLoaded", function () {
       isNewStudent: isNew
     };
 
-    console.log("📦 SAE Payload:", data);
+    console.log("📦 Payload to submit (SAE):", data);
     return data;
   }
 
-  // ---- Submit ----
-  const form = document.getElementById("sae-enrollment-form");
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    const data = buildPayload();
 
-    const loader = document.getElementById("submitting-overlay");
     if (loader) loader.style.display = "block";
 
-    fetch("YOUR_GAS_WEBAPP_URL", {
+    const payload = buildPayload();
+
+    fetch("/.netlify/functions/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload)
     })
-      .then((res) => res.text())
-      .then((result) => {
-        console.log("Server response:", result);
-        if (loader) loader.style.display = "none";
-        // Store context (optional)
-        sessionStorage.setItem("programType", "SAE – Seriously Active English");
-        sessionStorage.setItem("saeLevel", data.saeLevel);
-        sessionStorage.setItem("saeSession", data.saeSession);
+    .then(response => response.text())
+    .then(result => {
+      if (loader) loader.style.display = "none";
+      console.log("✅ Server responded:", result);
 
-        if (result.trim() === "Submitted and emailed successfully.") {
-          window.top.location.href = "/confirmation.html";
-        } else {
-          alert("Submission error: " + result);
-        }
-      })
-      .catch((err) => {
-        console.error("Submission failed:", err);
-        if (loader) loader.style.display = "none";
-        alert("There was an error submitting the form. Please try again.");
-      });
+      if (result.trim() === "Submitted and emailed successfully.") {
+        window.top.location.href = "https://y2lacademy.com/summer-confirmation";
+      } else {
+        alert("Submission error: " + result);
+      }
+    })
+    .catch(error => {
+      console.error("Submission failed:", error);
+      if (loader) loader.style.display = "none";
+      alert("There was an error submitting the form. Please try again.");
+    });
   });
 
-  // Initialize on load
+  // Initialize fee summary once on load
   calculateAndDisplayFee();
 });
