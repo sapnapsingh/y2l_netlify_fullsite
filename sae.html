@@ -2,36 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=480, initial-scale=1.0"/>
   <title>SAE – Seriously Active English Enrollment</title>
+  <!-- Keep your site-wide stylesheet for consistent look -->
   <link rel="stylesheet" href="/styles/main.css">
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#222; }
-    h1,h2 { margin: 18px 0 10px; }
-    .info-section { display: grid; gap: 8px; }
-    .input-field { width: 100%; padding: 8px; box-sizing: border-box; }
-    .section-divider { margin: 16px 0; border: 0; height: 1px; background: #ddd; }
-    .fee-summary-box { border:1px solid #ddd; padding:10px; border-radius:8px; }
-    .fee-line { display:flex; justify-content:space-between; margin:6px 0; }
-    .fee-line.total span:last-child { font-weight:bold; }
-    .submit-btn { background:#2a7ae2; color:#fff; border:none; padding:10px 16px; border-radius:6px; cursor:pointer; }
-    .submit-btn:hover { opacity:.95; }
-    #submitting-overlay { display:none; position:fixed; inset:0; background:rgba(255,255,255,.85); z-index:9999; text-align:center; padding-top:20vh; font-size:20px; color:#2a7ae2; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
 
-<div id="submitting-overlay">Submitting your enrollment… Please wait.</div>
-
-<form id="sae-enrollment-form" autocomplete="off">
-  <h1>SAE – Seriously Active English (Lathrop)</h1>
-
-  <!-- Disabled cross-enroll toggle (visible, but disabled as requested) -->
-  <div style="margin: 8px 0 16px;">
-    <label>
-      <input type="checkbox" id="alsoEnrollSam" disabled>
-      Also enroll in <strong>SAM Singapore Math</strong> (disabled for now)
-    </label>
+<form id="sae-enrollment-form" name="enrollment" method="POST" netlify netlify-honeypot="bot-field">
+  <!-- Submitting overlay -->
+  <div id="submitting-overlay" style="display: none; position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.9); z-index:9999; text-align:center; padding-top: 200px; font-size: 20px; color: #2a7ae2;">
+    Submitting your enrollment... Please wait.
   </div>
 
   <h2>Parent Information</h2>
@@ -47,10 +28,9 @@
   <h2>Student Information</h2>
   <div class="info-section">
     <label>Student Name <input class="input-field" name="student1Name" required></label>
+    <label>Date of Birth <input class="input-field" type="date" name="dob" required></label>
     <label>Grade <input class="input-field" name="grade1" required></label>
     <label>School <input class="input-field" name="school1" required></label>
-
-    <!-- Nationality (full list) -->
     <label>Nationality
       <select class="input-field" name="nationality" required>
         <option value="">Select nationality</option>
@@ -92,8 +72,7 @@
         <option value="China">China</option>
         <option value="Colombia">Colombia</option>
         <option value="Comoros">Comoros</option>
-        <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
-        <option value="Congo, Republic of the">Congo, Republic of the</option>
+        <option value="Congo">Congo</option>
         <option value="Costa Rica">Costa Rica</option>
         <option value="Cote d'Ivoire">Cote d'Ivoire</option>
         <option value="Croatia">Croatia</option>
@@ -143,9 +122,6 @@
         <option value="Kazakhstan">Kazakhstan</option>
         <option value="Kenya">Kenya</option>
         <option value="Kiribati">Kiribati</option>
-        <option value="Korea, North">Korea, North</option>
-        <option value="Korea, South">Korea, South</option>
-        <option value="Kosovo">Kosovo</option>
         <option value="Kuwait">Kuwait</option>
         <option value="Kyrgyzstan">Kyrgyzstan</option>
         <option value="Laos">Laos</option>
@@ -188,7 +164,6 @@
         <option value="Oman">Oman</option>
         <option value="Pakistan">Pakistan</option>
         <option value="Palau">Palau</option>
-        <option value="Palestine">Palestine</option>
         <option value="Panama">Panama</option>
         <option value="Papua New Guinea">Papua New Guinea</option>
         <option value="Paraguay">Paraguay</option>
@@ -217,6 +192,7 @@
         <option value="Solomon Islands">Solomon Islands</option>
         <option value="Somalia">Somalia</option>
         <option value="South Africa">South Africa</option>
+        <option value="South Korea">South Korea</option>
         <option value="South Sudan">South Sudan</option>
         <option value="Spain">Spain</option>
         <option value="Sri Lanka">Sri Lanka</option>
@@ -229,7 +205,6 @@
         <option value="Tajikistan">Tajikistan</option>
         <option value="Tanzania">Tanzania</option>
         <option value="Thailand">Thailand</option>
-        <option value="Timor-Leste">Timor-Leste</option>
         <option value="Togo">Togo</option>
         <option value="Tonga">Tonga</option>
         <option value="Trinidad and Tobago">Trinidad and Tobago</option>
@@ -245,7 +220,6 @@
         <option value="Uruguay">Uruguay</option>
         <option value="Uzbekistan">Uzbekistan</option>
         <option value="Vanuatu">Vanuatu</option>
-        <option value="Vatican City">Vatican City</option>
         <option value="Venezuela">Venezuela</option>
         <option value="Vietnam">Vietnam</option>
         <option value="Yemen">Yemen</option>
@@ -253,34 +227,14 @@
         <option value="Zimbabwe">Zimbabwe</option>
       </select>
     </label>
-
-    <label>Date of Birth <input class="input-field" type="date" name="dob" required></label>
-
-    <!-- SAE Assessed Level (same structure as SAM levels) -->
     <label>SAE Assessed Level
       <select class="input-field" name="saeLevel" required>
-        <option value="">Select Level</option>
-        <option value="0A">0A</option>
-        <option value="0B">0B</option>
-        <option value="0C">0C</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
+        <option value="">Select level</option>
+        <option>0A</option><option>0B</option><option>0C</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+        <option>5</option><option>6</option>
       </select>
     </label>
-  </div>
-
-  <hr class="section-divider"/>
-
-  <h2>Session Selection</h2>
-  <div class="info-section">
-    <label><input type="radio" name="saeSession" value="Monthly" required> Monthly</label>
-    <label><input type="radio" name="saeSession" value="Quarterly"> Quarterly</label>
-    <label><input type="radio" name="saeSession" value="6 Months"> 6 Months</label>
-    <label><input type="radio" name="saeSession" value="1 Year"> 1 Year</label>
   </div>
 
   <hr class="section-divider"/>
@@ -320,38 +274,47 @@
 
   <hr class="section-divider"/>
 
-  <h2>Medical & Emergency Info</h2>
+  <h2>Session Selection</h2>
   <div class="info-section">
-    <label>Medical or Allergy Info <input class="input-field" name="medicalInfo" required></label>
-    <label>Medications <input class="input-field" name="medications" required></label>
-    <label>Emergency Contact Name <input class="input-field" name="emergencyContactName" required></label>
-    <label>Emergency Contact Phone <input class="input-field" name="emergencyContactPhone" required></label>
+    <label><input type="radio" name="saeSession" value="Monthly" required> Monthly</label>
+    <label><input type="radio" name="saeSession" value="Quarterly"> Quarterly</label>
+    <label><input type="radio" name="saeSession" value="6 Months"> 6 Months</label>
+    <label><input type="radio" name="saeSession" value="1 Year"> 1 Year</label>
   </div>
 
-  <hr class="section-divider"/>
-
-  <h2>Waivers</h2>
-  <div class="info-section">
-    <label><input type="checkbox" name="photoConsent"> I give permission for my child to be photographed or recorded during the program.</label>
-    <label><input type="checkbox" name="refundPolicy" required> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" target="_blank">program's cancellation and refund policy</a>.</label>
-    <label><input type="checkbox" name="emergencyMedical" required> I authorize emergency medical care.</label>
-    <label><input type="checkbox" name="emergencyContact" required> I confirm I have provided accurate emergency contact information.</label>
-  </div>
-
-  <hr class="section-divider"/>
-
-  <h2>Fee Summary</h2>
-
-  <!-- New Student acknowledgement (same as SAM) -->
   <div style="margin:10px 0;">
+    <!-- New student acknowledgement (adds $50 to fee) -->
     <label>
       <input type="checkbox" id="isNewStudent" name="isNewStudent" value="yes" />
       I acknowledge there may be a one-time $50 registration fee for new students.
     </label>
   </div>
 
+  <hr class="section-divider"/>
+
+  <h2>Emergency Contact</h2>
+  <div class="info-section">
+    <label>Emergency Contact Name <input class="input-field" name="emergencyContactName" required></label>
+    <label>Emergency Contact Phone <input class="input-field" name="emergencyContactPhone" required></label>
+    <label>Medical Conditions <input class="input-field" name="medicalInfo"></label>
+    <label>Medications <input class="input-field" name="medications"></label>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <h2>Consent & Policy</h2>
+  <div class="info-section">
+    <label><input type="checkbox" name="photoConsent"> Photo/Media Consent</label><br/>
+    <label><input type="checkbox" name="refundPolicy" required> I agree to the program's cancellation and refund policy.</label><br/>
+    <label><input type="checkbox" name="emergencyMedical" required> I authorize emergency medical care.</label><br/>
+    <label><input type="checkbox" name="emergencyContact" required> I confirm I have provided accurate emergency contact information.</label>
+  </div>
+
+  <hr class="section-divider"/>
+
+  <h2>Fee Summary</h2>
   <div class="fee-summary-box">
-    <div class="fee-line"><span>Total Tuition Fee:</span><span id="total-fee">$0</span></div>
+    <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
     <div class="fee-line" id="registration-fee-line" style="display:none;">
       <span>Registration Fee:</span><span id="registration-fee">$0</span>
     </div>
@@ -360,19 +323,24 @@
   </div>
   <div id="installment-info" style="font-weight:bold;color:#ff6600; margin-top:8px;"></div>
 
-  <!-- hidden fields for backend logging -->
+  <!-- Hidden fields posted to GAS -->
   <input type="hidden" name="baseFee">
   <input type="hidden" name="registrationFee">
   <input type="hidden" name="discountValue">
   <input type="hidden" name="finalFee">
 
-  <div id="form-error-msg" style="color:red; display:none; margin-top: 12px;"></div>
+  <!-- Placeholder for future cross-enrollment (disabled) -->
+  <div style="margin-top:10px; opacity:0.6;">
+    <label><input type="checkbox" disabled> Also enroll in SAM Singapore Math (coming soon)</label>
+  </div>
 
-  <div style="margin: 18px 0 28px;">
+  <div id="form-error-msg" style="color:red; display:none; margin-top: 20px;"></div>
+
+  <div style="margin-top: 30px;">
     <button class="submit-btn" type="submit">Submit Enrollment</button>
   </div>
 </form>
 
-<script src="/scripts/main-sae.js?v=1.0"></script>
+<script src="/scripts/main-sae.js?v=20250816"></script>
 </body>
 </html>
