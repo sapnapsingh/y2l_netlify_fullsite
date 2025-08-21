@@ -26,6 +26,14 @@
 <form id="sae-enrollment-form" autocomplete="off">
   <h1>SAE – Seriously Active English (Lathrop)</h1>
 
+  <!-- Disabled cross-enroll toggle (visible, but disabled as requested) -->
+  <div style="margin: 8px 0 16px;">
+    <label>
+      <input type="checkbox" id="alsoEnrollSam" disabled>
+      Also enroll in <strong>SAM Singapore Math</strong> (disabled for now)
+    </label>
+  </div>
+
   <h2>Parent Information</h2>
   <div class="info-section">
     <label>Parent Name <input class="input-field" name="parentName" required></label>
@@ -248,13 +256,19 @@
 
     <label>Date of Birth <input class="input-field" type="date" name="dob" required></label>
 
-    <!-- SAE Assessed Level -->
+    <!-- SAE Assessed Level (same structure as SAM levels) -->
     <label>SAE Assessed Level
       <select class="input-field" name="saeLevel" required>
         <option value="">Select Level</option>
-        <option value="Beginner">Beginner</option>
-        <option value="Intermediate">Intermediate</option>
-        <option value="Advanced">Advanced</option>
+        <option value="0A">0A</option>
+        <option value="0B">0B</option>
+        <option value="0C">0C</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
       </select>
     </label>
   </div>
@@ -328,7 +342,7 @@
 
   <h2>Fee Summary</h2>
 
-  <!-- New Student acknowledgement -->
+  <!-- New Student acknowledgement (same as SAM) -->
   <div style="margin:10px 0;">
     <label>
       <input type="checkbox" id="isNewStudent" name="isNewStudent" value="yes" />
