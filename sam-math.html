@@ -5,6 +5,15 @@
   <title>SAM Singapore Math Enrollment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/styles/main.css">
+  <style>
+    /* optional: small helpers so it looks tidy even without your site CSS */
+    .info-section { display: grid; gap: 10px; }
+    .input-field { width: 100%; }
+    .section-divider { margin: 18px 0; }
+    .fee-summary-box { border: 1px solid #ddd; padding: 12px; border-radius: 6px; background:#fafafa; }
+    .fee-line { display:flex; justify-content:space-between; margin:6px 0; }
+    .fee-line.total { font-weight:bold; }
+  </style>
 </head>
 <body>
 
@@ -31,7 +40,6 @@
     <label>Nationality
       <select class="input-field" name="nationality" required>
         <option value="">Select nationality</option>
-        <!-- full list kept intentionally -->
         <option>Afghanistan</option><option>Albania</option><option>Algeria</option><option>Andorra</option>
         <option>Angola</option><option>Antigua and Barbuda</option><option>Argentina</option><option>Armenia</option>
         <option>Australia</option><option>Austria</option><option>Azerbaijan</option><option>Bahamas</option>
@@ -91,9 +99,9 @@
 
   <h2>Session Selection</h2>
   <div class="info-section">
-    <label><input type="radio" name="samSession" value="Monthly" required> Monthly</label><br/>
-    <label><input type="radio" name="samSession" value="Quarterly"> Quarterly</label><br/>
-    <label><input type="radio" name="samSession" value="6 Months"> 6 Months</label><br/>
+    <label><input type="radio" name="samSession" value="Monthly" required> Monthly</label>
+    <label><input type="radio" name="samSession" value="Quarterly"> Quarterly</label>
+    <label><input type="radio" name="samSession" value="6 Months"> 6 Months</label>
     <label><input type="radio" name="samSession" value="1 Year"> 1 Year</label>
   </div>
 
@@ -133,7 +141,7 @@
   </div>
 
   <!-- ============================= -->
-  <!-- ELA add-on (appears on check) -->
+  <!-- ELA add-on (hidden until checked) -->
   <!-- ============================= -->
   <hr class="section-divider"/>
   <h2>Also enroll in English (SAE)?</h2>
@@ -155,7 +163,7 @@
       <label>ELA Preferred Day & Time
         <select class="input-field" name="elaPreferredSlot" id="elaPreferredSlot">
           <option value="">Select preferred ELA day and time</option>
-          <!-- same slot list so we can enforce “different from Math” -->
+          <!-- same slot list so we can enforce different-from-Math -->
           <option>Monday — 2:00 PM–3:30 PM</option>
           <option>Monday — 3:30 PM–5:00 PM</option>
           <option>Monday — 4:30 PM–6:00 PM</option>
@@ -239,7 +247,7 @@
   </div>
 </form>
 
-<!-- Add a cache-buster so the new JS is definitely loaded -->
-<script src="/scripts/main-sam-math.js?v=20250825a"></script>
+<!-- Cache-buster to ensure latest JS loads -->
+<script defer src="/scripts/main-sam-math.js?v=20250825f"></script>
 </body>
 </html>
