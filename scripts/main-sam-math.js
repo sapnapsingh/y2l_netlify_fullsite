@@ -147,56 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("isNewStudent").addEventListener("change", calculateAndDisplayFee);
 
   // ----------- BUILD PAYLOAD -----------
-  
-  // =======================
-  // ELA add-on interactions
-  // =======================
-  const enrollELACheck = document.getElementById("enrollELA");
-  const elaWrap        = document.getElementById("ela-slot-wrap");
-  const elaSelect      = document.getElementById("elaPreferredSlot");
-  const mathSelect     = document.getElementById("preferredSlot");
-  const elaWarn        = document.getElementById("ela-slot-warning");
-
-  function syncElaOptions() {
-    if (!elaSelect) return;
-    const mathVal = mathSelect?.value || "";
-    // Reset all options enabled
-    [...elaSelect.options].forEach(opt => { opt.disabled = false; });
-    // Disable the current math slot
-    if (mathVal) {
-      for (const opt of elaSelect.options) {
-        if (opt.value === mathVal) {
-          opt.disabled = true;
-          if (elaSelect.value === mathVal) {
-            elaSelect.value = "";
-            if (elaWarn) elaWarn.style.display = "block";
-          }
-          break;
-        }
-      }
-    }
-  }
-
-  mathSelect?.addEventListener("change", () => {
-    if (elaWarn) elaWarn.style.display = "none";
-    syncElaOptions();
-  });
-
-  enrollELACheck?.addEventListener("change", () => {
-    const show = enrollELACheck.checked;
-    if (elaWrap) elaWrap.style.display = show ? "block" : "none";
-    if (elaWarn) elaWarn.style.display = "none";
-    if (show) syncElaOptions();
-  });
-
-  elaSelect?.addEventListener("change", () => {
-    if (elaWarn) elaWarn.style.display = "none";
-    if (mathSelect && elaSelect && mathSelect.value && elaSelect.value === mathSelect.value) {
-      elaSelect.value = "";
-      if (elaWarn) elaWarn.style.display = "block";
-    }
-  });
-function buildPayload() {
+  function buildPayload() {
     const sessionRaw = document.querySelector("input[name='samSession']:checked")?.value || "";
     const session = sessionRaw.trim().toLowerCase(); // always store lowercase
     const sessionDetails = {
@@ -241,6 +192,43 @@ function buildPayload() {
       registrationFee: registrationFee,
       discountValue: discount,
       finalFee: finalFee,
-
       isNewStudent: isNew
     };
+
+    console.log("📦 Payload to submit:", data);
+    return data;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    if (loader) loader.style.display = "block";
+
+    const payload = buildPayload();
+
+    fetch("/.netlify/functions/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(response => response.text())
+    .then(result => {
+      if (loader) loader.style.display = "none";
+      console.log("✅ Server responded:", result);
+
+      if (result.trim() === "Submitted and emailed successfully.") {
+        window.top.location.href = "https://y2lacademy.com/summer-confirmation";
+      } else {
+        alert("Submission error: " + result);
+      }
+    })
+    .catch(error => {
+      console.error("Submission failed:", error);
+      if (loader) loader.style.display = "none";
+      alert("There was an error submitting the form. Please try again.");
+    });
+  });
+
+  // Initialize fee summary once on load
+  calculateAndDisplayFee();
+});
