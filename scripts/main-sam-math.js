@@ -1,4 +1,4 @@
-// main-sam-math.js — Math-only + Bundle (Math+ELA) pricing, ELA UI, and no-overlap enforcement
+// main-sam-math.js — Math-only + Bundle (Math+ELA) pricing, ELA UI, no-overlap, and required reg-fee acknowledgment
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🔧 SAM form booting…");
@@ -87,6 +87,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const loader = $("#submitting-overlay");
   if (!form) { console.error("❌ #sam-math-enrollment-form not found."); return; }
 
+  // Make the registration-fee acknowledgment REQUIRED (without auto-charging)
+  const ack = document.getElementById("isNewStudent");
+  if (ack) ack.required = true;
+
   function ensureFeeLine(id, labelText) {
     let line = document.getElementById(id);
     if (!line) {
@@ -122,13 +126,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =========================
-  // ---- Time parsing & overlap detection (for different slot lists)
+  // ---- Time parsing & overlap detection (handles manual slot edits)
   // =========================
   function parseTime12h(t) {
-    const m = (t || "").trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/);
+    // accepts "5 PM" or "5:30 PM"
+    const m = (t || "").trim().toUpperCase().match(/^(\d{1,2})(?::(\d{2}))?\s*([AP]M)$/);
     if (!m) return null;
     let h = parseInt(m[1], 10);
-    const min = parseInt(m[2], 10);
+    const min = m[2] != null ? parseInt(m[2], 10) : 0;
     const ampm = m[3];
     if (ampm === "AM") h = (h % 12);
     else h = (h % 12) + 12; // PM
@@ -137,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function parseSlot(str) {
     if (!str) return null;
     const s = str.replace(/\s+/g, " ").trim();
-    // Accept em dash / en dash / hyphen
+    // Accept em dash / en dash / hyphen between parts; times may omit minutes
     const m = s.match(/^([A-Za-z]+)\s*[—-]\s*([\d:]+\s*[APap][Mm])\s*[–-]\s*([\d:]+\s*[APap][Mm])$/);
     if (!m) return null;
     const day = m[1].toLowerCase();
@@ -158,7 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function calculateAndDisplayFee() {
     const session  = document.querySelector("input[name='samSession']:checked")?.value || "";
     const samLevel = getVal("samLevel");
-    const isNew    = $("#isNewStudent")?.checked ? "yes" : "no";
 
     const enrollELA = $("#enrollELA")?.checked || false;
     const saeLevel  = $("#saeLevel")?.value || "";
@@ -172,11 +176,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (enrollELA && session && samLevel && saeLevel) {
       const bundle = priceBundle(samLevel, saeLevel, session);
       if (bundle != null) { combinedTuition = bundle; bundleUsed = true; }
-      // if not all chosen yet, keep showing math tuition until ready
     }
 
-    // Registration fee: one-time per student
-    const registrationFee = (isNew === "yes") ? 50 : 0;
+    // Registration fee: ACK is required, but we DO NOT auto-add $50 here
+    const registrationFee = 0;
 
     // Savings vs monthly
     let saveMsg = "";
@@ -208,12 +211,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalFeeSpan = $("#total-fee");
     if (totalFeeSpan) totalFeeSpan.innerText = "$" + (combinedTuition || 0);
 
+    // Hide registration-fee line in UI since we aren't auto-applying it
     const regLine = $("#registration-fee-line");
-    const regSpan = $("#registration-fee");
-    if (regLine && regSpan) {
-      if (registrationFee && registrationFee > 0) { regLine.style.display = ""; regSpan.innerText = "$" + registrationFee; }
-      else { regLine.style.display = "none"; regSpan.innerText = "$0"; }
-    }
+    if (regLine) regLine.style.display = "none";
 
     const discountLine = $("#discount-line");
     const finalLine    = $("#final-fee-line");
@@ -249,16 +249,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const discIn  = document.querySelector("input[name='discountValue']");
     const finalIn = document.querySelector("input[name='finalFee']");
     if (baseIn)  baseIn.value  = mathTuition;
-    if (regIn)   regIn.value   = registrationFee;
+    if (regIn)   regIn.value   = 0; // not auto-applying here
     if (discIn)  discIn.value  = "";
-    if (finalIn) finalIn.value = mathTuition + registrationFee;
+    if (finalIn) finalIn.value = mathTuition; // no reg fee included client-side
 
     // Publish for payload
     window.__SAM_FEE_STATE__ = {
       mathTuition,
       bundleTuition: bundleUsed ? combinedTuition : null,
       combinedTuition,
-      registrationFee,
+      registrationFee: 0,
       pricingMode: bundleUsed ? "bundle" : "math-only"
     };
   }
@@ -266,7 +266,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Listeners for fee updates
   document.querySelectorAll("input[name='samSession']").forEach(r => r.addEventListener("change", calculateAndDisplayFee));
   document.querySelector("[name='samLevel']")?.addEventListener("change", calculateAndDisplayFee);
-  $("#isNewStudent")?.addEventListener("change", calculateAndDisplayFee);
 
   // =======================
   // ---- ELA add-on UI with NO-OVERLAP enforcement
@@ -293,18 +292,20 @@ document.addEventListener("DOMContentLoaded", function () {
       calculateAndDisplayFee();
     }
 
+    // --- overlap-aware disabling ---
+    function parseTime12hLocal(t) { return parseTime12h(t); } // reuse
+    function parseSlotLocal(str) { return parseSlot(str); }
+    function overlapsLocal(a, b) { return overlaps(a, b); }
+
     function syncElaOptionsNoOverlap() {
       if (!elaSel) return;
-      // enable all first
       [...elaSel.options].forEach(o => (o.disabled = false));
       const mathVal = mathSel?.value || "";
-      const mathSlot = parseSlot(mathVal);
+      const mathSlot = parseSlotLocal(mathVal);
       if (!mathSlot) return;
-
-      // disable any ELA option that overlaps the Math slot on the same day
       for (const opt of elaSel.options) {
-        const s = parseSlot(opt.value);
-        if (s && overlaps(s, mathSlot)) {
+        const s = parseSlotLocal(opt.value);
+        if (s && overlapsLocal(s, mathSlot)) {
           opt.disabled = true;
           if (elaSel.value === opt.value) {
             elaSel.value = "";
@@ -318,9 +319,9 @@ document.addEventListener("DOMContentLoaded", function () {
     mathSel?.addEventListener("change", () => { if (warn) warn.style.display = "none"; syncElaOptionsNoOverlap(); });
     elaSel?.addEventListener("change", () => {
       if (warn) warn.style.display = "none";
-      const m = parseSlot(mathSel?.value || "");
-      const e = parseSlot(elaSel?.value || "");
-      if (m && e && overlaps(e, m)) {
+      const m = parseSlotLocal(mathSel?.value || "");
+      const e = parseSlotLocal(elaSel?.value || "");
+      if (m && e && overlapsLocal(e, m)) {
         elaSel.value = "";
         if (warn) warn.style.display = "block";
       }
@@ -349,7 +350,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const details = map[session] || { sessionLabel: "", sessionLength: "" };
 
     const fee = window.__SAM_FEE_STATE__ || { mathTuition:0, bundleTuition:null, combinedTuition:0, registrationFee:0, pricingMode:"math-only" };
-    const isNew   = $("#isNewStudent")?.checked ? "yes" : "no";
     const alsoELA = $("#enrollELA")?.checked ? "Yes" : "No";
     const saeLvlV = $("#saeLevel")?.value?.trim() || "";
     const elaSlot = $("#elaPreferredSlot")?.value?.trim() || "";
@@ -391,12 +391,11 @@ document.addEventListener("DOMContentLoaded", function () {
       sessionLength: details.sessionLength,
       preferredSlot: getVal("preferredSlot"),
 
-      // Fees (keep SAM legacy Math-only to avoid breaking existing handler)
+      // Fees (SAM legacy fields — Math-only here)
       baseFee: fee.mathTuition,
-      registrationFee: fee.registrationFee,
+      registrationFee: 0, // not auto-applying in UI
       discountValue: "",
-      finalFee: fee.mathTuition + fee.registrationFee,
-      isNewStudent: isNew,
+      finalFee: fee.mathTuition,
 
       // ELA (SAE) add-on
       alsoEnrollELA: alsoELA,
@@ -409,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Extended fields for combined PDF / English sheet
       bundleBaseFee: fee.bundleTuition || 0,
       combinedBaseFee: fee.combinedTuition,
-      combinedFinalFee: fee.combinedTuition + fee.registrationFee,
+      combinedFinalFee: fee.combinedTuition, // no reg fee added here
       pricingMode: fee.pricingMode
     };
 
@@ -422,6 +421,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // ==================
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+
+    // Required: registration fee acknowledgment
+    const ack = document.getElementById("isNewStudent");
+    if (ack && !ack.checked) {
+      alert("Please acknowledge the one-time $50 registration fee policy for new students.");
+      ack.scrollIntoView({ behavior: "smooth", block: "center" });
+      ack.focus();
+      return;
+    }
 
     // If ELA is selected, enforce required fields + non-overlap of slots
     const enroll = $("#enrollELA");
