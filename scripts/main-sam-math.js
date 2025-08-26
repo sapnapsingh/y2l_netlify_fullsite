@@ -1,10 +1,10 @@
-// main-sam-math.js — Math-only + Bundle (Math+ELA) pricing with ELA add-on UI
+// main-sam-math.js — Math-only + Bundle (Math+ELA) pricing, ELA UI, and no-overlap enforcement
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🔧 SAM form booting…");
 
   // =========================
-  // ---- MATH PRICING (as before)
+  // ---- SAM (Math) pricing (as before)
   // =========================
   const MATH_FEE_TABLE = [
     { levels: ["0A", "0B", "0C", "1"], monthly: 200, quarterly: 575, sixmo: 1125, yearly: 1750 },
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =========================
-  // ---- BUNDLE PRICING (Math+ELA) you provided
+  // ---- Bundle (Math+ELA) pricing you provided
   // Bands: A=0A,0B,0C,1  •  B=2,3,4  •  C=5,6
   // =========================
   const BANDS = {
@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return "A";
   }
 
-  // Bundle table by (MathBand|ELABand) for each session
   const BUNDLE = {
     "Monthly": {
       "A|A": 355, "A|B": 355, "A|C": 355,
@@ -62,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
       "C|A": 3888, "C|B": 3888, "C|C": 3888
     }
   };
-
   function priceBundle(mathLevel, elaLevel, session) {
     const mk = bandKey(mathLevel);
     const ek = bandKey(elaLevel);
@@ -80,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =========================
-  // ---- DOM HELPERS
+  // ---- DOM helpers
   // =========================
   const $ = (sel) => document.querySelector(sel);
   const getVal = (name) => document.querySelector(`[name='${name}']`)?.value?.trim() || "";
@@ -124,7 +122,38 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =========================
-  // ---- FEE CALC + UI
+  // ---- Time parsing & overlap detection (for different slot lists)
+  // =========================
+  function parseTime12h(t) {
+    const m = (t || "").trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/);
+    if (!m) return null;
+    let h = parseInt(m[1], 10);
+    const min = parseInt(m[2], 10);
+    const ampm = m[3];
+    if (ampm === "AM") h = (h % 12);
+    else h = (h % 12) + 12; // PM
+    return h * 60 + min;
+  }
+  function parseSlot(str) {
+    if (!str) return null;
+    const s = str.replace(/\s+/g, " ").trim();
+    // Accept em dash / en dash / hyphen
+    const m = s.match(/^([A-Za-z]+)\s*[—-]\s*([\d:]+\s*[APap][Mm])\s*[–-]\s*([\d:]+\s*[APap][Mm])$/);
+    if (!m) return null;
+    const day = m[1].toLowerCase();
+    const start = parseTime12h(m[2]);
+    const end   = parseTime12h(m[3]);
+    if (start == null || end == null) return null;
+    return { day, start, end };
+  }
+  function overlaps(a, b) {
+    if (!a || !b) return false;
+    if (a.day !== b.day) return false;
+    return !(a.end <= b.start || b.end <= a.start);
+  }
+
+  // =========================
+  // ---- Fee calc + UI
   // =========================
   function calculateAndDisplayFee() {
     const session  = document.querySelector("input[name='samSession']:checked")?.value || "";
@@ -143,13 +172,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (enrollELA && session && samLevel && saeLevel) {
       const bundle = priceBundle(samLevel, saeLevel, session);
       if (bundle != null) { combinedTuition = bundle; bundleUsed = true; }
-      // (If not all selected, keep showing math tuition until ready)
+      // if not all chosen yet, keep showing math tuition until ready
     }
 
     // Registration fee: one-time per student
     const registrationFee = (isNew === "yes") ? 50 : 0;
 
-    // Savings vs monthly (based on chosen mode)
+    // Savings vs monthly
     let saveMsg = "";
     if (session && session !== "Monthly") {
       const months = monthsFor(session);
@@ -165,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (savings > 0) saveMsg = `You save $${savings} compared to monthly pricing${bundleUsed ? " (bundle)" : ""}.`;
     }
 
-    // -------- Fee UI --------
+    // Fee UI
     if (bundleUsed) {
       setFeeLine("bundle-fee-line", "Bundle Tuition (Math+ELA):", combinedTuition, true);
       setFeeLine("math-fee-line",   "Math Tuition:", 0, false);
@@ -202,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     saveMsgDiv.innerText = saveMsg || "";
 
-    // Installment + proration note
+    // Installment + yearly proration note
     const inst = document.getElementById("installment-info");
     if (inst) {
       if (session === "6 Months") {
@@ -234,13 +263,13 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // Hook up fee listeners
+  // Listeners for fee updates
   document.querySelectorAll("input[name='samSession']").forEach(r => r.addEventListener("change", calculateAndDisplayFee));
   document.querySelector("[name='samLevel']")?.addEventListener("change", calculateAndDisplayFee);
   $("#isNewStudent")?.addEventListener("change", calculateAndDisplayFee);
 
   // =======================
-  // ---- ELA add-on UI ----
+  // ---- ELA add-on UI with NO-OVERLAP enforcement
   // =======================
   (function elaAddon() {
     const enroll = $("#enrollELA");
@@ -264,29 +293,34 @@ document.addEventListener("DOMContentLoaded", function () {
       calculateAndDisplayFee();
     }
 
-    function syncElaOptions() {
+    function syncElaOptionsNoOverlap() {
       if (!elaSel) return;
-      [...elaSel.options].forEach(o => o.disabled = false);
-      const m = mathSel?.value || "";
-      if (m) {
-        for (const opt of elaSel.options) {
-          if (opt.value === m) {
-            opt.disabled = true;
-            if (elaSel.value === m) {
-              elaSel.value = "";
-              if (warn) warn.style.display = "block";
-            }
-            break;
+      // enable all first
+      [...elaSel.options].forEach(o => (o.disabled = false));
+      const mathVal = mathSel?.value || "";
+      const mathSlot = parseSlot(mathVal);
+      if (!mathSlot) return;
+
+      // disable any ELA option that overlaps the Math slot on the same day
+      for (const opt of elaSel.options) {
+        const s = parseSlot(opt.value);
+        if (s && overlaps(s, mathSlot)) {
+          opt.disabled = true;
+          if (elaSel.value === opt.value) {
+            elaSel.value = "";
+            if (warn) warn.style.display = "block";
           }
         }
       }
     }
 
-    enroll.addEventListener("change", () => { show(enroll.checked); if (enroll.checked) syncElaOptions(); });
-    mathSel?.addEventListener("change", () => { if (warn) warn.style.display = "none"; syncElaOptions(); });
+    enroll.addEventListener("change", () => { show(enroll.checked); if (enroll.checked) syncElaOptionsNoOverlap(); });
+    mathSel?.addEventListener("change", () => { if (warn) warn.style.display = "none"; syncElaOptionsNoOverlap(); });
     elaSel?.addEventListener("change", () => {
       if (warn) warn.style.display = "none";
-      if (mathSel && elaSel && elaSel.value === mathSel.value) {
+      const m = parseSlot(mathSel?.value || "");
+      const e = parseSlot(elaSel?.value || "");
+      if (m && e && overlaps(e, m)) {
         elaSel.value = "";
         if (warn) warn.style.display = "block";
       }
@@ -295,8 +329,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // init
     show(enroll.checked);
-    syncElaOptions();
-    console.log("🧩 ELA add-on wired.");
+    syncElaOptionsNoOverlap();
+    console.log("🧩 ELA add-on wired (no-overlap).");
   })();
 
   // ============================
@@ -389,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    // If ELA is selected, enforce required fields + different slot
+    // If ELA is selected, enforce required fields + non-overlap of slots
     const enroll = $("#enrollELA");
     if (enroll?.checked) {
       const saeLvl = $("#saeLevel")?.value || "";
@@ -398,7 +432,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!saeLvl) { alert("Please choose an SAE assessed level for ELA."); return; }
       if (!elaSel) { alert("Please choose an ELA preferred slot."); return; }
-      if (mathSel && elaSel === mathSel) { alert("ELA slot cannot be the same as Math slot. Please choose a different time."); return; }
+
+      const m = parseSlot(mathSel);
+      const e2 = parseSlot(elaSel);
+      if (m && e2 && overlaps(e2, m)) {
+        alert("ELA slot overlaps with the Math slot on the same day. Please choose a non-overlapping time.");
+        return;
+      }
     }
 
     if (loader) loader.style.display = "block";
