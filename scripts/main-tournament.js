@@ -151,7 +151,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (result.trim() === "Submitted and emailed successfully.") {
         sessionStorage.setItem("programType", "ChessTournament");
         sessionStorage.setItem("session", payload.chessLevel);
-        window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel) + "&fee=" + encodeURIComponent(payload.finalFee);
+        //window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel) + "&fee=" + encodeURIComponent(payload.finalFee);
+        const uscfParam = (payload.purchaseUSCF === "Yes") ? "&uscf=1" : "";
+        window.location.href = "/payment-options.html?session=" + encodeURIComponent(payload.chessLevel)
+                     + "&fee=" + encodeURIComponent(payload.finalFee)
+                     + uscfParam;
       } else {
         alert("Submission error: " + result);
       }
