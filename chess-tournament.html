@@ -49,13 +49,14 @@
 
 <h2>Select Player Category</h2>
 <div class="info-section">
-  <label><input type="radio" name="chessLevel" value="Under 400" required> Beginner (USCF Rating 0–400) – Entry Fee: $25</label><br/>
-  <label><input type="radio" name="chessLevel" value="400 - 800"> Intermediate (USCF Rating 401–800) – Entry Fee: $30</label><br/>
-  <label><input type="radio" name="chessLevel" value="Above 800"> Advanced (USCF Rating 801+) – Entry Fee: $35</label>
+  <label for="chessCategory">Category</label>
+  <select class="input-field" id="chessCategory" name="chessCategory" required>
+    <option value="" disabled selected>Select a category</option>
+    <!-- Options will be auto-populated by main-tournament JS from CATEGORIES[] -->
+  </select>
 </div>
 
 <hr class="section-divider"/>
-
 
 <h2>Waiver & Consent</h2>
 <div class="info-section">
@@ -94,6 +95,6 @@
 </div>
 
 </form>
-<script src="/scripts/main-tournament.js?v=20250723"></script>
+<script src="/scripts/main-tournament.js?v=20250909-auto"></script>
 </body>
 </html>
