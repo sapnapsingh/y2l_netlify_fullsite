@@ -1,17 +1,5 @@
-// --- CONFIG: Just edit this array to add/remove categories ---
-// value: what gets saved as 'chessLevel' and sent in your payload
-// label: what shows in the dropdown
-// fee: entry fee for that category (int)
-const CATEGORIES = [
-  { value: "UnRated", label: "UnRated", fee: 30 },
-  { value: "U300",    label: "U300",    fee: 30 },
-  { value: "U600",    label: "U600",    fee: 30 },
-  { value: "U900",    label: "U900",    fee: 30 },
-  { value: "900+",    label: "900+",    fee: 30 },
-];
-
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("♟️ Chess Tournament Form (auto categories)");
+  console.log("♟️ Chess Tournament Form initialized");
 
   const form = document.getElementById("tournament-registration-form");
   const loader = document.getElementById("submitting-overlay");
@@ -21,20 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const uscfPurchaseSection = document.getElementById("uscf-purchase-section");
   const purchaseUscfCheckbox = document.querySelector("input[name='purchaseUscfId']");
   const uscfIdField = document.querySelector("input[name='uscfId']");
-
-  const categorySelect = document.getElementById("chessCategory");
-
-  // Build dropdown from CATEGORIES[]
-  if (categorySelect) {
-    // Remove any existing options after the first placeholder
-    [...categorySelect.querySelectorAll("option:not([value=''])")].forEach(o => o.remove());
-    CATEGORIES.forEach(cat => {
-      const opt = document.createElement("option");
-      opt.value = cat.value;
-      opt.textContent = `${cat.label} – Entry Fee: $${cat.fee}`;
-      categorySelect.appendChild(opt);
-    });
-  }
 
   function toggleSections() {
     const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
@@ -52,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     calculateFee();
   }
 
+  // ---- Add USCF ID required logic here ----
   function updateUscfIdRequired() {
     const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
     if (!uscfIdField) return;
@@ -59,19 +34,19 @@ document.addEventListener("DOMContentLoaded", function () {
       uscfIdField.required = true;
     } else {
       uscfIdField.required = false;
-      uscfIdField.value = "";
+      uscfIdField.value = ""; // Optionally clear when not required
     }
   }
 
-  function categoryFee(value) {
-    const found = CATEGORIES.find(c => c.value === value);
-    return found ? found.fee : 0;
-  }
-
   function calculateFee() {
-    const catVal = categorySelect?.value || "";
-    const base = categoryFee(catVal);
-    const uscfFee = purchaseUscfCheckbox?.checked ? 24 : 0;
+    let base = 0;
+    let uscfFee = purchaseUscfCheckbox?.checked ? 24 : 0;
+    const level = document.querySelector("input[name='chessLevel']:checked")?.value || "";
+
+    if (level === "Under 400") base = 25;
+    else if (level === "400 - 800") base = 30;
+    else if (level === "Above 800") base = 35;
+
     const total = base + uscfFee;
 
     document.getElementById("base-fee").innerText = "$" + base;
@@ -81,20 +56,18 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("input[name='baseFee']").value = base;
     document.querySelector("input[name='uscfFee']").value = uscfFee;
     document.querySelector("input[name='finalFee']").value = total;
-    const catHidden = document.querySelector("input[name='chessLevelSession']");
-    if (catHidden) catHidden.value = catVal;
   }
 
-  if (categorySelect) categorySelect.addEventListener("change", calculateFee);
+  document.querySelectorAll("input[name='chessLevel']").forEach(radio =>
+    radio.addEventListener("change", calculateFee)
+  );
   hasUscfRadios.forEach(radio => radio.addEventListener("change", toggleSections));
   if (purchaseUscfCheckbox) purchaseUscfCheckbox.addEventListener("change", calculateFee);
 
   function buildPayload() {
     const getVal = (name) => {
-      const elChecked = document.querySelector(`[name='${name}']:checked`);
-      const elAny = document.querySelector(`[name='${name}']`);
-      const el = elChecked || elAny;
-      return el ? (el.value || "").trim() : "";
+      const el = document.querySelector(`[name='${name}']:checked`) || document.querySelector(`[name='${name}']`);
+      return el ? el.value.trim() : "";
     };
     const checked = (name) => document.querySelector(`[name='${name}']`)?.checked ? "Yes" : "No";
 
@@ -112,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
       uscfRating: getVal("uscfRating"),
       purchaseUSCF: checked("purchaseUscfId"),
       dob: getVal("dob"),
-      chessLevel: getVal("chessCategory"), // for backward compatibility
+      chessLevel: getVal("chessLevel"),
       photo_consent: checked("photoConsent"),
       medical_release: checked("emergencyMedical"),
       cancellation_policy: checked("refundPolicy"),
@@ -128,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
+    // ---- USCF ID must be filled if required ----
     const selected = document.querySelector("input[name='hasUscf']:checked")?.value;
     if (selected === "yes" && uscfIdField && !uscfIdField.value.trim()) {
       uscfIdField.focus();
@@ -161,13 +135,8 @@ document.addEventListener("DOMContentLoaded", function () {
       alert("There was an error submitting the form. Please try again.");
     });
   });
-
-  // init
-  toggleSections();
-  calculateFee();
 });
 
-// Keep separate USCF toggles (safe duplicate guard) and handle DOB required when purchasing USCF
 document.addEventListener("DOMContentLoaded", function () {
   const hasUscfRadios = document.querySelectorAll("input[name='hasUscf']");
   const uscfIdSection = document.getElementById("uscf-id-section");
@@ -180,11 +149,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (selected === "yes") {
       uscfIdSection.style.display = "block";
       uscfPurchaseSection.style.display = "none";
-      if (dobField) dobField.required = false;
+      dobField.required = false;
     } else if (selected === "no") {
       uscfIdSection.style.display = "none";
       uscfPurchaseSection.style.display = "block";
-      if (dobField) dobField.required = purchaseUscfCheckbox?.checked;
+      dobField.required = purchaseUscfCheckbox?.checked;
     }
   }
 
@@ -195,10 +164,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (purchaseUscfCheckbox) {
     purchaseUscfCheckbox.addEventListener("change", () => {
       if (document.querySelector("input[name='hasUscf']:checked")?.value === "no") {
-        if (dobField) dobField.required = purchaseUscfCheckbox.checked;
+        dobField.required = purchaseUscfCheckbox.checked;
       }
     });
   }
 
-  toggleUSCFSections();
+  toggleUSCFSections(); // run once on load
 });
