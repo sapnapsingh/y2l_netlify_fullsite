@@ -103,14 +103,26 @@
     return "https://y2lacademy.com/summer-confirmation";
   }
 
+  
   if (programType === "ChessTournament") {
     const fee = params.get("fee") || "0";
-    sessionInfo.innerHTML = "You are registering for the <strong>Y2L's Back 2 School Chess tournament</strong>.";
+    const uscfFlag = (params.get("uscf") || "").toLowerCase();
+    sessionInfo.innerHTML = "You are registering for the <strong>Y2L Chess Scholastic Tournament</strong>.";
     zelleAmount.innerHTML = "Please send <strong>$" + fee + "</strong> to:";
 
-    if (session === "under 400") {
-      payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/834b67a9-67e3-4888-9d8f-4d5";
-    } else if (session === "400 - 800") {
+    // New unified GoDaddy Pay links
+    const DEFAULT_PAY_LINK = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/sept-scholastic";
+    const COMBINED_PAY_LINK = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/sept-scholastic-uscf";
+
+    // Choose combined link only when &uscf=1/yes/true is present
+    if (uscfFlag === "1" || uscfFlag === "yes" || uscfFlag === "true") {
+      payLink.href = COMBINED_PAY_LINK;
+    } else {
+      payLink.href = DEFAULT_PAY_LINK;
+    }
+
+    programTitle.innerText = "Complete Your Payment – Y2L Chess Scholastic Tournament";
+  } else if (session === "400 - 800") {
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/611d02f2-803b-4fba-b51c-1ee";
     } else if (session === "above 800") {
       payLink.href = "https://564b76c3-9a27-43ef-a0d9-de5359ab6f33.paylinks.godaddy.com/bfd43145-a314-4c71-86a9-8d6";
