@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Session Details Mapping: EDIT HERE IF SESSIONS CHANGE ===
   const sessionDetails = {
     "Beginner to Intermediate": {
-      sessionDates: "Aug 27 – Nov 12, 2025",
-      sessionTimings: "Wednesdays, 3:30–4:45 pm"
+      sessionDates: "Oct 14 – Dec 16, 2025",
+      sessionTimings: "Tuesdays, 4:45 – 6:00 PM"
     },
     "Intermediate to Advanced": {
-      sessionDates: "Aug 27 – Nov 12, 2025",
-      sessionTimings: "Wednesdays, 5:00–6:15 pm"
+      sessionDates: "Oct 14 – Dec 16, 2025",
+      sessionTimings: "Tuesdays, 4:45 – 6:00 PM"
     }
   };
   // === End Session Details Mapping ===
@@ -25,17 +25,17 @@ document.addEventListener("DOMContentLoaded", function () {
   function calculateAndDisplayFee() {
     console.log("🔧 Fee calc triggered");
     const today = new Date();
-    const earlyBirdDeadline = new Date("2025-08-10");
+    const earlyBirdDeadline = new Date("2025-10-10");
 
     const session = document.querySelector("input[name='chessSession']:checked")?.value || "";
     console.log("🎯 Session selected:", session);
 
     let base = 0, discount = 0;
     if (session === "Beginner to Intermediate") {
-      base = 360;
+      base = 300;
       discount = today <= earlyBirdDeadline ? 30 : 0;
     } else if (session === "Intermediate to Advanced") {
-      base = 420;
+      base = 350;
       discount = today <= earlyBirdDeadline ? 35 : 0;
     }
 
