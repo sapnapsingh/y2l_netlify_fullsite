@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Session Details Mapping: EDIT HERE IF SESSIONS CHANGE ===
   const sessionDetails = {
     "Beginner to Intermediate": {
-      sessionDates: "Oct 14 – Dec 16, 2025",
-      sessionTimings: "Tuesdays, 4:45 – 6:00 PM"
+      sessionDates: "Nov 19 – Dec 17, 2025",
+      sessionTimings: "Tuesdays, 3:30 – 4:45 PM"
     },
     "Intermediate to Advanced": {
       sessionDates: "Oct 14 – Dec 16, 2025",
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let base = 0, discount = 0;
     if (session === "Beginner to Intermediate") {
-      base = 300;
+      base = 150;
       discount = today <= earlyBirdDeadline ? 30 : 0;
     } else if (session === "Intermediate to Advanced") {
       base = 350;
