@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const sessionDetails = {
     "Beginner to Intermediate": {
       sessionDates: "Nov 19 – Dec 17, 2025",
-      sessionTimings: "Tuesdays, 3:30 – 4:45 PM"
+      sessionTimings: "Wednesdays, 3:30 – 4:45 PM"
     },
     "Intermediate to Advanced": {
       sessionDates: "Oct 14 – Dec 16, 2025",
