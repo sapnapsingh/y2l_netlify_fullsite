@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
       sessionTimings: "5:30 pm – 7:00 pm"
     },
     "Intermediate": {
-      sessionDates: "Aug 29 – Nov 21, 2025 - No Class: Oct 10",
-      sessionTimings: "5:30 pm – 7:00 pm"
+      sessionDates: "Nov 21 – Dec 19, 2025 - No Class: Nov 27",
+      sessionTimings: "4:30 pm – 5:30 pm"
     },
     "Advanced": {
       sessionDates: "TBD",
