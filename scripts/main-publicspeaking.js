@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // === Session Details Mapping: EDIT HERE IF SESSIONS CHANGE ===
   const sessionDetails = {
     "Beginner Orators": {
-      sessionDates: "Aug 28 – Nov 13, 2025",
-      sessionTimings: "Thursdays, 4:30–6:00 pm"
+      sessionDates: "Jan 13 – Feb 19, 2026",
+      sessionTimings: "Tues 6:00 - 7:00 PM & Thurs, 5:30–6:30 PM"
     }
     // If you add Intermediate Orators, add here
     // "Intermediate Orators": { sessionDates: "...", sessionTimings: "..." }
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let base = 0, discount = 0;
     if (session === "Beginner") {
       base = 420;
-      discount = today <= earlyBirdDeadline ? 35 : 0;
+      discount = today <= earlyBirdDeadline ? 42 : 0;
     }
     // Prep for more levels if needed
     // else if (session === "Intermediate") { ... }
