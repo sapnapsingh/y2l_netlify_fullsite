@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function calculateAndDisplayFee() {
     console.log("🔧 Fee calc triggered");
     const today = new Date();
-    const earlyBirdDeadline = new Date("2025-08-10");
+    const earlyBirdDeadline = new Date("2026-01-07");
 
     const session = document.querySelector("input[name='publicSpeakingSession']:checked")?.value || "";
     console.log("🎯 Session selected:", session);
