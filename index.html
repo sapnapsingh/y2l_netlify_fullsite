@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Y2L Summer Enrollment 2026</title>
+  <link href="/styles/main.css" rel="stylesheet"/>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      color: #243447;
+      margin: 0;
+      padding: 24px 18px 48px;
+      background: #ffffff;
+    }
+
+    .page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-box {
+      background: linear-gradient(135deg, #123b7a, #2a7ae2);
+      color: #fff;
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin-bottom: 28px;
+    }
+
+    .hero-box h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .hero-box p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 780px;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #1d3557;
+    }
+
+    .info-section {
+      margin-bottom: 40px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px 22px;
+    }
+
+    .info-section label {
+      display: block;
+      margin-bottom: 0;
+      font-weight: 500;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 6px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+      transition: border-color 0.2s ease-in-out;
+      box-sizing: border-box;
+    }
+
+    .input-field:focus {
+      border-color: #2a7ae2;
+      outline: none;
+    }
+
+    .section-card {
+      margin-bottom: 34px;
+    }
+
+    .section-intro {
+      margin: -6px 0 16px;
+      color: #5b6777;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .toggle-box {
+      background: #f7fbff;
+      border: 1px solid #d8e6fb;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 18px 0 6px;
+    }
+
+    .toggle-box label {
+      font-weight: 600;
+    }
+
+    .fee-summary-box {
+      background: #f8fbff;
+      border: 1px solid #d4e3f6;
+      border-radius: 8px;
+      padding: 18px 20px;
+      max-width: 480px;
+    }
+
+    .fee-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .fee-line.total {
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid #d9e2ec;
+      font-weight: 700;
+      font-size: 18px;
+      color: #1d3557;
+    }
+
+    .discount-details {
+      background: #fffdf4;
+      border: 1px solid #f1df9f;
+      border-radius: 8px;
+      padding: 14px 16px;
+      max-width: 620px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .waiver-section {
+      background-color: #f1f7ff;
+      border: 1px solid #c5d8f3;
+      border-radius: 8px;
+      padding: 20px;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .waiver-section label {
+      display: block;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .waiver-section a {
+      color: #2a7ae2;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .waiver-section a:hover {
+      text-decoration: underline;
+    }
+
+    hr.section-divider {
+      border: none;
+      height: 1px;
+      background-color: #ddd;
+      margin: 36px 0;
+    }
+
+    .submit-wrap {
+      margin-top: 24px;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      background: #2a7ae2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: #195bb1;
+    }
+
+    #form-error-msg {
+      white-space: pre-line;
+      background: #fff5f5;
+      border: 1px solid #f1b0b7;
+      border-radius: 8px;
+      padding: 12px 14px;
+      max-width: 700px;
+    }
+
+    #submitting-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(255, 255, 255, 0.85);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 22px;
+      color: #2a7ae2;
+      text-align: center;
+    }
+
+    .spinner {
+      margin: 20px auto 0;
+      width: 50px;
+      height: 50px;
+      border: 6px solid #eee;
+      border-top: 6px solid #2a7ae2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 16px 12px 36px;
+      }
+
+      .hero-box h1 {
+        font-size: 24px;
+      }
+
+      .fee-summary-box {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="submitting-overlay">
+    <div>
+      <div>Submitting your enrollment... Please wait.</div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="hero-box">
+      <h1>Y2L Summer Enrollment 2026</h1>
+      <p>Complete the form below to reserve your child’s summer camp selections. Weekly programs, sibling enrollment, and automatic fee calculation are included below.</p>
+    </div>
+
+    <div class="section-card">
+      <h2>Parent Information</h2>
+      <div class="info-section">
+        <div class="info-grid">
+          <label>Parent Name
+            <input class="input-field" id="parentName" name="parentName" required type="text"/>
+          </label>
+
+          <label>Email
+            <input class="input-field" id="email" name="email" required type="email"/>
+          </label>
+
+          <label>Phone
+            <input class="input-field" id="phone" name="phone" required type="tel"/>
+          </label>
+
+          <label>Billing Address
+            <input class="input-field" id="billingAddress" name="billingAddress" placeholder="123 Main St, City, State ZIP" required type="text"/>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="section-card">
+      <h2>Student Information</h2>
+      <div class="info-section">
+        <div class="info-grid">
+          <label>Student Name
+            <input class="input-field" id="student1Name" name="student1Name" required type="text"/>
+          </label>
+
+          <label>Grade
+            <input class="input-field" id="grade1" name="grade1" required type="text"/>
+          </label>
+
+          <label>School
+            <input class="input-field" id="school1" name="school1" required type="text"/>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="section-card">
+      <h2>Program Selection by Week</h2>
+      <p class="section-intro">Choose the weeks and programs that fit your child’s interests and schedule. Fees will update automatically below.</p>
+      <div id="program-grid"></div>
+
+      <div class="toggle-box">
+        <label><input id="add-sibling-checkbox" type="checkbox"/> Add Sibling</label>
+      </div>
+
+      <div id="sibling-info-section" style="display: none;">
+        <h2>Sibling Information</h2>
+        <div class="info-section">
+          <div class="info-grid">
+            <label>Student Name
+              <input class="input-field" id="student2Name" name="student2Name" type="text"/>
+            </label>
+
+            <label>Grade
+              <input class="input-field" id="grade2" name="grade2" type="text"/>
+            </label>
+
+            <label>School
+              <input class="input-field" id="school2" name="school2" type="text"/>
+            </label>
+          </div>
+        </div>
+
+        <h2>Sibling Program Selection by Week</h2>
+        <div id="sibling-program-grid"></div>
+      </div>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="section-card">
+      <h2>Fee Summary</h2>
+      <div class="fee-summary-box">
+        <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
+        <div class="fee-line"><span>Discount:</span><span id="discount">$0</span></div>
+        <div class="fee-line total"><span>Final Fee:</span><span id="final-fee">$0</span></div>
+      </div>
+      <div class="discount-details" id="discount-breakdown" style="display:none; margin-top:12px;"></div>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="section-card">
+      <h2>Medical &amp; Emergency Info</h2>
+      <div class="info-section">
+        <div class="info-grid">
+          <label>Medical or Allergy Information
+            <input class="input-field" id="medicalInfo" name="medicalInfo" placeholder="Enter NA if none" required type="text"/>
+          </label>
+
+          <label>Medications Currently Taking
+            <input class="input-field" id="medications" name="medications" placeholder="Enter NA if none" required type="text"/>
+          </label>
+
+          <label>Emergency Contact Name
+            <input class="input-field" id="emergencyContactName" name="emergencyContactName" required type="text"/>
+          </label>
+
+          <label>Emergency Contact Phone
+            <input class="input-field" id="emergencyContactPhone" name="emergencyContactPhone" required type="tel"/>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="section-card">
+      <h2>Waivers</h2>
+      <div class="waiver-section">
+        <label><input id="photoConsent" name="photoConsent" type="checkbox"/> I give permission for my child to be photographed or recorded during the program.</label>
+
+        <label><input id="refundPolicy" name="refundPolicy" required type="checkbox"/> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" onclick="window.open(this.href, 'popup', 'width=600,height=600'); return false;" target="_blank">program’s cancellation and refund policy</a>.</label>
+
+        <label><input id="emergencyMedical" name="emergencyMedical" required type="checkbox"/> I authorize Y2L Academy to obtain emergency medical care for my child if necessary.</label>
+
+        <label><input id="emergencyContact" name="emergencyContact" required type="checkbox"/> I confirm I have provided accurate emergency contact information and consent to its use if needed.</label>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <input name="baseFee" type="hidden"/>
+      <input name="discountValue" type="hidden"/>
+      <input name="finalFee" type="hidden"/>
+
+      <div id="form-error-msg" style="display:none;color:red;margin-bottom:20px;font-weight:bold;"></div>
+
+      <button class="submit-btn" type="submit">Submit Enrollment</button>
+    </div>
+  </div>
+
+  <script src="/scripts/main.js?v=20240520"></script>
+</body>
+</html>
