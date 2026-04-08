@@ -56,15 +56,15 @@
     }
 
     .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px 22px;
+      display: block;
     }
 
+    .info-grid label,
     .info-section label {
       display: block;
-      margin-bottom: 0;
+      margin-bottom: 16px;
       font-weight: 500;
+      max-width: 560px;
     }
 
     .input-field {
@@ -105,6 +105,8 @@
 
     .toggle-box label {
       font-weight: 600;
+      margin-bottom: 0;
+      max-width: none;
     }
 
     .fee-summary-box {
@@ -112,7 +114,7 @@
       border: 1px solid #d4e3f6;
       border-radius: 8px;
       padding: 18px 20px;
-      max-width: 480px;
+      max-width: 520px;
     }
 
     .fee-line {
@@ -136,7 +138,7 @@
       border: 1px solid #f1df9f;
       border-radius: 8px;
       padding: 14px 16px;
-      max-width: 620px;
+      max-width: 700px;
       font-size: 14px;
       line-height: 1.6;
     }
@@ -154,6 +156,8 @@
       display: block;
       margin-bottom: 12px;
       line-height: 1.5;
+      font-weight: 400;
+      max-width: none;
     }
 
     .waiver-section a {
@@ -164,6 +168,12 @@
 
     .waiver-section a:hover {
       text-decoration: underline;
+    }
+
+    .required-star {
+      color: #c62828;
+      font-weight: 700;
+      margin-left: 4px;
     }
 
     hr.section-divider {
@@ -240,7 +250,9 @@
         font-size: 24px;
       }
 
-      .fee-summary-box {
+      .fee-summary-box,
+      .info-grid label,
+      .info-section label {
         max-width: 100%;
       }
     }
@@ -273,7 +285,7 @@
           </label>
 
           <label>Phone
-            <input class="input-field" id="phone" name="phone" required type="tel"/>
+            <input class="input-field" id="phone" name="phone" required type="tel" inputmode="tel" pattern="^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$" title="Please enter a valid 10-digit phone number"/>
           </label>
 
           <label>Billing Address
@@ -369,7 +381,7 @@
           </label>
 
           <label>Emergency Contact Phone
-            <input class="input-field" id="emergencyContactPhone" name="emergencyContactPhone" required type="tel"/>
+            <input class="input-field" id="emergencyContactPhone" name="emergencyContactPhone" required type="tel" inputmode="tel" pattern="^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$" title="Please enter a valid 10-digit phone number"/>
           </label>
         </div>
       </div>
@@ -380,13 +392,29 @@
     <div class="section-card">
       <h2>Waivers</h2>
       <div class="waiver-section">
-        <label><input id="photoConsent" name="photoConsent" type="checkbox"/> I give permission for my child to be photographed or recorded during the program.</label>
+        <label>
+          <input id="photoConsent" name="photoConsent" type="checkbox"/>
+          I give permission for my child to be photographed or recorded during the program.
+        </label>
 
-        <label><input id="refundPolicy" name="refundPolicy" required type="checkbox"/> I acknowledge and accept the <a href="https://y2lacademy.com/cancellation-policy" onclick="window.open(this.href, 'popup', 'width=600,height=600'); return false;" target="_blank">program’s cancellation and refund policy</a>.</label>
+        <label>
+          <input id="refundPolicy" name="refundPolicy" required type="checkbox"/>
+          <span class="required-star">*</span>
+          I acknowledge and accept the
+          <a href="https://y2lacademy.com/cancellation-policy" onclick="window.open(this.href, 'popup', 'width=600,height=600'); return false;" target="_blank">program’s cancellation and refund policy</a>.
+        </label>
 
-        <label><input id="emergencyMedical" name="emergencyMedical" required type="checkbox"/> I authorize Y2L Academy to obtain emergency medical care for my child if necessary.</label>
+        <label>
+          <input id="emergencyMedical" name="emergencyMedical" required type="checkbox"/>
+          <span class="required-star">*</span>
+          I authorize Y2L Academy to obtain emergency medical care for my child if necessary.
+        </label>
 
-        <label><input id="emergencyContact" name="emergencyContact" required type="checkbox"/> I confirm I have provided accurate emergency contact information and consent to its use if needed.</label>
+        <label>
+          <input id="emergencyContact" name="emergencyContact" required type="checkbox"/>
+          <span class="required-star">*</span>
+          I confirm I have provided accurate emergency contact information and consent to its use if needed.
+        </label>
       </div>
     </div>
 
