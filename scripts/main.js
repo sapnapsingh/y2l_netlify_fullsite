@@ -37,9 +37,6 @@ function buildPayload() {
   return data;
 }
 
-// =========================
-// Editable Pricing Settings
-// =========================
 const EARLY_BIRD_TIER_1_DEADLINE = new Date("2026-05-07T23:59:59");
 const EARLY_BIRD_TIER_2_DEADLINE = new Date("2026-05-15T23:59:59");
 const EARLY_BIRD_TIER_1_AMOUNT = 25;
@@ -136,22 +133,17 @@ function calculateFee() {
   };
 
   if (earlyBirdActive) {
-    // Early bird applies to eligible programs only
     allSelections.forEach(item => {
       if (item.earlyBirdEligible) {
         breakdown.earlyBird += currentEarlyBirdAmount;
       }
     });
-
-    // During early bird period, do not stack sibling or multi-week
   } else {
-    // Multi-week applies only to eligible programs when 3+ eligible weeks are selected
     const multiWeekEligibleSelections = allSelections.filter(item => item.multiWeekEligible);
     if (multiWeekEligibleSelections.length >= 3) {
       breakdown.multiWeek = multiWeekEligibleSelections.length * MULTI_WEEK_DISCOUNT_PER_WEEK;
     }
 
-    // Sibling discount applies to student 2 eligible selections except holiday week
     student2Selections.forEach(item => {
       if (item.siblingEligible && !item.holidayWeek) {
         breakdown.sibling += SIBLING_DISCOUNT_PER_WEEK;
@@ -176,7 +168,7 @@ function calculateFee() {
 
   let breakdownHtml = "";
   if (totalDiscount > 0 || allSelections.some(item => item.holidayWeek)) {
-    breakdownHtml += "<h4>Discounts Applied</h4><ul style='margin:0;padding-left:20px'>";
+    breakdownHtml += "<h4>Discounts Applied:</h4><ul style='margin:0;padding-left:20px'>";
     if (breakdown.earlyBird > 0) {
       breakdownHtml += `<li>Early Bird Discount: $${breakdown.earlyBird}</li>`;
     }
@@ -195,7 +187,7 @@ function calculateFee() {
   const summaryDiv = document.getElementById("discount-breakdown");
   if (summaryDiv) {
     summaryDiv.innerHTML = breakdownHtml;
-    summaryDiv.style.display = breakdownHtml ? "block" : "block";
+    summaryDiv.style.display = breakdownHtml ? "block" : "none";
   }
 }
 
