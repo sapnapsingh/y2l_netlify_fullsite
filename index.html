@@ -153,6 +153,44 @@
       margin: 0 0 8px 0;
     }
 
+
+    .promo-section {
+      background: #f7fbff;
+      border: 1px solid #d8e6fb;
+      border-radius: 8px;
+      padding: 18px 20px;
+      max-width: 520px;
+    }
+
+    .promo-section label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .promo-help {
+      margin: 6px 0 0;
+      color: #5b6777;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .promo-message {
+      margin-top: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .promo-message.success {
+      color: #1b7f3a;
+      font-weight: 600;
+    }
+
+    .promo-message.error {
+      color: #c62828;
+      font-weight: 600;
+    }
+
     .waiver-section {
       background-color: #f1f7ff;
       border: 1px solid #c5d8f3;
@@ -364,6 +402,18 @@
     <hr class="section-divider"/>
 
     <div class="section-card">
+      <h2>Promo / Referral Code</h2>
+      <div class="promo-section">
+        <label for="promoCode">Promo / Referral Code (Optional)</label>
+        <input class="input-field" id="promoCode" name="promoCode" type="text" placeholder="Enter code if you have one" autocomplete="off"/>
+        <p class="promo-help">Enter a valid referral or promotional code. Some codes may apply only to specific camps. Leave this blank if you do not have one.</p>
+        <div id="promo-message" class="promo-message" style="display:none;"></div>
+      </div>
+    </div>
+
+    <hr class="section-divider"/>
+
+    <div class="section-card">
       <h2>Fee Summary</h2>
       <div class="fee-summary-box">
         <div class="fee-line"><span>Total Fee:</span><span id="total-fee">$0</span></div>
@@ -432,6 +482,7 @@
     <div class="submit-wrap">
       <input name="baseFee" type="hidden"/>
       <input name="discountValue" type="hidden"/>
+      <input name="promoDiscount" type="hidden"/>
       <input name="finalFee" type="hidden"/>
 
       <div id="form-error-msg" style="display:none;color:red;margin-bottom:20px;font-weight:bold;"></div>
