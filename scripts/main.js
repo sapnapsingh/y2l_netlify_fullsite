@@ -69,7 +69,7 @@ const SIBLING_DISCOUNT_PER_WEEK = 10;
 // - ["Public Speaking"] means the code applies only to selected Public Speaking programs
 // You can also use exact/partial program words like ["STEM Innovation Camp"] or ["Math"]
 const PROMO_CODES = {
-  MACARONI25: {
+  MACKID25: {
     label: "Macaroni Kid Promo",
     type: "perEligibleSelection",
     amount: 25,
@@ -79,7 +79,7 @@ const PROMO_CODES = {
     noEligibleMessage: "This promo code applies to eligible camp selections. Please select at least one eligible camp or remove the code."
   },
 
-  CHESSFAMILY25: {
+  CHESSFAM25: {
     label: "Chess Family Promo",
     type: "perEligibleSelection",
     amount: 25,
