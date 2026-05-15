@@ -79,21 +79,21 @@ const PROMO_CODES = {
     noEligibleMessage: "This promo code applies to eligible camp selections. Please select at least one eligible camp or remove the code."
   },
 
-  CHESSFAM25: {
+  CHESSFAM50: {
     label: "Chess Family Promo",
     type: "perEligibleSelection",
-    amount: 25,
+    amount: 50,
     expires: "2026-05-25T23:59:59",
     eligiblePrograms: ["Chess"],
     excludeHolidayWeek: false,
     noEligibleMessage: "This promo code applies only to Chess Camp selections. Please select a Chess Camp or remove the code."
   },
 
-  CHESSVIP25: {
+  CHESSVIP: {
     label: "Chess VIP Promo",
     type: "perEligibleSelection",
-    amount: 25,
-    expires: null,
+    amount: 50,
+    expires: "2026-06-10T23:59:59",
     eligiblePrograms: ["Chess"],
     excludeHolidayWeek: false,
     noEligibleMessage: "This promo code applies only to Chess Camp selections. Please select a Chess Camp or remove the code."
@@ -109,11 +109,11 @@ const PROMO_CODES = {
     noEligibleMessage: "This promo code applies only to Python & AI camp selections. Please select a Python camp or remove the code."
   },
 
-  FRIEND25: {
+  SAMFAMILY40: {
     label: "Friend Referral Promo",
     type: "flat",
-    amount: 25,
-    expires: "2026-05-25T23:59:59",
+    amount: 40,
+    expires: "2026-05-31T23:59:59",
     eligiblePrograms: ["*"],
     excludeHolidayWeek: false,
     noEligibleMessage: "This promo code applies to eligible camp selections. Please select at least one eligible camp or remove the code."
