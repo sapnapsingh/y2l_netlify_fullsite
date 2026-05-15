@@ -79,10 +79,10 @@ const PROMO_CODES = {
     noEligibleMessage: "This promo code applies to eligible camp selections. Please select at least one eligible camp or remove the code."
   },
 
-  CHESSFAM50: {
+  CHESSFAM: {
     label: "Chess Family Promo",
     type: "perEligibleSelection",
-    amount: 50,
+    amount: 60,
     expires: "2026-05-25T23:59:59",
     eligiblePrograms: ["Chess"],
     excludeHolidayWeek: false,
