@@ -79,6 +79,16 @@ const PROMO_CODES = {
     noEligibleMessage: "This promo code applies to eligible camp selections. Please select at least one eligible camp or remove the code."
   },
 
+  CELEBRATE35: {
+    label: "Y2L Anniversary Celebration",
+    type: "flat",
+    amount: 35,
+    expires: "2026-05-24T23:59:59",
+    eligiblePrograms: ["*"],
+    excludeHolidayWeek: true,
+    noEligibleMessage: "This promo code applies to eligible camp selections. Please select at least one eligible camp or remove the code."
+  },
+  
   CHESSFAM: {
     label: "Chess Family Promo",
     type: "perEligibleSelection",
