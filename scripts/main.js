@@ -81,7 +81,7 @@ const PROMO_CODES = {
 
   CELEBRATE35: {
     label: "Y2L Anniversary Celebration",
-    type: "flat",
+    type: "perEligibleSelection",
     amount: 35,
     expires: "2026-05-24T23:59:59",
     eligiblePrograms: ["*"],
