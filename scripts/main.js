@@ -46,11 +46,11 @@ function buildPayload() {
 // Editable Pricing Settings
 // =========================
 const EARLY_BIRD_TIER_1_DEADLINE = new Date("2026-05-15T23:59:59");
-const EARLY_BIRD_TIER_2_DEADLINE = new Date("2026-05-25T23:59:59");
+const EARLY_BIRD_TIER_2_DEADLINE = new Date("2026-05-31T23:59:59");
 const EARLY_BIRD_TIER_1_AMOUNT = 25;
 const EARLY_BIRD_TIER_2_AMOUNT = 15;
 const MULTI_WEEK_DISCOUNT_PER_WEEK = 10;
-const SIBLING_DISCOUNT_PER_WEEK = 10;
+const SIBLING_DISCOUNT_PER_WEEK = 5;
 
 // =========================
 // Editable Promo Code Setup
